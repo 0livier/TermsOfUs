@@ -10,7 +10,6 @@ import {
   type SupportedLocale,
 } from './content/loader.js'
 import {
-  summarizeSelection,
   type ItemId,
   type ItemState,
   type SelectionState,
@@ -52,7 +51,6 @@ function App() {
   const [activeState, setActiveState] = useState<ItemState>('want')
   const [copyStatus, setCopyStatus] = useState('')
   const content = useMemo(() => localizeSchema(locale), [locale])
-  const summary = useMemo(() => summarizeSelection(selection), [selection])
 
   useEffect(() => {
     replaceUrlState(new URL(window.location.href), {
@@ -120,18 +118,6 @@ function App() {
 
       <section className="toolbar" aria-label="Selection tools">
         <Palette activeState={activeState} stateOptions={content.stateOptions} onChange={setActiveState} />
-
-        <div className="summary" aria-label="Selection summary">
-          <span>
-            <strong>{summary.want}</strong> want
-          </span>
-          <span>
-            <strong>{summary.have}</strong> have
-          </span>
-          <span>
-            <strong>{summary.avoid}</strong> avoid
-          </span>
-        </div>
 
         <div className="actions">
           <button type="button" onClick={resetSelection}>
