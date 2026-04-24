@@ -4,6 +4,8 @@ import fr from './locales/fr.json' with { type: 'json' }
 import type {
   CategoryId,
   ItemId,
+  ItemState,
+  ItemStateOption,
   LocaleCode,
   LocaleContent,
   SchemaDefinition,
@@ -29,7 +31,17 @@ export interface LocalizedContent {
   locale: SupportedLocale
   schema: SchemaDefinition
   categories: LocalizedCategory[]
+  stateOptions: ItemStateOption[]
 }
+
+const ITEM_STATES: ItemState[] = ['none', 'want', 'have', 'avoid']
+
+const DEFAULT_STATE_OPTIONS: ItemStateOption[] = [
+  { value: 'none', label: 'Not selected', shortLabel: 'None' },
+  { value: 'want', label: 'I want this', shortLabel: 'Want' },
+  { value: 'have', label: 'We already have this', shortLabel: 'Have' },
+  { value: 'avoid', label: 'I do not want this', shortLabel: 'Avoid' },
+]
 
 const schema = schemaV1 as SchemaDefinition
 const locales: Record<SupportedLocale, LocaleContent> = {
@@ -95,6 +107,7 @@ export function localizeContent(
   return {
     locale,
     schema,
+    stateOptions: buildStateOptions(requestedContent, fallbackContent),
     categories: schema.categories.map((category) => ({
       id: category.id,
       label: getCategoryLabel(
@@ -114,6 +127,26 @@ export function localizeContent(
       })),
     })),
   }
+}
+
+function buildStateOptions(
+  requestedContent: LocaleContent,
+  fallbackContent: LocaleContent,
+): ItemStateOption[] {
+  return ITEM_STATES.map((state) => {
+    const defaultOption = DEFAULT_STATE_OPTIONS.find((o) => o.value === state)!
+    return {
+      value: state,
+      label:
+        requestedContent.ui?.states?.[state]?.label ??
+        fallbackContent.ui?.states?.[state]?.label ??
+        defaultOption.label,
+      shortLabel:
+        requestedContent.ui?.states?.[state]?.shortLabel ??
+        fallbackContent.ui?.states?.[state]?.shortLabel ??
+        defaultOption.shortLabel,
+    }
+  })
 }
 
 function isSupportedLocale(

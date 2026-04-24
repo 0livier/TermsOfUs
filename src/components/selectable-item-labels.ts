@@ -1,13 +1,13 @@
-import type { ItemState } from '../domain/model.js'
-import { getItemStateOption } from './item-states.js'
+import type { ItemState, ItemStateOption } from '../domain/model.js'
 
 export function getSelectableItemAriaLabel(
   label: string,
   currentState: ItemState,
   activeState: ItemState,
+  stateOptions: ItemStateOption[],
 ): string {
-  const currentOption = getItemStateOption(currentState)
-  const activeOption = getItemStateOption(activeState)
+  const currentOption = stateOptions.find((o) => o.value === currentState) ?? stateOptions[0]!
+  const activeOption = stateOptions.find((o) => o.value === activeState) ?? stateOptions[0]!
   const action =
     activeState === 'none' || currentState === activeState
       ? 'clear state'

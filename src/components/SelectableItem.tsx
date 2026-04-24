@@ -1,5 +1,4 @@
-import type { ItemId, ItemState } from '../domain/model.js'
-import { getItemStateOption } from './item-states.js'
+import type { ItemId, ItemState, ItemStateOption } from '../domain/model.js'
 import { getSelectableItemAriaLabel } from './selectable-item-labels.js'
 
 interface SelectableItemProps {
@@ -7,6 +6,7 @@ interface SelectableItemProps {
   label: string
   currentState: ItemState
   activeState: ItemState
+  stateOptions: ItemStateOption[]
   onSelect: (itemId: ItemId) => void
 }
 
@@ -15,15 +15,16 @@ export function SelectableItem({
   label,
   currentState,
   activeState,
+  stateOptions,
   onSelect,
 }: SelectableItemProps) {
-  const currentOption = getItemStateOption(currentState)
+  const currentOption = stateOptions.find((o) => o.value === currentState) ?? stateOptions[0]!
 
   return (
     <button
       type="button"
       className={`item-button is-${currentState}`}
-      aria-label={getSelectableItemAriaLabel(label, currentState, activeState)}
+      aria-label={getSelectableItemAriaLabel(label, currentState, activeState, stateOptions)}
       onClick={() => onSelect(id)}
     >
       <span>{label}</span>

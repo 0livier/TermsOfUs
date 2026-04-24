@@ -1,10 +1,6 @@
-import type { ItemState } from '../domain/model.js'
+import type { ItemState, ItemStateOption } from '../domain/model.js'
 
-export interface ItemStateOption {
-  value: ItemState
-  label: string
-  shortLabel: string
-}
+export type { ItemStateOption }
 
 export const itemStateOptions: ItemStateOption[] = [
   { value: 'none', label: 'Not selected', shortLabel: 'None' },

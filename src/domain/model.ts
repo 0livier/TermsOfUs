@@ -31,11 +31,22 @@ export interface LocaleContent {
   locale: LocaleCode
   categories: Record<CategoryId, LocaleCategoryContent>
   items: Record<ItemId, LocaleItemContent>
+  ui?: LocaleUiContent
 }
 
 export type ItemState = 'none' | 'want' | 'avoid' | 'have'
 export type SelectedItemState = Exclude<ItemState, 'none'>
 export type SelectionState = Partial<Record<ItemId, SelectedItemState>>
+
+export interface ItemStateOption {
+  value: ItemState
+  label: string
+  shortLabel: string
+}
+
+export interface LocaleUiContent {
+  states: Partial<Record<ItemState, { label: string; shortLabel: string }>>
+}
 
 export interface SelectionSummary {
   want: number

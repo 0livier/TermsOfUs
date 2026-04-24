@@ -1,15 +1,15 @@
-import type { ItemState } from '../domain/model.js'
-import { itemStateOptions } from './item-states.js'
+import type { ItemState, ItemStateOption } from '../domain/model.js'
 
 interface PaletteProps {
   activeState: ItemState
+  stateOptions: ItemStateOption[]
   onChange: (state: ItemState) => void
 }
 
-export function Palette({ activeState, onChange }: PaletteProps) {
+export function Palette({ activeState, stateOptions, onChange }: PaletteProps) {
   return (
     <div className="palette" aria-label="Active state">
-      {itemStateOptions.map((option) => (
+      {stateOptions.map((option) => (
         <button
           key={option.value}
           type="button"

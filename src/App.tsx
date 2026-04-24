@@ -119,7 +119,7 @@ function App() {
       </header>
 
       <section className="toolbar" aria-label="Selection tools">
-        <Palette activeState={activeState} onChange={setActiveState} />
+        <Palette activeState={activeState} stateOptions={content.stateOptions} onChange={setActiveState} />
 
         <div className="summary" aria-label="Selection summary">
           <span>
@@ -165,6 +165,7 @@ function App() {
                     label={item.label}
                     currentState={currentState}
                     activeState={activeState}
+                    stateOptions={content.stateOptions}
                     onSelect={updateItem}
                   />
                 )
