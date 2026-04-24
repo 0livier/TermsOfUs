@@ -1,7 +1,11 @@
 import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 import {
+  defaultLocale,
+  getLocaleFromBrowser,
+  getLocalePreference,
   localizeSchema,
+  saveLocalePreference,
   supportedLocales,
   type SupportedLocale,
 } from './content/loader.js'
@@ -11,7 +15,7 @@ import {
   type ItemState,
   type SelectionState,
 } from './domain/model.js'
-import { parseUrlState, replaceUrlState } from './routing/url-state.js'
+import { getLocaleFromUrl, parseUrlState, replaceUrlState } from './routing/url-state.js'
 import { applyActiveState } from './app/selection.js'
 import { Palette } from './components/Palette.js'
 import { SelectableItem } from './components/SelectableItem.js'
@@ -27,7 +31,15 @@ function getInitialUrlState() {
     }
   }
 
-  return parseUrlState(new URL(window.location.href), schema)
+  const url = new URL(window.location.href)
+  const urlState = parseUrlState(url, schema)
+  const locale =
+    getLocaleFromUrl(url) ??
+    getLocalePreference() ??
+    getLocaleFromBrowser() ??
+    defaultLocale
+
+  return { ...urlState, locale }
 }
 
 const initialUrlState = getInitialUrlState()
@@ -91,7 +103,9 @@ function App() {
           <select
             value={locale}
             onChange={(event) => {
-              setLocale(event.target.value as SupportedLocale)
+              const newLocale = event.target.value as SupportedLocale
+              setLocale(newLocale)
+              saveLocalePreference(newLocale)
               setCopyStatus('')
             }}
           >

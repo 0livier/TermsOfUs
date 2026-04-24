@@ -4,46 +4,197 @@
     {
       "id": "communication",
       "items": [
-        { "id": "in-person-conversation", "code": 1 },
-        { "id": "video-calls", "code": 4 },
-        { "id": "text-messages", "code": 2 },
-        { "id": "phone-calls", "code": 3 }
+        { "id": "video", "code": 1 },
+        { "id": "phone-calls", "code": 2 },
+        { "id": "sms", "code": 3 },
+        { "id": "erotic-messages", "code": 4 },
+        { "id": "letters", "code": 5 },
+        { "id": "emails", "code": 6 },
+        { "id": "relationship-meetings", "code": 7 },
+        { "id": "in-person-visits", "code": 8 }
       ]
     },
     {
       "id": "emotional-support",
       "items": [
-        { "id": "daily-check-ins", "code": 5 },
-        { "id": "reassurance", "code": 6 },
-        { "id": "conflict-repair", "code": 7 },
-        { "id": "sharing-feelings", "code": 8 }
+        { "id": "listening", "code": 9 },
+        { "id": "empathy", "code": 10 },
+        { "id": "reassurance", "code": 11 },
+        { "id": "advice-seeking", "code": 12 },
+        { "id": "confiding", "code": 13 }
+      ]
+    },
+    {
+      "id": "emotional-intimacy",
+      "items": [
+        { "id": "vulnerability", "code": 14 },
+        { "id": "sharing-values", "code": 15 },
+        { "id": "deep-conversations", "code": 16 },
+        { "id": "love-languages", "code": 17 }
       ]
     },
     {
       "id": "physical-intimacy",
       "items": [
-        { "id": "cuddling", "code": 9 },
-        { "id": "kissing", "code": 10 },
-        { "id": "sleeping-together", "code": 11 },
-        { "id": "sexual-intimacy", "code": 12 }
+        { "id": "dancing", "code": 18 },
+        { "id": "caresses", "code": 19 },
+        { "id": "cuddling", "code": 20 },
+        { "id": "massage", "code": 21 },
+        { "id": "holding-hands", "code": 22 },
+        { "id": "sleeping-together", "code": 23 },
+        { "id": "physical-contact", "code": 24 }
+      ]
+    },
+    {
+      "id": "sexuality",
+      "items": [
+        { "id": "touching", "code": 25 },
+        { "id": "oral-sex", "code": 26 },
+        { "id": "penetrative-sex", "code": 27 },
+        { "id": "sexting", "code": 28 },
+        { "id": "protection", "code": 29 },
+        { "id": "sti-testing", "code": 30 },
+        { "id": "sexual-frequency", "code": 31 }
       ]
     },
     {
       "id": "domesticity",
       "items": [
-        { "id": "shared-meals", "code": 13 },
-        { "id": "overnights", "code": 14 },
-        { "id": "shared-home", "code": 15 },
-        { "id": "chores", "code": 16 }
+        { "id": "chores", "code": 32 },
+        { "id": "living-together", "code": 33 },
+        { "id": "cooking-together", "code": 34 },
+        { "id": "eating-together", "code": 35 },
+        { "id": "shared-bed", "code": 36 }
       ]
     },
     {
-      "id": "commitment",
+      "id": "time-together",
       "items": [
-        { "id": "labels", "code": 17 },
-        { "id": "future-planning", "code": 18 },
-        { "id": "exclusivity", "code": 19 },
-        { "id": "family-involvement", "code": 20 }
+        { "id": "vacations", "code": 37 },
+        { "id": "anniversaries", "code": 38 },
+        { "id": "courses-workshops", "code": 39 },
+        { "id": "parallel-play", "code": 40 },
+        { "id": "frequency", "code": 41 },
+        { "id": "duration", "code": 42 },
+        { "id": "locations", "code": 43 },
+        { "id": "dates", "code": 44 }
+      ]
+    },
+    {
+      "id": "relationship-structure",
+      "items": [
+        { "id": "objectives", "code": 45 },
+        { "id": "shared-values", "code": 46 },
+        { "id": "habits", "code": 47 },
+        { "id": "change-management", "code": 48 },
+        { "id": "commitment", "code": 49 },
+        { "id": "responsibility", "code": 50 },
+        { "id": "coherence", "code": 51 }
+      ]
+    },
+    {
+      "id": "exclusivity",
+      "items": [
+        { "id": "sexual-exclusivity", "code": 52 },
+        { "id": "emotional-exclusivity", "code": 53 },
+        { "id": "structural-exclusivity", "code": 54 },
+        { "id": "romantic-exclusivity", "code": 55 },
+        { "id": "activity-based-exclusivity", "code": 56 }
+      ]
+    },
+    {
+      "id": "romance",
+      "items": [
+        { "id": "attraction", "code": 57 },
+        { "id": "uniqueness", "code": 58 },
+        { "id": "shared-experience", "code": 59 },
+        { "id": "centrality", "code": 60 },
+        { "id": "crushes", "code": 61 }
+      ]
+    },
+    {
+      "id": "power-dynamics",
+      "items": [
+        { "id": "boss-employee", "code": 62 },
+        { "id": "mentorship", "code": 63 },
+        { "id": "teacher-student", "code": 64 },
+        { "id": "hierarchy", "code": 65 }
+      ]
+    },
+    {
+      "id": "community",
+      "items": [
+        { "id": "friendship", "code": 66 },
+        { "id": "shared-activities", "code": 67 },
+        { "id": "intellectual-discussions", "code": 68 }
+      ]
+    },
+    {
+      "id": "family-care",
+      "items": [
+        { "id": "family-care", "code": 69 },
+        { "id": "long-term-commitments", "code": 70 },
+        { "id": "children", "code": 71 },
+        { "id": "pets", "code": 72 }
+      ]
+    },
+    {
+      "id": "practical-support",
+      "items": [
+        { "id": "health-support", "code": 73 },
+        { "id": "availability", "code": 74 },
+        { "id": "emergencies", "code": 75 },
+        { "id": "caregiving", "code": 76 }
+      ]
+    },
+    {
+      "id": "finances",
+      "items": [
+        { "id": "shared-accounts", "code": 77 },
+        { "id": "property", "code": 78 },
+        { "id": "rent", "code": 79 },
+        { "id": "resource-sharing", "code": 80 },
+        { "id": "mutual-aid", "code": 81 }
+      ]
+    },
+    {
+      "id": "projects",
+      "items": [
+        { "id": "long-term-projects", "code": 82 },
+        { "id": "having-children", "code": 83 },
+        { "id": "community", "code": 84 },
+        { "id": "lifestyle", "code": 85 },
+        { "id": "career", "code": 86 },
+        { "id": "housing", "code": 87 }
+      ]
+    },
+    {
+      "id": "labels",
+      "items": [
+        { "id": "spouse", "code": 88 },
+        { "id": "partner", "code": 89 },
+        { "id": "lover", "code": 90 },
+        { "id": "nickname", "code": 91 },
+        { "id": "family-labels", "code": 92 }
+      ]
+    },
+    {
+      "id": "public-affection",
+      "items": [
+        { "id": "public-events", "code": 93 },
+        { "id": "family-introduction", "code": 94 },
+        { "id": "coming-out", "code": 95 },
+        { "id": "social-media", "code": 96 }
+      ]
+    },
+    {
+      "id": "creativity",
+      "items": [
+        { "id": "art", "code": 97 },
+        { "id": "music", "code": 98 },
+        { "id": "dance", "code": 99 },
+        { "id": "theatre", "code": 100 },
+        { "id": "crafting", "code": 101 }
       ]
     }
   ]

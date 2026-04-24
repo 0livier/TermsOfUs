@@ -8,6 +8,10 @@
     "commitment": { "label": "Commitment" }
   },
   "items": {
+    "video": { "label": "Video calls" },
+    "erotic-messages": { "label": "Erotic messages" },
+    "shared-bed": { "label": "Shared bed" },
+    "having-children": { "label": "Having children" },
     "in-person-conversation": { "label": "In-person conversation" },
     "video-calls": { "label": "Video calls" },
     "text-messages": { "label": "Text messages" },

@@ -53,6 +53,29 @@ export function resolveLocale(locale: LocaleCode | null | undefined): SupportedL
   return defaultLocale
 }
 
+const LOCALE_STORAGE_KEY = 'locale'
+
+export function getLocalePreference(): SupportedLocale | null {
+  try {
+    const stored = localStorage.getItem(LOCALE_STORAGE_KEY)
+    return isSupportedLocale(stored) ? stored : null
+  } catch {
+    return null
+  }
+}
+
+export function saveLocalePreference(locale: SupportedLocale): void {
+  try {
+    localStorage.setItem(LOCALE_STORAGE_KEY, locale)
+  } catch {}
+}
+
+export function getLocaleFromBrowser(): SupportedLocale | null {
+  if (typeof navigator === 'undefined') return null
+  const lang = navigator.language.split('-')[0]
+  return isSupportedLocale(lang) ? lang : null
+}
+
 export function localizeSchema(
   requestedLocale: LocaleCode | null | undefined,
   options: { logMissing?: boolean } = {},

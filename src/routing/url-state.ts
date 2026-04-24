@@ -84,6 +84,13 @@ export function replaceUrlState(
   return path
 }
 
+export function getLocaleFromUrl(url: URL): SupportedLocale | null {
+  const lang = url.searchParams.get('lang')
+  if (lang === null) return null
+  const resolved = resolveLocale(lang)
+  return resolved === lang ? resolved : null
+}
+
 function getUrlLocale(url: URL): SupportedLocale {
   return resolveLocale(url.searchParams.get('lang'))
 }

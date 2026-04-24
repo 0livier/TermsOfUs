@@ -5,6 +5,7 @@ import { encodeSparseSelection } from '../domain/model.js'
 import type { SchemaDefinition, SelectionState } from '../domain/model.js'
 import {
   buildUrlStatePath,
+  getLocaleFromUrl,
   parseUrlState,
   replaceUrlState,
 } from './url-state.js'
@@ -28,6 +29,13 @@ const schema: SchemaDefinition = {
     },
   ],
 }
+
+test('getLocaleFromUrl returns locale when present and supported, null otherwise', () => {
+  assert.equal(getLocaleFromUrl(new URL('https://example.test/?lang=fr')), 'fr')
+  assert.equal(getLocaleFromUrl(new URL('https://example.test/?lang=en')), 'en')
+  assert.equal(getLocaleFromUrl(new URL('https://example.test/?lang=de')), null)
+  assert.equal(getLocaleFromUrl(new URL('https://example.test/')), null)
+})
 
 test('restores locale, version, and sparse selection from the URL', () => {
   const selection: SelectionState = {
