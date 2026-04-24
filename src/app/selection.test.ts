@@ -24,3 +24,10 @@ test('clears an item when applying the same active state twice', () => {
     {},
   )
 })
+
+test('clears an item when applying the none state', () => {
+  assert.deepEqual(
+    applyActiveState({ 'video-calls': 'avoid' }, 'video-calls', 'none'),
+    {},
+  )
+})

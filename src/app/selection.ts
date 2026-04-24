@@ -1,17 +1,17 @@
 import type {
   ItemId,
-  SelectedItemState,
+  ItemState,
   SelectionState,
 } from '../domain/model.js'
 
 export function applyActiveState(
   selection: SelectionState,
   itemId: ItemId,
-  activeState: SelectedItemState,
+  activeState: ItemState,
 ): SelectionState {
   const nextSelection = { ...selection }
 
-  if (nextSelection[itemId] === activeState) {
+  if (activeState === 'none' || nextSelection[itemId] === activeState) {
     delete nextSelection[itemId]
   } else {
     nextSelection[itemId] = activeState

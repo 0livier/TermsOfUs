@@ -8,21 +8,13 @@ import {
 import {
   summarizeSelection,
   type ItemId,
-  type SelectedItemState,
+  type ItemState,
   type SelectionState,
 } from './domain/model.js'
 import { parseUrlState, replaceUrlState } from './routing/url-state.js'
 import { applyActiveState } from './app/selection.js'
-
-const stateOptions: Array<{
-  value: SelectedItemState
-  label: string
-  shortLabel: string
-}> = [
-  { value: 'want', label: 'I want this', shortLabel: 'Want' },
-  { value: 'have', label: 'We already have this', shortLabel: 'Have' },
-  { value: 'avoid', label: 'I do not want this', shortLabel: 'Avoid' },
-]
+import { Palette } from './components/Palette.js'
+import { SelectableItem } from './components/SelectableItem.js'
 
 function getInitialUrlState() {
   const schema = localizeSchema('en').schema
@@ -45,7 +37,7 @@ function App() {
   const [selection, setSelection] = useState<SelectionState>(
     initialUrlState.selection,
   )
-  const [activeState, setActiveState] = useState<SelectedItemState>('want')
+  const [activeState, setActiveState] = useState<ItemState>('want')
   const [copyStatus, setCopyStatus] = useState('')
   const content = useMemo(() => localizeSchema(locale), [locale])
   const summary = useMemo(() => summarizeSelection(selection), [selection])
@@ -113,20 +105,7 @@ function App() {
       </header>
 
       <section className="toolbar" aria-label="Selection tools">
-        <div className="palette" aria-label="Active state">
-          {stateOptions.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              className={`palette-button is-${option.value}`}
-              aria-pressed={activeState === option.value}
-              onClick={() => setActiveState(option.value)}
-            >
-              <span className="state-mark" aria-hidden="true" />
-              <span>{option.label}</span>
-            </button>
-          ))}
-        </div>
+        <Palette activeState={activeState} onChange={setActiveState} />
 
         <div className="summary" aria-label="Selection summary">
           <span>
@@ -163,26 +142,17 @@ function App() {
             <h2>{category.label}</h2>
             <div className="item-list">
               {category.items.map((item) => {
-                const currentState = selection[item.id]
+                const currentState = selection[item.id] ?? 'none'
 
                 return (
-                  <button
+                  <SelectableItem
                     key={item.id}
-                    type="button"
-                    className={`item-button ${
-                      currentState ? `is-${currentState}` : ''
-                    }`}
-                    onClick={() => updateItem(item.id)}
-                  >
-                    <span>{item.label}</span>
-                    <span className="item-state">
-                      {currentState
-                        ? stateOptions.find(
-                            (option) => option.value === currentState,
-                          )?.shortLabel
-                        : 'None'}
-                    </span>
-                  </button>
+                    id={item.id}
+                    label={item.label}
+                    currentState={currentState}
+                    activeState={activeState}
+                    onSelect={updateItem}
+                  />
                 )
               })}
             </div>
