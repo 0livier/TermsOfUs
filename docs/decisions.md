@@ -24,6 +24,7 @@
   - 11 = have
 - Encode packed bytes as base64url.
 - Encode sparse selected item/state pairs in item-code order with a URL-safe base62 alphabet.
+- Use React component state for the V1 shared shell until the app has enough cross-view complexity to justify a separate state library.
 - Use SVG for desktop visual map.
 - Use DOM cards/chips for mobile.
 - Do not use D3 in V1.
