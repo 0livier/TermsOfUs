@@ -81,7 +81,17 @@ function App() {
     const url = `${window.location.origin}${path}`
 
     try {
-      await navigator.clipboard.writeText(url)
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(url)
+      } else {
+        const textarea = document.createElement('textarea')
+        textarea.value = url
+        textarea.style.cssText = 'position:fixed;opacity:0'
+        document.body.appendChild(textarea)
+        textarea.select()
+        document.execCommand('copy')
+        document.body.removeChild(textarea)
+      }
       setCopyStatus('Link copied')
     } catch {
       setCopyStatus('Copy unavailable')
