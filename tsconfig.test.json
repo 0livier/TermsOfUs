@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./.tmp-tests",
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "allowImportingTsExtensions": false,
+    "noEmit": false
+  },
+  "include": ["src/domain/**/*.ts"]
+}
