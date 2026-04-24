@@ -5,9 +5,14 @@
 - Use Vite + React + TypeScript.
 - Use no backend.
 - Use JSON files for schema and locales.
+- Store V1 content under `src/content/` as `schema.v1.json` plus `locales/en.json` and `locales/fr.json`.
+- Resolve unsupported locales to English, and fall back missing category/item labels to English before falling back to the stable ID.
 - Use stable category and item IDs.
 - Use a versioned schema.
 - Use canonical item order from schema order.
+- Use path-based locale URLs with `v` for schema version and `s` for encoded selection state.
+- Update selection URLs with `history.replaceState` so selection changes do not add browser-history noise.
+- Omit `s` from the URL when the current selection is empty.
 - Encode item states using 2 bits per item:
   - 00 = none
   - 01 = want

@@ -1,0 +1,32 @@
+{
+  "locale": "fr",
+  "categories": {
+    "communication": { "label": "Communication" },
+    "emotional-support": { "label": "Soutien emotionnel" },
+    "physical-intimacy": { "label": "Intimite physique" },
+    "domesticity": { "label": "Vie domestique" },
+    "commitment": { "label": "Engagement" }
+  },
+  "items": {
+    "in-person-conversation": { "label": "Conversation en personne" },
+    "video-calls": { "label": "Appels video" },
+    "text-messages": { "label": "Messages texte" },
+    "phone-calls": { "label": "Appels telephoniques" },
+    "daily-check-ins": { "label": "Prendre des nouvelles chaque jour" },
+    "reassurance": { "label": "Reassurance" },
+    "conflict-repair": { "label": "Reparer les conflits" },
+    "sharing-feelings": { "label": "Partager ses sentiments" },
+    "cuddling": { "label": "Calins" },
+    "kissing": { "label": "Baisers" },
+    "sleeping-together": { "label": "Dormir ensemble" },
+    "sexual-intimacy": { "label": "Intimite sexuelle" },
+    "shared-meals": { "label": "Repas partages" },
+    "overnights": { "label": "Nuits ensemble" },
+    "shared-home": { "label": "Logement partage" },
+    "chores": { "label": "Taches menageres" },
+    "labels": { "label": "Etiquettes relationnelles" },
+    "future-planning": { "label": "Projets d'avenir" },
+    "exclusivity": { "label": "Exclusivite" },
+    "family-involvement": { "label": "Place dans la famille" }
+  }
+}

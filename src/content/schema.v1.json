@@ -1,0 +1,50 @@
+{
+  "version": 1,
+  "categories": [
+    {
+      "id": "communication",
+      "items": [
+        { "id": "in-person-conversation" },
+        { "id": "video-calls" },
+        { "id": "text-messages" },
+        { "id": "phone-calls" }
+      ]
+    },
+    {
+      "id": "emotional-support",
+      "items": [
+        { "id": "daily-check-ins" },
+        { "id": "reassurance" },
+        { "id": "conflict-repair" },
+        { "id": "sharing-feelings" }
+      ]
+    },
+    {
+      "id": "physical-intimacy",
+      "items": [
+        { "id": "cuddling" },
+        { "id": "kissing" },
+        { "id": "sleeping-together" },
+        { "id": "sexual-intimacy" }
+      ]
+    },
+    {
+      "id": "domesticity",
+      "items": [
+        { "id": "shared-meals" },
+        { "id": "overnights" },
+        { "id": "shared-home" },
+        { "id": "chores" }
+      ]
+    },
+    {
+      "id": "commitment",
+      "items": [
+        { "id": "labels" },
+        { "id": "future-planning" },
+        { "id": "exclusivity" },
+        { "id": "family-involvement" }
+      ]
+    }
+  ]
+}

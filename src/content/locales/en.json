@@ -1,0 +1,32 @@
+{
+  "locale": "en",
+  "categories": {
+    "communication": { "label": "Communication" },
+    "emotional-support": { "label": "Emotional support" },
+    "physical-intimacy": { "label": "Physical intimacy" },
+    "domesticity": { "label": "Domesticity" },
+    "commitment": { "label": "Commitment" }
+  },
+  "items": {
+    "in-person-conversation": { "label": "In-person conversation" },
+    "video-calls": { "label": "Video calls" },
+    "text-messages": { "label": "Text messages" },
+    "phone-calls": { "label": "Phone calls" },
+    "daily-check-ins": { "label": "Daily check-ins" },
+    "reassurance": { "label": "Reassurance" },
+    "conflict-repair": { "label": "Conflict repair" },
+    "sharing-feelings": { "label": "Sharing feelings" },
+    "cuddling": { "label": "Cuddling" },
+    "kissing": { "label": "Kissing" },
+    "sleeping-together": { "label": "Sleeping together" },
+    "sexual-intimacy": { "label": "Sexual intimacy" },
+    "shared-meals": { "label": "Shared meals" },
+    "overnights": { "label": "Overnights" },
+    "shared-home": { "label": "Shared home" },
+    "chores": { "label": "Chores" },
+    "labels": { "label": "Labels" },
+    "future-planning": { "label": "Future planning" },
+    "exclusivity": { "label": "Exclusivity" },
+    "family-involvement": { "label": "Family involvement" }
+  }
+}

@@ -6,7 +6,7 @@ The project goal for V1 is a local-first, multilingual app where a person can ma
 
 ## Project status
 
-This repository is still in active development. The product direction and domain model are documented, and the repo already includes domain encoding tests, but the main UI is not fully implemented yet.
+This repository is still in active development. The product direction, domain model, initial English/French content files, and URL-state helpers are in place, but the main UI is not fully implemented yet.
 
 Useful project docs:
 
@@ -78,7 +78,7 @@ npm run preview
 ## Build notes
 
 - `npm run build` runs TypeScript compilation and then creates the Vite production bundle.
-- `npm test` compiles the domain test target to a temporary directory and runs it with Node's test runner.
+- `npm test` compiles the local test target to a temporary directory and runs it with Node's test runner.
 - The app is designed to stay backend-free in V1.
 - The Vite base path is derived from `GITHUB_REPOSITORY` during CI builds so the app works on GitHub Pages project sites.
 
@@ -102,5 +102,6 @@ docs/                  Product notes, decisions, and tickets
 public/                Static assets
 scripts/               Project scripts, including test helpers
 src/                   Application source
+src/content/           Versioned schema, locale files, and content loader
 src/domain/            Domain model and tests
 ```

@@ -5,8 +5,9 @@
     "outDir": "./.tmp-tests",
     "module": "nodenext",
     "moduleResolution": "nodenext",
+    "resolveJsonModule": true,
     "allowImportingTsExtensions": false,
     "noEmit": false
   },
-  "include": ["src/domain/**/*.ts"]
+  "include": ["src/**/*.ts"]
 }
