@@ -13,17 +13,17 @@ Persist and restore selection state from the URL.
 
 - docs/product/spec-v1.md sections 8, 13, 16, 17, 20
 
-- docs/architecture/decisions.md
+- docs/decisions.md
 
 ## Scope
 
 Implement:
 
-- locale parsing from path
+- locale parsing from optional `lang` query param
 
-- schema version parsing from query params
+- selection payload parsing from the URL hash
 
-- selection payload parsing from query params
+- base path preservation for project-site hosting
 
 - URL update when selection changes
 
@@ -39,7 +39,9 @@ Implement:
 
 ## Acceptance criteria
 
-- `/fr?v=1&s=...` restores locale, version, and selection.
+- `/?lang=fr#...` restores locale and selection.
+
+- `/#...` restores the default English locale and selection.
 
 - Selection changes update the URL without full page reload.
 
@@ -48,4 +50,3 @@ Implement:
 - Unknown locale falls back safely.
 
 - Tests cover valid and invalid URL parsing.
-

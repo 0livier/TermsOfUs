@@ -126,13 +126,10 @@ Preserve the current schema version
 Preserve the current view if possible
 Update the URL to reflect the selected locale
 8.4 Locale in URL
-The URL must include the locale explicitly, for example:
-/fr?...
-/en?...
-or
+The URL may include the locale explicitly with a `lang` query parameter, for example:
 ?lang=fr
 ?lang=en
-Path-based locale routing is preferred.
+The default English locale may omit `lang`.
 8.5 Fallback strategy
 If a translation is missing:
 The application should fall back to the default locale
@@ -248,35 +245,32 @@ locales/de.json
 13. URL Model
 The URL must encode at least:
 locale
-schema version
 selection state
 13.1 Recommended URL format
 Example:
+/?lang=fr#encodedPayload
+/TermsOfUs/?lang=fr#encodedPayload
 Where:
-/fr is the locale
-v=1 is the schema version
-s=... is the encoded selection payload
+lang=fr is the optional locale query parameter
+the hash is the encoded selection payload
+the hosting base path, such as /TermsOfUs/, is preserved when present
 13.2 State encoding strategy
-Each item has four possible states. This can be encoded using 2 bits per item.
+Each item has four possible states. Only selected items are encoded in the URL.
 Recommended mapping:
-00 = none
 01 = want
 10 = avoid
 11 = have
-The encoding order must follow a canonical flattened item order derived from the schema.
+00 = none is implicit and omitted
+The encoding order follows permanent numeric item codes.
 Then:
-Flatten all items in schema order
-Convert item states into a bit sequence
-Pack bits into bytes
-Encode as base64url
-13.3 Canonical item order
-The item order must be deterministic and version-specific. For example:
-category order from schema
-item order inside each category from schema
-This order must be treated as part of the versioned schema contract.
+Assign every item a permanent positive integer code
+Sort selected items by code
+Pack each item code with its state
+Encode item/state pairs with a URL-safe base62 alphabet
+13.3 Permanent item codes
+The item code must be deterministic and permanent. Codes must never be recycled, even if an item is renamed, moved, hidden, or removed from the active UI. String item IDs remain required for humans, tests, locale dictionaries, and maintenance.
 13.4 Invalid URL handling
 If the URL contains:
-unknown schema version
 malformed selection payload
 payload too short or too long
 Then the app should fail gracefully:
@@ -330,9 +324,9 @@ If multi-route locale handling and deployment conventions matter more, Next.js i
 16. Application States and Behaviors
 16.1 Initial load
 On initial load, the app should:
-Read locale from route or query
+Read locale from the optional `lang` query parameter
 Load the correct schema and translations
-Read v and s from the URL
+Read the selection payload from the URL hash
 Decode selection if valid
 Render the correct view for the device
 16.2 Applying a state
@@ -344,9 +338,8 @@ update the URL
 16.3 Switching locale
 When the user switches locale:
 preserve selection state
-preserve version
 re-render labels in the selected language
-update route or query
+update the `lang` query parameter
 16.4 Reset
 Reset should:
 set all items to none
@@ -357,7 +350,6 @@ The app should handle errors simply and safely.
 Possible cases:
 unknown locale
 missing translation key
-unsupported schema version
 malformed selection payload
 schema loading failure
 Expected behavior:
@@ -401,7 +393,7 @@ Applying the same active state twice resets the item to none.
 URL behavior
 The current selection is encoded in the URL.
 Reloading the page restores the same selection.
-The URL includes locale and schema version.
+The URL includes locale when non-default and stores selection in the hash.
 Desktop and mobile
 Desktop provides a visual bubble-based view.
 Mobile provides a usable structured list view.
@@ -495,8 +487,8 @@ Should there be a short onboarding note explaining what each state means?
 To reduce ambiguity for agents, the following decisions are recommended:
 Use a versioned schema from day one
 Use stable item IDs from day one
-Use path-based locale routing
-Use base64url compact selection encoding
+Use optional `lang` query routing for locale
+Use sparse base62 hash payloads for selection encoding
 Use SVG for desktop and DOM for mobile
 Use a palette-first interaction model
 Use Option B for multilingual content storage: base schema plus locale dictionaries

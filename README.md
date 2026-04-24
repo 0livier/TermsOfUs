@@ -6,7 +6,7 @@ The project goal for V1 is a local-first, multilingual app where a person can ma
 
 ## Project status
 
-This repository is still in active development. The product direction, domain model, initial English/French content files, and URL-state helpers are in place, but the main UI is not fully implemented yet.
+This repository is still in active development. The product direction, domain model, initial English/French content files, permanent item codes, and URL-state helpers are in place, but the main UI is not fully implemented yet.
 
 Useful project docs:
 

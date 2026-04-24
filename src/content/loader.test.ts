@@ -8,7 +8,7 @@ import {
   resolveLocale,
   supportedLocales,
 } from './loader.js'
-import type { LocaleContent, SchemaDefinition } from '../domain/model.js'
+import { validateItemCodes, type LocaleContent, type SchemaDefinition } from '../domain/model.js'
 
 test('resolves supported locales and falls back to the default locale', () => {
   assert.equal(resolveLocale('en'), 'en')
@@ -28,15 +28,20 @@ test('loads versioned schema content with stable ids', () => {
   const itemIds = new Set(
     schema.categories.flatMap((category) => category.items.map((item) => item.id)),
   )
-
-  assert.equal(categoryIds.size, schema.categories.length)
-  assert.equal(
-    itemIds.size,
-    schema.categories.reduce(
-      (count, category) => count + category.items.length,
-      0,
+  const itemCodes = new Set(
+    schema.categories.flatMap((category) =>
+      category.items.map((item) => item.code),
     ),
   )
+  const itemCount = schema.categories.reduce(
+    (count, category) => count + category.items.length,
+    0,
+  )
+
+  assert.equal(categoryIds.size, schema.categories.length)
+  assert.equal(itemIds.size, itemCount)
+  assert.equal(itemCodes.size, itemCount)
+  assert.deepEqual(validateItemCodes(schema), [])
 })
 
 test('localizes schema labels for English and French', () => {
@@ -55,7 +60,10 @@ test('falls back to default locale labels when translations are missing', () => 
     categories: [
       {
         id: 'communication',
-        items: [{ id: 'video-calls' }, { id: 'unknown-item' }],
+        items: [
+          { id: 'video-calls', code: 1 },
+          { id: 'unknown-item', code: 2 },
+        ],
       },
     ],
   }

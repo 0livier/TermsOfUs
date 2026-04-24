@@ -1,12 +1,12 @@
 import {
-  decodeSelection,
-  encodeSelection,
-  getCanonicalItemOrder,
+  decodeSparseSelection,
+  encodeSparseSelection,
   type SchemaDefinition,
   type SchemaVersion,
   type SelectionState,
 } from '../domain/model.js'
 import {
+  defaultLocale,
   resolveLocale,
   supportedLocales,
   type SupportedLocale,
@@ -29,29 +29,22 @@ export function parseUrlState(
   url: URL,
   schema: SchemaDefinition,
 ): ParsedUrlState {
-  const itemOrder = getCanonicalItemOrder(schema)
-  const parsedVersion = Number(url.searchParams.get('v') ?? schema.version)
-  const version =
-    Number.isInteger(parsedVersion) && parsedVersion === schema.version
-      ? parsedVersion
-      : schema.version
-  const isVersionFallback = version !== parsedVersion
-  const payload = url.searchParams.get('s')
+  const hashPayload = url.hash.replace(/^#/, '')
 
-  if (!payload || isVersionFallback) {
+  if (!hashPayload) {
     return {
-      locale: getPathLocale(url.pathname),
-      version,
+      locale: getUrlLocale(url),
+      version: schema.version,
       selection: {},
-      isFallback: isVersionFallback,
+      isFallback: false,
     }
   }
 
-  const selection = decodeSelection(itemOrder, payload)
+  const selection = decodeSparseSelection(schema, hashPayload)
 
   return {
-    locale: getPathLocale(url.pathname),
-    version,
+    locale: getUrlLocale(url),
+    version: schema.version,
     selection: selection ?? {},
     isFallback: selection === null,
   }
@@ -61,17 +54,19 @@ export function buildUrlStatePath(
   currentUrl: URL,
   state: UrlStateInput,
 ): string {
-  const itemOrder = getCanonicalItemOrder(state.schema)
-  const payload = encodeSelection(itemOrder, state.selection)
+  const payload = encodeSparseSelection(state.schema, state.selection)
   const nextUrl = new URL(currentUrl)
 
-  nextUrl.pathname = buildLocalePath(currentUrl.pathname, state.locale)
-  nextUrl.searchParams.set('v', String(state.schema.version))
+  nextUrl.pathname = getBasePath(currentUrl.pathname)
+  nextUrl.search = ''
+  nextUrl.hash = ''
 
-  if (isEmptySelection(state.selection)) {
-    nextUrl.searchParams.delete('s')
-  } else {
-    nextUrl.searchParams.set('s', payload)
+  if (state.locale !== defaultLocale) {
+    nextUrl.searchParams.set('lang', state.locale)
+  }
+
+  if (!isEmptySelection(state.selection)) {
+    nextUrl.hash = payload
   }
 
   return `${nextUrl.pathname}${nextUrl.search}${nextUrl.hash}`
@@ -89,25 +84,18 @@ export function replaceUrlState(
   return path
 }
 
-function getPathLocale(pathname: string): SupportedLocale {
-  const locale = pathname
-    .split('/')
-    .filter(Boolean)
-    .at(-1)
-
-  return resolveLocale(locale)
+function getUrlLocale(url: URL): SupportedLocale {
+  return resolveLocale(url.searchParams.get('lang'))
 }
 
-function buildLocalePath(pathname: string, locale: SupportedLocale): string {
+function getBasePath(pathname: string): string {
   const parts = pathname.split('/').filter(Boolean)
 
   if (isLocalePathPart(parts.at(-1))) {
-    parts[parts.length - 1] = locale
-  } else {
-    parts.push(locale)
+    parts.pop()
   }
 
-  return `/${parts.join('/')}`
+  return parts.length > 0 ? `/${parts.join('/')}/` : '/'
 }
 
 function isEmptySelection(selection: SelectionState): boolean {

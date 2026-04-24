@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import test from 'node:test'
 
-import { encodeSelection, getCanonicalItemOrder } from '../domain/model.js'
+import { encodeSparseSelection } from '../domain/model.js'
 import type { SchemaDefinition, SelectionState } from '../domain/model.js'
 import {
   buildUrlStatePath,
@@ -14,23 +14,29 @@ const schema: SchemaDefinition = {
   categories: [
     {
       id: 'communication',
-      items: [{ id: 'video-calls' }, { id: 'text-messages' }],
+      items: [
+        { id: 'video-calls', code: 4 },
+        { id: 'text-messages', code: 2 },
+      ],
     },
     {
       id: 'intimacy',
-      items: [{ id: 'cuddling' }, { id: 'kissing' }],
+      items: [
+        { id: 'cuddling', code: 9 },
+        { id: 'kissing', code: 10 },
+      ],
     },
   ],
 }
 
-test('restores locale, version, and selection from the URL', () => {
+test('restores locale, version, and sparse selection from the URL', () => {
   const selection: SelectionState = {
     'video-calls': 'want',
     cuddling: 'have',
   }
-  const payload = encodeSelection(getCanonicalItemOrder(schema), selection)
+  const payload = encodeSparseSelection(schema, selection)
   const parsed = parseUrlState(
-    new URL(`https://example.test/fr?v=1&s=${payload}`),
+    new URL(`https://example.test/?lang=fr#${payload}`),
     schema,
   )
 
@@ -42,9 +48,9 @@ test('restores locale, version, and selection from the URL', () => {
   })
 })
 
-test('falls back safely for unknown locale, unsupported version, and invalid payload', () => {
+test('falls back safely for unknown locale and invalid payload', () => {
   assert.deepEqual(
-    parseUrlState(new URL('https://example.test/de?v=1&s=not*valid'), schema),
+    parseUrlState(new URL('https://example.test/?lang=de#not*valid'), schema),
     {
       locale: 'en',
       version: 1,
@@ -54,7 +60,7 @@ test('falls back safely for unknown locale, unsupported version, and invalid pay
   )
 
   assert.deepEqual(
-    parseUrlState(new URL('https://example.test/fr?v=99&s=AA'), schema),
+    parseUrlState(new URL('https://example.test/?lang=fr#AA'), schema),
     {
       locale: 'fr',
       version: 1,
@@ -64,14 +70,14 @@ test('falls back safely for unknown locale, unsupported version, and invalid pay
   )
 })
 
-test('builds path-based locale URLs and omits empty selection payloads', () => {
+test('builds hash payload URLs and omits default locale and empty selections', () => {
   assert.equal(
     buildUrlStatePath(new URL('https://example.test/en?old=1'), {
       locale: 'fr',
       schema,
       selection: {},
     }),
-    '/fr?old=1&v=1',
+    '/?lang=fr',
   )
 
   assert.equal(
@@ -80,7 +86,7 @@ test('builds path-based locale URLs and omits empty selection payloads', () => {
       schema,
       selection: { kissing: 'avoid' },
     }),
-    '/TermsOfUs/en?v=1&s=Ag',
+    '/TermsOfUs/#aQ',
   )
 })
 
@@ -93,7 +99,7 @@ test('updates browser history without a reload hook', () => {
   }
 
   const path = replaceUrlState(
-    new URL('https://example.test/fr?v=1'),
+    new URL('https://example.test/'),
     {
       locale: 'fr',
       schema,
@@ -102,6 +108,6 @@ test('updates browser history without a reload hook', () => {
     history,
   )
 
-  assert.equal(path, '/fr?v=1&s=MA')
+  assert.equal(path, '/?lang=fr#al')
   assert.equal(nextPath, path)
 })

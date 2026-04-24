@@ -4,46 +4,46 @@
     {
       "id": "communication",
       "items": [
-        { "id": "in-person-conversation" },
-        { "id": "video-calls" },
-        { "id": "text-messages" },
-        { "id": "phone-calls" }
+        { "id": "in-person-conversation", "code": 1 },
+        { "id": "video-calls", "code": 4 },
+        { "id": "text-messages", "code": 2 },
+        { "id": "phone-calls", "code": 3 }
       ]
     },
     {
       "id": "emotional-support",
       "items": [
-        { "id": "daily-check-ins" },
-        { "id": "reassurance" },
-        { "id": "conflict-repair" },
-        { "id": "sharing-feelings" }
+        { "id": "daily-check-ins", "code": 5 },
+        { "id": "reassurance", "code": 6 },
+        { "id": "conflict-repair", "code": 7 },
+        { "id": "sharing-feelings", "code": 8 }
       ]
     },
     {
       "id": "physical-intimacy",
       "items": [
-        { "id": "cuddling" },
-        { "id": "kissing" },
-        { "id": "sleeping-together" },
-        { "id": "sexual-intimacy" }
+        { "id": "cuddling", "code": 9 },
+        { "id": "kissing", "code": 10 },
+        { "id": "sleeping-together", "code": 11 },
+        { "id": "sexual-intimacy", "code": 12 }
       ]
     },
     {
       "id": "domesticity",
       "items": [
-        { "id": "shared-meals" },
-        { "id": "overnights" },
-        { "id": "shared-home" },
-        { "id": "chores" }
+        { "id": "shared-meals", "code": 13 },
+        { "id": "overnights", "code": 14 },
+        { "id": "shared-home", "code": 15 },
+        { "id": "chores", "code": 16 }
       ]
     },
     {
       "id": "commitment",
       "items": [
-        { "id": "labels" },
-        { "id": "future-planning" },
-        { "id": "exclusivity" },
-        { "id": "family-involvement" }
+        { "id": "labels", "code": 17 },
+        { "id": "future-planning", "code": 18 },
+        { "id": "exclusivity", "code": 19 },
+        { "id": "family-involvement", "code": 20 }
       ]
     }
   ]

@@ -2,9 +2,11 @@ export type SchemaVersion = number
 export type LocaleCode = string
 export type CategoryId = string
 export type ItemId = string
+export type ItemCode = number
 
 export interface ItemDefinition {
   id: ItemId
+  code: ItemCode
 }
 
 export interface CategoryDefinition {
@@ -55,10 +57,48 @@ const BITS_TO_ITEM_STATE: Record<number, ItemState> = {
   0b11: 'have',
 }
 
+const SPARSE_URL_ALPHABET =
+  'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+const SPARSE_URL_CHUNK_LENGTH = 2
+const SPARSE_URL_RADIX = SPARSE_URL_ALPHABET.length
+const SPARSE_URL_MAX_CODE =
+  (SPARSE_URL_RADIX ** SPARSE_URL_CHUNK_LENGTH - 1) >> 2
+
 export function getCanonicalItemOrder(schema: SchemaDefinition): ItemId[] {
   return schema.categories.flatMap((category) =>
     category.items.map((item) => item.id),
   )
+}
+
+export function validateItemCodes(schema: SchemaDefinition): string[] {
+  const errors: string[] = []
+  const usedCodes = new Map<ItemCode, ItemId>()
+
+  for (const item of getSchemaItems(schema)) {
+    if (!Number.isInteger(item.code) || item.code <= 0) {
+      errors.push(`${item.id} must have a positive integer code`)
+      continue
+    }
+
+    if (item.code > SPARSE_URL_MAX_CODE) {
+      errors.push(
+        `${item.id} code ${item.code} exceeds the sparse URL codec limit`,
+      )
+      continue
+    }
+
+    const existingItemId = usedCodes.get(item.code)
+
+    if (existingItemId) {
+      errors.push(
+        `${item.id} reuses code ${item.code} from ${existingItemId}`,
+      )
+    } else {
+      usedCodes.set(item.code, item.id)
+    }
+  }
+
+  return errors
 }
 
 export function encodeSelection(
@@ -112,6 +152,65 @@ export function decodeSelection(
   return selection
 }
 
+export function encodeSparseSelection(
+  schema: SchemaDefinition,
+  selection: SelectionState,
+): string {
+  assertValidItemCodes(schema)
+
+  return [...getSchemaItems(schema)]
+    .sort((left, right) => left.code - right.code)
+    .flatMap((item) => {
+      const state = selection[item.id]
+
+      if (!state) {
+        return []
+      }
+
+      return [encodeSparseChunk((item.code << 2) + ITEM_STATE_TO_BITS[state])]
+    })
+    .join('')
+}
+
+export function decodeSparseSelection(
+  schema: SchemaDefinition,
+  payload: string,
+): SelectionState | null {
+  const errors = validateItemCodes(schema)
+
+  if (
+    errors.length > 0 ||
+    payload.length % SPARSE_URL_CHUNK_LENGTH !== 0 ||
+    !isBase62(payload)
+  ) {
+    return null
+  }
+
+  const itemIdsByCode = new Map(
+    getSchemaItems(schema).map((item) => [item.code, item.id] as const),
+  )
+  const decodedCodes = new Set<ItemCode>()
+  const selection: SelectionState = {}
+
+  for (let index = 0; index < payload.length; index += SPARSE_URL_CHUNK_LENGTH) {
+    const packed = decodeSparseChunk(
+      payload.slice(index, index + SPARSE_URL_CHUNK_LENGTH),
+    )
+    const state = BITS_TO_ITEM_STATE[packed & 0b11]
+    const code = packed >> 2
+    const itemId = itemIdsByCode.get(code)
+
+    if (!itemId || state === 'none' || decodedCodes.has(code)) {
+      return null
+    }
+
+    decodedCodes.add(code)
+    selection[itemId] = state
+  }
+
+  return selection
+}
+
 export function summarizeSelection(selection: SelectionState): SelectionSummary {
   const summary: SelectionSummary = {
     want: 0,
@@ -130,6 +229,36 @@ export function summarizeSelection(selection: SelectionState): SelectionSummary 
 
 function getEncodedByteLength(itemCount: number): number {
   return Math.ceil((itemCount * 2) / 8)
+}
+
+function getSchemaItems(schema: SchemaDefinition): ItemDefinition[] {
+  return schema.categories.flatMap((category) => category.items)
+}
+
+function assertValidItemCodes(schema: SchemaDefinition): void {
+  const errors = validateItemCodes(schema)
+
+  if (errors.length > 0) {
+    throw new Error(errors.join('; '))
+  }
+}
+
+function encodeSparseChunk(value: number): string {
+  const high = Math.floor(value / SPARSE_URL_RADIX)
+  const low = value % SPARSE_URL_RADIX
+
+  return `${SPARSE_URL_ALPHABET[high]}${SPARSE_URL_ALPHABET[low]}`
+}
+
+function decodeSparseChunk(chunk: string): number {
+  const high = SPARSE_URL_ALPHABET.indexOf(chunk[0] ?? '')
+  const low = SPARSE_URL_ALPHABET.indexOf(chunk[1] ?? '')
+
+  return high * SPARSE_URL_RADIX + low
+}
+
+function isBase62(payload: string): boolean {
+  return /^[A-Za-z0-9]*$/.test(payload)
 }
 
 function isBase64Url(payload: string): boolean {

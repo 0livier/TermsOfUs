@@ -23,8 +23,9 @@ V1 must not include:
 Technical decisions:
 - React + TypeScript + Vite
 - content stored as schema + locale JSON files
-- path-based locale routing preferred
-- base64url compact selection encoding
+- optional `lang` query parameter for locale
+- sparse hash payload for selected items
+- base62 compact selection encoding
 - SVG desktop view
 - DOM mobile view
 - Vitest for domain tests
