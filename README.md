@@ -1,73 +1,92 @@
-# React + TypeScript + Vite
+# TermsOfUs
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+TermsOfUs is a privacy-first web app for helping people express relationship expectations and boundaries in a structured way.
 
-Currently, two official plugins are available:
+The project goal for V1 is a local-first, multilingual app where a person can mark items as `have`, `want`, `avoid`, or unanswered, keep that data in the browser, and share or restore a selection through a compact URL payload.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Project status
 
-## React Compiler
+This repository is still in active development. The product direction and domain model are documented, and the repo already includes domain encoding tests, but the main UI is not fully implemented yet.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Useful project docs:
 
-## Expanding the ESLint configuration
+- [docs/spec.md](docs/spec.md)
+- [docs/product/v1-summary.md](docs/product/v1-summary.md)
+- [docs/decisions.md](docs/decisions.md)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Stack
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- React 19
+- TypeScript
+- Vite
+- ESLint
+- Node built-in test runner for current domain tests
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Requirements
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- Node.js 20.19+ or 22.12+
+- npm
+
+## Getting started
+
+Install dependencies:
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Start the development server:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+npm run dev
+```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Vite will print the local URL, usually `http://localhost:5173`.
+
+## Available scripts
+
+Run the development server:
+
+```bash
+npm run dev
+```
+
+Create a production build:
+
+```bash
+npm run build
+```
+
+Run linting:
+
+```bash
+npm run lint
+```
+
+Run the current domain tests:
+
+```bash
+npm test
+```
+
+Preview the production build locally:
+
+```bash
+npm run preview
+```
+
+## Build notes
+
+- `npm run build` runs TypeScript compilation and then creates the Vite production bundle.
+- `npm test` compiles the domain test target to a temporary directory and runs it with Node's test runner.
+- The app is designed to stay backend-free in V1.
+
+## Repository layout
+
+```text
+docs/                  Product notes, decisions, and tickets
+public/                Static assets
+scripts/               Project scripts, including test helpers
+src/                   Application source
+src/domain/            Domain model and tests
 ```
