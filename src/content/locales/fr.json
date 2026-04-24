@@ -3,9 +3,9 @@
   "ui": {
     "states": {
       "none": { "label": "Non sélectionné", "shortLabel": "Aucun" },
-      "want": { "label": "Je veux ceci", "shortLabel": "Je veux" },
-      "have": { "label": "Nous avons déjà ceci", "shortLabel": "Nous avons" },
-      "avoid": { "label": "Je ne veux pas ceci", "shortLabel": "Éviter" }
+      "want": { "label": "Je veux", "shortLabel": "Je veux" },
+      "have": { "label": "Nous avons déjà", "shortLabel": "Nous avons" },
+      "avoid": { "label": "Je ne veux pas", "shortLabel": "Éviter" }
     }
   },
   "categories": {
