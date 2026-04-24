@@ -18,3 +18,4 @@
 - Use DOM cards/chips for mobile.
 - Do not use D3 in V1.
 - Do not add analytics in V1.
+- Deploy the static build to GitHub Pages from GitHub Actions on pushes to `main`.

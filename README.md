@@ -80,6 +80,20 @@ npm run preview
 - `npm run build` runs TypeScript compilation and then creates the Vite production bundle.
 - `npm test` compiles the domain test target to a temporary directory and runs it with Node's test runner.
 - The app is designed to stay backend-free in V1.
+- The Vite base path is derived from `GITHUB_REPOSITORY` during CI builds so the app works on GitHub Pages project sites.
+
+## Deployment
+
+This repository includes a GitHub Actions workflow that builds and deploys the app to GitHub Pages on every push to `main`.
+
+Before the first deployment, enable GitHub Pages in the repository settings and set the source to `GitHub Actions`.
+
+The workflow does the following:
+
+- installs dependencies with `npm ci`
+- runs `npm test`
+- runs `npm run build`
+- publishes `dist/` to GitHub Pages
 
 ## Repository layout
 
