@@ -1,6 +1,6 @@
 # TermsOfUs V1 Product Spec
 
-This is the product source of truth.
+This is the product intent record. The implementation in `src/` is the source of truth for current behavior.
 
 For implementation, agents should first read:
 
@@ -16,9 +16,10 @@ Do not try to implement the full spec in one pass.
 1. Overview
 This document specifies a multilingual web application inspired by the Relationship Anarchy Smorgasbord PDF. The application allows a person to review a configurable set of relationship-related items and assign each item exactly one state:
 Not selected
-I want this
-I do not want this
-We already have this
+Already present
+Important to me
+To discuss
+Not for me
 The primary use case for V1 is personal reflection in the context of a current or emerging relationship. The application must work without a backend and must persist the full selection in the URL so it can be shared easily.
 A future version may allow two people to compare their selections, but that is explicitly out of scope for V1.
 2. Product Goals
@@ -45,7 +46,7 @@ Advanced animations or force-directed visualizations
 4. Core Product Principles
 Config-driven: Content must come from versioned JSON files, not hardcoded UI strings.
 One item, one state: An item can only be in one state at a time.
-URL as source of truth for sharing: The current selection must be recoverable from the URL alone.
+URL as source of truth for sharing: the current selection must be recoverable from the URL alone.
 Multilingual by design: Text, labels, metadata, and content must support multiple locales cleanly.
 Desktop and mobile parity: The same underlying data and state must power both views.
 Accessible interaction: The experience must not rely on color alone.
@@ -64,11 +65,12 @@ Category
 A group of related items, such as communication methods, emotional support, physical intimacy, or domesticity.
 State
 The status assigned to an item by the user.
-Supported states:
+Supported states in the current code:
 none - not selected
-want - I want this in the relationship
-avoid - I do not want this in the relationship
-have - this is already present in the relationship
+present - this is already present in the relationship
+important - this matters to me
+discuss - this needs discussion
+no - this is not for me
 Schema version
 A version number attached to the content model. This ensures URL-encoded selections can be interpreted correctly even if the content evolves.
 Locale
@@ -79,13 +81,13 @@ The application must load its content from versioned locale-aware JSON files.
 The initial content should stay as close as reasonably possible to the source PDF, with minimal cleanup only where needed for consistency or usability.
 7.2 Item selection
 The user must be able to:
-Choose an active state from a palette
-Apply that state to any item by clicking or tapping it
-Remove a state by applying the same active state to an already-selected item, which returns it to none
+Choose one state for each item
+Apply a state by clicking or tapping the relevant item state button
+Remove a state by applying the same state to an already-selected item, which returns it to none
 7.3 Visual presentation
 The application must provide:
-A visual desktop view inspired by bubbles and concentric zones
-A mobile-friendly structured list view using the same data model
+The current primary UI is a responsive structured category-card view.
+The repository also contains Sunburst visual map components, but they are not wired into the primary app.
 7.4 URL persistence
 The application must:
 Encode the entire selection into the URL
@@ -99,9 +101,10 @@ Share a link that reconstructs the same selection state on another device
 The application must provide a way to clear all selections and return to a blank state.
 7.7 Summary
 The application should show a lightweight summary such as:
-Number of items marked as want
-Number of items marked as have
-Number of items marked as avoid
+Number of items marked as present
+Number of items marked as important
+Number of items marked as discuss
+Number of items marked as no
 Optional category-level summaries may be added if they do not clutter the experience.
 8. Multilingual Requirements
 Multilingual support is a hard requirement from V1.
@@ -139,17 +142,19 @@ Missing translations must never crash the app
 Stable item and category IDs must be shared across locales. Only labels and descriptions vary by locale.
 9. UX Requirements
 9.1 Palette interaction
-The application must expose a visible palette containing the four possible states:
+The current primary UI exposes state buttons on each item row for the four selected states:
 Not selected
-I want this
-We already have this
-I do not want this
+Already present
+Important to me
+To discuss
+Not for me
 Recommended visual style:
 Not selected: white or neutral
-Want: highlighter yellow
-Have: highlighter green
-Avoid: highlighter pink
-The currently active palette state must be clearly visible.
+Important: highlighter yellow
+Present: highlighter green
+No: highlighter pink
+Discuss: neutral accent
+If a future global palette is reintroduced, the active palette state must be clearly visible.
 9.2 Desktop view
 The desktop view should stay visually faithful to the spirit of the original PDF:
 Bubble-based layout
@@ -189,8 +194,7 @@ textual label
 pattern or underline style
 10.2 Keyboard support
 Users must be able to:
-Navigate the palette with keyboard
-Navigate items with keyboard
+Navigate item state controls with keyboard
 Apply a state without a mouse
 See a clear visible focus indicator
 10.3 Screen reader support
@@ -199,7 +203,7 @@ item label
 current state
 available action if activated
 Example:
-"Video, current state: We already have this. Activate to clear state."
+"Video calls, current state: Already present. Activate to clear state."
 10.4 Touch accessibility
 Touch targets must be large enough to use comfortably on mobile.
 10.5 Contrast and readability
@@ -255,12 +259,13 @@ lang=fr is the optional locale query parameter
 the hash is the encoded selection payload
 the hosting base path, such as /TermsOfUs/, is preserved when present
 13.2 State encoding strategy
-Each item has four possible states. Only selected items are encoded in the URL.
+Each item has four selected states plus the implicit unanswered state. Only selected items are encoded in the URL.
 Recommended mapping:
-01 = want
-10 = avoid
-11 = have
-00 = none is implicit and omitted
+001 = important
+010 = present
+011 = discuss
+100 = no
+000 = none is implicit and omitted
 The encoding order follows permanent numeric item codes.
 Then:
 Assign every item a permanent positive integer code
@@ -316,7 +321,7 @@ Vite or Next.js
 SVG for desktop diagram rendering
 Standard i18n library such as i18next, react-intl, or next-intl
 Lightweight state management using React state, Zustand, or equivalent
-Unit tests with Vitest or Jest
+Unit tests with Node's built-in test runner
 E2E tests with Playwright
 Recommended preference
 If SEO is not important for V1, Vite + React + TypeScript is sufficient.
@@ -387,17 +392,16 @@ The app loads a versioned schema from JSON.
 The app supports at least two locales from launch.
 Category and item IDs remain stable across locales.
 Interaction
-The user can select an active state from a palette.
-The user can assign exactly one state to an item at a time.
-Applying the same active state twice resets the item to none.
+The user can select a state for an item.
+The user can assign exactly one selected state to an item at a time.
+Applying the same state twice resets the item to none.
 URL behavior
 The current selection is encoded in the URL.
 Reloading the page restores the same selection.
 The URL includes locale when non-default and stores selection in the hash.
 Desktop and mobile
-Desktop provides a visual bubble-based view.
-Mobile provides a usable structured list view.
-Both views operate on the same selection data.
+The current primary UI provides a responsive structured category-card view.
+Any future separate desktop/mobile visual views must operate on the same selection data.
 Accessibility
 State is not communicated by color alone.
 The app is keyboard-navigable.
@@ -419,7 +423,7 @@ Implement item flattening and canonical order
 Implement encode and decode logic
 Add unit tests for encoding and decoding
 Phase 2 - Core UI
-Build palette component
+Build state-selection controls
 Build item component
 Build shared selection store
 Build summary component
@@ -489,8 +493,8 @@ Use a versioned schema from day one
 Use stable item IDs from day one
 Use optional `lang` query routing for locale
 Use sparse base62 hash payloads for selection encoding
-Use SVG for desktop and DOM for mobile
-Use a palette-first interaction model
+Use DOM category cards for the current primary UI
+Keep SVG Sunburst work ticketed separately if it returns
 Use Option B for multilingual content storage: base schema plus locale dictionaries
 25. Summary
 This project should be built as a config-driven, multilingual, backend-free web application that lets a user classify relationship-related items into four states and share the result through the URL.

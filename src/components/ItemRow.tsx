@@ -43,7 +43,7 @@ export function ItemRow({
             <button
               key={opt.value}
               type="button"
-              className={`sel-btn sel-btn-${opt.value}${isActive ? ` active-${opt.value}` : ''}`}
+              className={`sel-btn${isActive ? ` active-${opt.value}` : ''}`}
               aria-label={opt.longLabel}
               aria-pressed={isActive}
               onClick={() => handleStateSelect(opt.value as SelectedItemState)}

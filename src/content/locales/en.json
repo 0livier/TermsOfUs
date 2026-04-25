@@ -26,7 +26,36 @@
       "privacy":          "Private and local unless you share a link.",
       "startCategory":    "Start with one category",
       "browseCategories": "Browse all categories",
-      "seeMap":           "See the map"
+      "seeMap":           "See the map",
+      "learnMore":        "Learn more"
+    },
+    "learnMore": {
+      "title": "What is Terms of Us for?",
+      "intro": "Terms of Us is a tool for taking a quiet moment with yourself and putting words on what matters in a relationship. It is inspired by a relationship buffet from relationship-anarchy spaces, but it can be useful in many contexts: couples, new relationships, friendships, co-parenting, non-exclusive relationships, chosen family, or simply understanding what you need with someone.",
+      "sections": [
+        {
+          "title": "What this tool helps with",
+          "body": "Terms of Us can help you notice what feels important to you, what is already present in a relationship, what is not for you, and what might need a conversation. It is not about completing everything or finding the right answer. It is a way to create space for reflection, and maybe later, for conversation."
+        },
+        {
+          "title": "How to use it",
+          "body": "You can start with one category, explore the map, or open the full list. For each item, you can mark it as Present, Important, Discuss, or No. You can also leave it unanswered. Leaving something unanswered is valid: it may simply mean that now is not the time, that the topic is unclear, or that it does not matter to you."
+        },
+        {
+          "title": "What kinds of relationships?",
+          "body": "You can use Terms of Us for a romantic relationship, a long-term relationship, a new relationship, an important friendship, a queerplatonic relationship, co-parenting, an open or non-monogamous relationship, or any relationship where you want to better understand what matters to you. The tool does not assume one specific relationship model."
+        },
+        {
+          "title": "What this is not",
+          "body": "Terms of Us is not a compatibility test, a relationship score, a diagnostic tool, or a method for deciding for you. It does not replace honest conversation, professional support, or respect for everyone’s consent and boundaries."
+        },
+        {
+          "title": "Privacy",
+          "body": "Your choices stay on your device. There is no account and no server storing your answers. If you copy or share a link, anyone with that link can see the choices it contains."
+        }
+      ],
+      "cta": "Start gently",
+      "back": "Back to home"
     },
     "mapPreview": {
       "title":       "Your relationship map",

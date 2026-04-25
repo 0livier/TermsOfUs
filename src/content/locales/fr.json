@@ -26,7 +26,36 @@
       "privacy":          "Privé et local, sauf si vous partagez un lien.",
       "startCategory":    "Commencer avec une catégorie",
       "browseCategories": "Parcourir les catégories",
-      "seeMap":           "Voir la carte"
+      "seeMap":           "Voir la carte",
+      "learnMore":        "En savoir plus"
+    },
+    "learnMore": {
+      "title": "À quoi sert Terms of Us ?",
+      "intro": "Terms of Us est un outil pour prendre un moment avec soi-même et mettre des mots sur ce qui compte dans une relation. Il s’inspire d’un buffet relationnel issu des milieux de l’anarchie relationnelle, mais il peut être utile dans beaucoup de contextes : couple, relation naissante, amitié, coparentalité, relation non exclusive, famille choisie, ou simplement pour mieux comprendre ce dont on a besoin avec quelqu’un.",
+      "sections": [
+        {
+          "title": "Ce que l’outil permet",
+          "body": "Terms of Us peut t’aider à repérer ce qui est important pour toi, ce qui est déjà présent dans une relation, ce que tu ne souhaites pas, et les sujets qui mériteraient une discussion. Il ne s’agit pas de tout remplir, ni de trouver une bonne réponse. L’idée est plutôt d’ouvrir un espace de réflexion, puis éventuellement de conversation."
+        },
+        {
+          "title": "Comment l’utiliser",
+          "body": "Tu peux commencer par une catégorie, parcourir la carte, ou ouvrir la liste complète. Pour chaque élément, tu peux le marquer comme Présent, Important, À discuter ou Non. Tu peux aussi ne rien choisir. Ne pas répondre est une réponse valable : cela peut simplement vouloir dire que ce n’est pas le moment, que le sujet n’est pas clair, ou qu’il n’a pas d’importance pour toi."
+        },
+        {
+          "title": "Pour quelles relations ?",
+          "body": "Tu peux utiliser Terms of Us pour une relation amoureuse, une relation longue, une relation récente, une amitié importante, une relation queerplatonique, une coparentalité, une relation ouverte ou non monogame, ou toute relation où tu as envie de mieux comprendre ce qui compte pour toi. L’outil ne suppose pas une forme de relation particulière."
+        },
+        {
+          "title": "Ce que ce n’est pas",
+          "body": "Terms of Us n’est pas un test de compatibilité, un score de relation, un outil de diagnostic ou une méthode pour décider à ta place. Il ne remplace pas une discussion honnête, un accompagnement professionnel, ni le respect du consentement et des limites de chacun·e."
+        },
+        {
+          "title": "Confidentialité",
+          "body": "Tes choix restent sur ton appareil. Il n’y a pas de compte et pas de serveur pour enregistrer tes réponses. Si tu copies ou partages un lien, les personnes qui ont ce lien peuvent voir les choix qu’il contient."
+        }
+      ],
+      "cta": "Commencer doucement",
+      "back": "Retour à l’accueil"
     },
     "mapPreview": {
       "title":       "Votre carte relationnelle",

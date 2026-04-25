@@ -3,7 +3,7 @@ interface StateIconProps {
   size?: number
 }
 
-export function StateIcon({ state, size = 16 }: StateIconProps) {
+export function StateIcon({ state, size = 15 }: StateIconProps) {
   const props = {
     width: size,
     height: size,

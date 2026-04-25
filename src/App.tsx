@@ -19,7 +19,6 @@ import {
 import { getLocaleFromUrl, parseUrlState, replaceUrlState } from './routing/url-state.js'
 import { ItemRow } from './components/ItemRow.js'
 import { StateIcon } from './components/StateIcon.js'
-import { CATEGORY_COLOR } from './sunburst/sunburstColors.js'
 
 function getInitialUrlState() {
   const schema = localizeSchema('en').schema
@@ -72,7 +71,6 @@ interface CategoryCardProps {
   onToggle: () => void
   onItemSelect: (itemId: ItemId, state: SelectedItemState) => void
   onItemClear: (itemId: ItemId) => void
-  color: string
 }
 
 function CategoryCard({
@@ -83,8 +81,9 @@ function CategoryCard({
   onToggle,
   onItemSelect,
   onItemClear,
-  color,
 }: CategoryCardProps) {
+  const answeredCount = category.items.filter((item) => selection[item.id]).length
+
   return (
     <div className={`category-card${isOpen ? ' category-card--open' : ''}`}>
       <button
@@ -93,32 +92,37 @@ function CategoryCard({
         onClick={onToggle}
         aria-expanded={isOpen}
       >
-        <span
-          className="category-card-dot"
-          style={{ background: color }}
+        <div>
+          <div className="category-card-title">{category.label}</div>
+          <div className="category-card-meta">
+            {category.items.length} items{answeredCount > 0 ? ` · ${answeredCount} answered` : ''}
+          </div>
+        </div>
+        <svg
+          className="category-card-chevron"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={2}
+          strokeLinecap="round"
+          strokeLinejoin="round"
           aria-hidden="true"
-        />
-        <span className="category-card-title">{category.label}</span>
-        <span className="category-card-chevron" aria-hidden="true">
-          {isOpen ? '▲' : '▼'}
-        </span>
+        >
+          <polyline points="6 9 12 15 18 9" />
+        </svg>
       </button>
 
-      {isOpen && (
-        <div className="category-card-items">
-          {category.items.map((item) => (
-            <ItemRow
-              key={item.id}
-              id={item.id}
-              label={item.label}
-              currentState={selection[item.id] ?? 'none'}
-              stateOptions={stateOptions}
-              onSelect={onItemSelect}
-              onClear={onItemClear}
-            />
-          ))}
-        </div>
-      )}
+      {isOpen && category.items.map((item) => (
+        <ItemRow
+          key={item.id}
+          id={item.id}
+          label={item.label}
+          currentState={selection[item.id] ?? 'none'}
+          stateOptions={stateOptions}
+          onSelect={onItemSelect}
+          onClear={onItemClear}
+        />
+      ))}
     </div>
   )
 }
@@ -149,6 +153,43 @@ function ConfirmDialog({ title, body, cancelLabel, confirmLabel, onCancel, onCon
   )
 }
 
+// ─── Learn more ──────────────────────────────────────────────────────────────
+
+interface LearnMorePageProps {
+  content: ReturnType<typeof localizeSchema>
+  onStart: () => void
+  onBack: () => void
+}
+
+function LearnMorePage({ content, onStart, onBack }: LearnMorePageProps) {
+  return (
+    <main className="learn-more-page" aria-labelledby="learn-more-title">
+      <section className="learn-more-hero">
+        <h1 id="learn-more-title">{content.learnMore.title}</h1>
+        <p>{content.learnMore.intro}</p>
+      </section>
+
+      <div className="learn-more-sections">
+        {content.learnMore.sections.map((section) => (
+          <section key={section.title} className="learn-more-section">
+            <h2>{section.title}</h2>
+            <p>{section.body}</p>
+          </section>
+        ))}
+      </div>
+
+      <div className="learn-more-actions">
+        <button type="button" className="btn-primary" onClick={onStart}>
+          {content.learnMore.cta}
+        </button>
+        <button type="button" className="btn-secondary" onClick={onBack}>
+          {content.learnMore.back}
+        </button>
+      </div>
+    </main>
+  )
+}
+
 // ─── App ──────────────────────────────────────────────────────────────────────
 
 function App() {
@@ -158,6 +199,7 @@ function App() {
   const [showConfirm, setShowConfirm]       = useState(false)
   const [toast, setToast]                   = useState('')
   const [openCategoryId, setOpenCategoryId] = useState<string | null>(null)
+  const [showLearnMore, setShowLearnMore]   = useState(false)
 
   const content = useMemo(() => localizeSchema(locale), [locale])
 
@@ -207,6 +249,14 @@ function App() {
     setSelection({})
     updateUrl({})
     setShowConfirm(false)
+  }
+
+  function handleStart() {
+    setShowLearnMore(false)
+    setOpenCategoryId(content.categories[0]?.id ?? null)
+    requestAnimationFrame(() => {
+      categoriesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    })
   }
 
   async function handleCopyLink() {
@@ -319,6 +369,15 @@ function App() {
         <p className="notice" role="status">{content.fallbackMessage}</p>
       ) : null}
 
+      {showLearnMore ? (
+        <LearnMorePage
+          content={content}
+          onStart={handleStart}
+          onBack={() => setShowLearnMore(false)}
+        />
+      ) : (
+        <>
+
       {/* ── Intro card ─────────────────────────────────────── */}
       <section className="intro-card" aria-labelledby="intro-title">
         <h1 id="intro-title">{content.intro.title}</h1>
@@ -331,10 +390,7 @@ function App() {
           <button
             type="button"
             className="btn-primary"
-            onClick={() => {
-              setOpenCategoryId(content.categories[0]?.id ?? null)
-              categoriesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-            }}
+            onClick={handleStart}
           >
             {content.intro.startCategory}
           </button>
@@ -344,6 +400,13 @@ function App() {
             onClick={() => categoriesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
           >
             {content.intro.browseCategories}
+          </button>
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => setShowLearnMore(true)}
+          >
+            {content.intro.learnMore}
           </button>
         </div>
       </section>
@@ -363,11 +426,12 @@ function App() {
               }
               onItemSelect={handleItemSelect}
               onItemClear={handleItemClear}
-              color={CATEGORY_COLOR[category.id] ?? '#888'}
             />
           ))}
         </div>
       </section>
+        </>
+      )}
 
     </div>
   )

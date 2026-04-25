@@ -5,6 +5,7 @@
 - Use Vite + React + TypeScript.
 - Use no backend.
 - Use JSON files for schema and locales.
+- Treat the code in `src/` as the source of truth for current behavior; docs and tickets describe or propose work, but must be refreshed when the code changes.
 - Store V1 content under `src/content/` as `schema.v1.json` plus `locales/en.json` and `locales/fr.json`.
 - Resolve unsupported locales to English, and fall back missing category/item labels to English before falling back to the stable ID.
 - Use stable category and item IDs.
@@ -17,16 +18,20 @@
 - Preserve the current hosting base path when writing URL state so GitHub Pages project paths keep working.
 - Update selection URLs with `history.replaceState` so selection changes do not add browser-history noise.
 - Omit the hash payload when the current selection is empty.
-- Encode item states using 2 bits per item:
-  - 00 = none
-  - 01 = want
-  - 10 = avoid
-  - 11 = have
-- Encode packed bytes as base64url.
+- Use the current selected states `present`, `important`, `discuss`, and `no`; `none` is represented by absence from the sparse selection.
+- Prefix the current sparse URL payload with `s1`.
+- Encode current item states with 3 bits per selected item:
+  - 000 = none, implicit and omitted
+  - 001 = important
+  - 010 = present
+  - 011 = discuss
+  - 100 = no
+- Reject unprefixed sparse URL payloads. The app was not public when the current codec was introduced, so there is no legacy public URL format to preserve.
 - Encode sparse selected item/state pairs in item-code order with a URL-safe base62 alphabet.
 - Use React component state for the V1 shared shell until the app has enough cross-view complexity to justify a separate state library.
-- Use SVG for desktop visual map.
-- Use DOM cards/chips for mobile.
+- Use expandable DOM category cards as the primary V1 interface.
+- Keep the SVG/DOM Sunburst components in `src/sunburst/` as optional future visual map work, not as the current primary UI.
 - Do not use D3 in V1.
 - Do not add analytics in V1.
+- Use Node's built-in test runner for current tests through `scripts/run-domain-tests.mjs`.
 - Deploy the static build to GitHub Pages from GitHub Actions on pushes to `main`.

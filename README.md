@@ -2,17 +2,25 @@
 
 TermsOfUs is a privacy-first web app for helping people express relationship expectations and boundaries in a structured way.
 
-The project goal for V1 is a local-first, multilingual app where a person can mark items as `have`, `want`, `avoid`, or unanswered, keep that data in the browser, and share or restore a selection through a compact URL payload.
+The current V1 is a local-first, multilingual React app where a person can mark relationship items as `present`, `important`, `discuss`, `no`, or unanswered, then share or restore that selection through a compact URL payload.
 
 ## Project status
 
-This repository is still in active development. The product direction, domain model, initial English/French content files, permanent item codes, URL-state helpers, shared app shell, and reusable palette/item components are in place, but the final desktop and mobile views are not fully implemented yet.
+The code is the source of truth for current behavior. The app currently includes:
+
+- 19 content categories and 101 items in `src/content/schema.v1.json`
+- English and French locale files with localized UI and content labels
+- URL state using an optional `lang` query parameter and sparse `s1` hash payload
+- a single-page React interface with an intro, localized state legend, expandable category cards, per-item state buttons, copy-link, clear-all confirmation, and invalid-link fallback notice
+- unused Sunburst components kept in `src/sunburst/` for possible future visual map work
+- unit tests run through Node's built-in test runner after TypeScript test compilation
 
 Useful project docs:
 
 - [docs/spec.md](docs/spec.md)
 - [docs/product/v1-summary.md](docs/product/v1-summary.md)
 - [docs/decisions.md](docs/decisions.md)
+- [docs/tickets/README.md](docs/tickets/README.md)
 
 ## Stack
 
@@ -20,7 +28,7 @@ Useful project docs:
 - TypeScript
 - Vite
 - ESLint
-- Node built-in test runner for current domain tests
+- Node built-in test runner for current tests
 
 ## Requirements
 
@@ -104,4 +112,6 @@ scripts/               Project scripts, including test helpers
 src/                   Application source
 src/content/           Versioned schema, locale files, and content loader
 src/domain/            Domain model and tests
+src/routing/           URL parse/build/replace helpers
+src/sunburst/          Optional visual map components not wired into the main app
 ```

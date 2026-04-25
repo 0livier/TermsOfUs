@@ -82,6 +82,17 @@ export interface LocaleUiContent {
     startCategory?: string
     browseCategories?: string
     seeMap?: string
+    learnMore?: string
+  }
+  learnMore?: {
+    title?: string
+    intro?: string
+    sections?: Array<{
+      title?: string
+      body?: string
+    }>
+    cta?: string
+    back?: string
   }
   mapPreview?: {
     title?: string
@@ -114,13 +125,12 @@ const SPARSE_URL_ALPHABET =
 const SPARSE_URL_CHUNK_LENGTH = 2
 const SPARSE_URL_RADIX = SPARSE_URL_ALPHABET.length
 
-// V2: 3-bit state encoding. Prefix "s2" marks new-format payloads.
-const V2_STATE_BITS = 3
-const V2_PREFIX = 's2'
+const SPARSE_URL_STATE_BITS = 3
+const SPARSE_URL_VERSION_PREFIX = 's1'
 const SPARSE_URL_MAX_CODE =
-  (SPARSE_URL_RADIX ** SPARSE_URL_CHUNK_LENGTH - 1) >> V2_STATE_BITS
+  (SPARSE_URL_RADIX ** SPARSE_URL_CHUNK_LENGTH - 1) >> SPARSE_URL_STATE_BITS
 
-const V2_STATE_TO_BITS: Record<ItemState, number> = {
+const STATE_TO_BITS: Record<ItemState, number> = {
   none:      0,
   important: 1,
   present:   2,
@@ -128,20 +138,12 @@ const V2_STATE_TO_BITS: Record<ItemState, number> = {
   no:        4,
 }
 
-const V2_BITS_TO_STATE: Partial<Record<number, ItemState>> = {
+const BITS_TO_STATE: Partial<Record<number, ItemState>> = {
   0: 'none',
   1: 'important',
   2: 'present',
   3: 'discuss',
   4: 'no',
-}
-
-// V1 legacy migration: old bit values (2-bit, no prefix)
-// want=1 → important, avoid=2 → no, have=3 → present
-const V1_BITS_TO_STATE: Partial<Record<number, SelectedItemState>> = {
-  1: 'important',
-  2: 'no',
-  3: 'present',
 }
 
 export function getCanonicalItemOrder(schema: SchemaDefinition): ItemId[] {
@@ -192,33 +194,32 @@ export function encodeSparseSelection(
     .flatMap((item) => {
       const state = selection[item.id]
       if (!state) return []
-      return [encodeSparseChunk((item.code << V2_STATE_BITS) | V2_STATE_TO_BITS[state])]
+      return [encodeSparseChunk((item.code << SPARSE_URL_STATE_BITS) | STATE_TO_BITS[state])]
     })
     .join('')
 
-  return payload ? V2_PREFIX + payload : ''
+  return payload ? SPARSE_URL_VERSION_PREFIX + payload : ''
 }
 
 export function decodeSparseSelection(
   schema: SchemaDefinition,
   payload: string,
 ): SelectionState | null {
-  if (payload.startsWith(V2_PREFIX)) {
-    return decodeV2SparsePayload(schema, payload.slice(V2_PREFIX.length))
+  if (payload === '') {
+    return {}
   }
-  return decodeV1SparsePayload(schema, payload)
-}
 
-function decodeV2SparsePayload(
-  schema: SchemaDefinition,
-  payload: string,
-): SelectionState | null {
+  if (!payload.startsWith(SPARSE_URL_VERSION_PREFIX)) {
+    return null
+  }
+
+  const encodedSelection = payload.slice(SPARSE_URL_VERSION_PREFIX.length)
   const errors = validateItemCodes(schema)
 
   if (
     errors.length > 0 ||
-    payload.length % SPARSE_URL_CHUNK_LENGTH !== 0 ||
-    !isBase62(payload)
+    encodedSelection.length % SPARSE_URL_CHUNK_LENGTH !== 0 ||
+    !isBase62(encodedSelection)
   ) {
     return null
   }
@@ -229,13 +230,17 @@ function decodeV2SparsePayload(
   const decodedCodes = new Set<ItemCode>()
   const selection: SelectionState = {}
 
-  for (let index = 0; index < payload.length; index += SPARSE_URL_CHUNK_LENGTH) {
+  for (
+    let index = 0;
+    index < encodedSelection.length;
+    index += SPARSE_URL_CHUNK_LENGTH
+  ) {
     const packed = decodeSparseChunk(
-      payload.slice(index, index + SPARSE_URL_CHUNK_LENGTH),
+      encodedSelection.slice(index, index + SPARSE_URL_CHUNK_LENGTH),
     )
-    const stateBits = packed & ((1 << V2_STATE_BITS) - 1)
-    const code = packed >> V2_STATE_BITS
-    const state = V2_BITS_TO_STATE[stateBits]
+    const stateBits = packed & ((1 << SPARSE_URL_STATE_BITS) - 1)
+    const code = packed >> SPARSE_URL_STATE_BITS
+    const state = BITS_TO_STATE[stateBits]
     const itemId = itemIdsByCode.get(code)
 
     if (!itemId || !state || state === 'none' || decodedCodes.has(code)) {
@@ -244,46 +249,6 @@ function decodeV2SparsePayload(
 
     decodedCodes.add(code)
     selection[itemId] = state as SelectedItemState
-  }
-
-  return selection
-}
-
-function decodeV1SparsePayload(
-  schema: SchemaDefinition,
-  payload: string,
-): SelectionState | null {
-  if (
-    payload.length % SPARSE_URL_CHUNK_LENGTH !== 0 ||
-    !isBase62(payload)
-  ) {
-    return null
-  }
-
-  const errors = validateItemCodes(schema)
-  if (errors.length > 0) return null
-
-  const itemIdsByCode = new Map(
-    getSchemaItems(schema).map((item) => [item.code, item.id] as const),
-  )
-  const decodedCodes = new Set<ItemCode>()
-  const selection: SelectionState = {}
-
-  for (let index = 0; index < payload.length; index += SPARSE_URL_CHUNK_LENGTH) {
-    const packed = decodeSparseChunk(
-      payload.slice(index, index + SPARSE_URL_CHUNK_LENGTH),
-    )
-    const stateBits = packed & 0b11
-    const code = packed >> 2
-    const state = V1_BITS_TO_STATE[stateBits]
-    const itemId = itemIdsByCode.get(code)
-
-    if (!itemId || !state || decodedCodes.has(code)) {
-      return null
-    }
-
-    decodedCodes.add(code)
-    selection[itemId] = state
   }
 
   return selection

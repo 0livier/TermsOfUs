@@ -45,6 +45,20 @@ export interface UiIntro {
   startCategory: string
   browseCategories: string
   seeMap: string
+  learnMore: string
+}
+
+export interface UiLearnMoreSection {
+  title: string
+  body: string
+}
+
+export interface UiLearnMore {
+  title: string
+  intro: string
+  sections: UiLearnMoreSection[]
+  cta: string
+  back: string
 }
 
 export interface UiMapPreview {
@@ -80,6 +94,7 @@ export interface LocalizedContent {
   stateOptions: ItemStateOption[]
   uiActions: UiActions
   intro: UiIntro
+  learnMore: UiLearnMore
   mapPreview: UiMapPreview
   allItems: UiAllItems
   headline: string
@@ -119,6 +134,15 @@ const DEFAULT_UI_INTRO: UiIntro = {
   startCategory:    'Start with one category',
   browseCategories: 'Browse all categories',
   seeMap:           'See the map',
+  learnMore:        'Learn more',
+}
+
+const DEFAULT_UI_LEARN_MORE: UiLearnMore = {
+  title: 'What is Terms of Us for?',
+  intro: 'Terms of Us is a relationship-reflection tool for noticing what matters to you.',
+  sections: [],
+  cta:   'Start gently',
+  back:  'Back to home',
 }
 
 const DEFAULT_UI_MAP_PREVIEW: UiMapPreview = {
@@ -188,7 +212,9 @@ export function getLocalePreference(): SupportedLocale | null {
 export function saveLocalePreference(locale: SupportedLocale): void {
   try {
     localStorage.setItem(LOCALE_STORAGE_KEY, locale)
-  } catch {}
+  } catch {
+    // Locale persistence is optional; private browsing can reject localStorage.
+  }
 }
 
 export function getLocaleFromBrowser(): SupportedLocale | null {
@@ -219,6 +245,7 @@ export function localizeContent(
     stateOptions: buildStateOptions(requestedContent, fallbackContent),
     uiActions:    buildUiActions(requestedContent, fallbackContent),
     intro:        buildUiIntro(requestedContent, fallbackContent),
+    learnMore:    buildUiLearnMore(requestedContent, fallbackContent),
     mapPreview:   buildUiMapPreview(requestedContent, fallbackContent),
     allItems:     buildUiAllItems(requestedContent, fallbackContent),
     headline:     requestedContent.ui?.headline    ?? fallbackContent.ui?.headline    ?? DEFAULT_HEADLINE,
@@ -292,6 +319,26 @@ function buildUiIntro(
     startCategory:    key('startCategory'),
     browseCategories: key('browseCategories'),
     seeMap:           key('seeMap'),
+    learnMore:        key('learnMore'),
+  }
+}
+
+function buildUiLearnMore(
+  requestedContent: LocaleContent,
+  fallbackContent: LocaleContent,
+): UiLearnMore {
+  const req = requestedContent.ui?.learnMore ?? {}
+  const fb  = fallbackContent.ui?.learnMore  ?? {}
+  const fallbackSections = fb.sections ?? DEFAULT_UI_LEARN_MORE.sections
+  return {
+    title:    req.title ?? fb.title ?? DEFAULT_UI_LEARN_MORE.title,
+    intro:    req.intro ?? fb.intro ?? DEFAULT_UI_LEARN_MORE.intro,
+    sections: (req.sections?.length ? req.sections : fallbackSections).map((section, index) => ({
+      title: section.title ?? fallbackSections[index]?.title ?? '',
+      body:  section.body  ?? fallbackSections[index]?.body  ?? '',
+    })).filter((section) => section.title && section.body),
+    cta:  req.cta  ?? fb.cta  ?? DEFAULT_UI_LEARN_MORE.cta,
+    back: req.back ?? fb.back ?? DEFAULT_UI_LEARN_MORE.back,
   }
 }
 

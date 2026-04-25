@@ -1,6 +1,10 @@
 
 # Ticket 009 - Accessibility pass
 
+## Status
+
+Needs verification against the current category-card UI. Do not assume the older palette/mobile/SVG acceptance criteria are complete for the current app.
+
 ## Goal
 
 Make V1 accessible enough to ship.
@@ -13,7 +17,7 @@ Make V1 accessible enough to ship.
 
 - docs/product/spec-v1.md sections 10, 20
 
-- docs/architecture/decisions.md
+- docs/decisions.md
 
 ## Scope
 
@@ -48,4 +52,3 @@ Implement or verify:
 - Screen reader labels include item label and current state.
 
 - State is distinguishable without color.
-

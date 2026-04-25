@@ -299,6 +299,56 @@
 
 .btn-danger:hover { opacity: 0.9; }
 
+/* ── Learn more ────────────────────────────────────────────────────────────── */
+
+.learn-more-page {
+  margin: 24px 20px 20px;
+}
+
+.learn-more-hero,
+.learn-more-section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-card);
+}
+
+.learn-more-hero {
+  padding: 28px 24px;
+  margin-bottom: 14px;
+}
+
+.learn-more-hero p,
+.learn-more-section p {
+  font-size: 15px;
+  line-height: 1.68;
+  color: var(--text);
+}
+
+.learn-more-sections {
+  display: grid;
+  gap: 10px;
+}
+
+.learn-more-section {
+  padding: 20px 22px;
+}
+
+.learn-more-section h2 {
+  font-family: var(--display);
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--heading);
+  margin-bottom: 8px;
+}
+
+.learn-more-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+}
+
 /* ── Category cards ────────────────────────────────────────────────────────── */
 
 .categories-section {
@@ -322,71 +372,62 @@
 
 .category-card--open {
   grid-column: 1 / -1;
-  border-color: var(--focus);
 }
 
 .category-card-header {
   display: flex;
   align-items: center;
-  gap: 8px;
+  justify-content: space-between;
   width: 100%;
-  padding: 14px;
+  padding: 14px 16px;
   background: none;
   border: none;
+  border-bottom: 1px solid var(--divider);
   text-align: left;
   cursor: pointer;
   font: inherit;
   color: var(--text);
 }
 
-.category-card-header:hover .category-card-title {
-  color: var(--heading);
-}
-
-.category-card-dot {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
+.category-card-header:hover {
+  background: var(--neutral-100);
 }
 
 .category-card-title {
-  flex: 1;
-  min-width: 0;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1.3;
+  font-family: var(--display);
+  font-size: 15px;
+  font-weight: 500;
   color: var(--heading);
+  line-height: 1.3;
+}
+
+.category-card-meta {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
 }
 
 .category-card-chevron {
-  font-size: 10px;
-  color: var(--muted);
+  width: 20px;
+  height: 20px;
   flex-shrink: 0;
+  color: var(--muted);
+  transition: transform 0.2s ease;
 }
 
-/* ── Item row group ────────────────────────────────────────────────────────── */
-
-.category-card-items {
-  margin: 0 12px 12px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-card);
-  overflow: hidden;
+.category-card--open .category-card-chevron {
+  transform: rotate(180deg);
 }
 
 /* ── Item row ──────────────────────────────────────────────────────────────── */
 
 .item-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
   padding: 12px 16px;
   border-bottom: 1px solid var(--divider);
-  background: var(--panel);
   transition: background 0.12s;
 }
 
@@ -395,7 +436,7 @@
 }
 
 .item-row:hover {
-  background: #FDFCF9;
+  background: var(--neutral-100);
 }
 
 .item-row-label {
@@ -407,61 +448,36 @@
 
 .item-row-answer {
   display: flex;
-  gap: 4px;
+  gap: 2px;
   flex-shrink: 0;
 }
 
-/* ── Circular state button ─────────────────────────────────────────────────── */
+/* ── Compact state button ──────────────────────────────────────────────────── */
 
 .sel-btn {
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
   border-radius: var(--radius-pill);
-  border: 1.5px solid var(--border);
-  background: var(--panel);
+  border: none;
+  background: transparent;
+  color: #9E9E9E;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
-  transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transition: background 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .sel-btn:hover {
-  border-color: var(--neutral-400);
   background: var(--neutral-100);
 }
 
-/* Icon color per state (uses currentColor in SVG) */
-.sel-btn-present   { color: var(--present);   }
-.sel-btn-important { color: var(--important);  }
-.sel-btn-discuss   { color: var(--discuss);    }
-.sel-btn-no        { color: var(--no);         }
-
-/* Active: light fill + solid colored border + outer glow */
-.sel-btn.active-present {
-  background: var(--present-light);
-  border: 2px solid var(--present);
-  box-shadow: 0 0 0 3px var(--present-light);
-}
-
-.sel-btn.active-important {
-  background: var(--important-light);
-  border: 2px solid var(--important);
-  box-shadow: 0 0 0 3px var(--important-light);
-}
-
-.sel-btn.active-discuss {
-  background: var(--discuss-light);
-  border: 2px solid var(--discuss);
-  box-shadow: 0 0 0 3px var(--discuss-light);
-}
-
-.sel-btn.active-no {
-  background: var(--no-light);
-  border: 2px solid var(--no);
-  box-shadow: 0 0 0 3px var(--no-light);
-}
+/* Active: solid state color, white icon */
+.sel-btn.active-present   { background: var(--present);   color: #fff; }
+.sel-btn.active-important { background: var(--important); color: #fff; }
+.sel-btn.active-discuss   { background: var(--discuss);   color: #fff; }
+.sel-btn.active-no        { background: var(--no);        color: #fff; }
 
 /* ── Utility ───────────────────────────────────────────────────────────────── */
 
@@ -504,6 +520,19 @@ input:focus-visible {
     padding: 0 32px 24px;
   }
 
+  .learn-more-page {
+    margin: 32px 32px 24px;
+  }
+
+  .learn-more-hero {
+    padding: 36px 32px;
+  }
+
+  .learn-more-actions {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
   .intro-actions {
     flex-direction: row;
     flex-wrap: wrap;
@@ -524,12 +553,5 @@ input:focus-visible {
 @media (max-width: 480px) {
   .category-cards-grid {
     grid-template-columns: 1fr;
-  }
-
-  /* Stack label above buttons on very small screens */
-  .item-row {
-    grid-template-columns: 1fr;
-    gap: 8px;
-    padding-bottom: 14px;
   }
 }
