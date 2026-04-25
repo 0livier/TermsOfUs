@@ -71,6 +71,7 @@
   gap: 8px;
   padding: 8px 12px;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .palette-button[aria-pressed='true'] {
@@ -173,6 +174,7 @@
 .actions button {
   padding: 8px 14px;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .toggle-btn.is-active {
@@ -270,5 +272,12 @@ select:focus-visible {
 
   .summary span {
     flex: 1 1 90px;
+  }
+
+  .palette-button,
+  .actions button {
+    font-size: 13px;
+    padding: 6px 10px;
+    min-height: 36px;
   }
 }

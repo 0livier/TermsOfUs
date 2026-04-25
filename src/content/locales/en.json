@@ -6,6 +6,16 @@
       "want": { "label": "I want this", "shortLabel": "Want" },
       "have": { "label": "We already have this", "shortLabel": "Have" },
       "avoid": { "label": "I do not want this", "shortLabel": "Avoid" }
+    },
+    "actions": {
+      "wheelView":       "Wheel",
+      "listView":        "List",
+      "paletteMode":     "Palette",
+      "cycleMode":       "Cycling",
+      "reset":           "Reset",
+      "copyLink":        "Copy link",
+      "linkCopied":      "Link copied",
+      "copyUnavailable": "Copy unavailable"
     }
   },
   "categories": {

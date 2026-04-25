@@ -6,6 +6,16 @@
       "want": { "label": "Je veux", "shortLabel": "Je veux" },
       "have": { "label": "Nous avons déjà", "shortLabel": "Nous avons" },
       "avoid": { "label": "Je ne veux pas", "shortLabel": "Éviter" }
+    },
+    "actions": {
+      "wheelView":       "Roue",
+      "listView":        "Liste",
+      "paletteMode":     "Palette",
+      "cycleMode":       "Cyclique",
+      "reset":           "Réinitialiser",
+      "copyLink":        "Copier le lien",
+      "linkCopied":      "Lien copié",
+      "copyUnavailable": "Copie impossible"
     }
   },
   "categories": {

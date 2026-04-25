@@ -8,7 +8,6 @@ import {
   STATE_STROKE,
   cycleState,
   getDominantState,
-  getCompletionPct,
 } from './sunburstColors.js'
 import './SunburstMobile.css'
 
@@ -38,7 +37,6 @@ export function SunburstMobile({
 
   const catCount  = content.categories.length
   const catAngle  = (2 * Math.PI) / catCount
-  const pct       = getCompletionPct(content, selection)
   const activeCat = activeCatId
     ? content.categories.find(c => c.id === activeCatId) ?? null
     : null
@@ -100,12 +98,6 @@ export function SunburstMobile({
             })}
 
             <circle cx={CX} cy={CY} r={R_STATE_INNER - 4} fill="white" />
-            <text x={CX} y={CY - 12} textAnchor="middle" fontSize="28" fontWeight="700" fill="#111">
-              {pct}%
-            </text>
-            <text x={CX} y={CY + 14} textAnchor="middle" fontSize="12" fill="#777">
-              complete
-            </text>
           </svg>
         </div>
 
@@ -127,10 +119,6 @@ export function SunburstMobile({
                   aria-hidden="true"
                 />
                 <span className="sunburst-cat-name">{activeCat.label}</span>
-                <span className="sunburst-cat-count">
-                  {activeCat.items.filter(i => selection[i.id]).length}
-                  /{activeCat.items.length}
-                </span>
               </div>
 
               <div className="sunburst-item-list">

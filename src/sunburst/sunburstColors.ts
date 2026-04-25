@@ -58,11 +58,3 @@ export function cycleState(current: ItemState): ItemState {
   const order: ItemState[] = ['none', 'want', 'have', 'avoid']
   return order[(order.indexOf(current) + 1) % order.length]
 }
-
-export function getCompletionPct(
-  content: LocalizedContent,
-  selection: SelectionState,
-): number {
-  const total = content.categories.reduce((n, c) => n + c.items.length, 0)
-  return total === 0 ? 0 : Math.round((Object.keys(selection).length / total) * 100)
-}

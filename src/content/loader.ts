@@ -27,14 +27,37 @@ export interface LocalizedCategory {
   items: LocalizedItem[]
 }
 
+export interface UiActions {
+  wheelView: string
+  listView: string
+  paletteMode: string
+  cycleMode: string
+  reset: string
+  copyLink: string
+  linkCopied: string
+  copyUnavailable: string
+}
+
 export interface LocalizedContent {
   locale: SupportedLocale
   schema: SchemaDefinition
   categories: LocalizedCategory[]
   stateOptions: ItemStateOption[]
+  uiActions: UiActions
 }
 
 const ITEM_STATES: ItemState[] = ['none', 'want', 'have', 'avoid']
+
+const DEFAULT_UI_ACTIONS: UiActions = {
+  wheelView:       'Wheel',
+  listView:        'List',
+  paletteMode:     'Palette',
+  cycleMode:       'Cycling',
+  reset:           'Reset',
+  copyLink:        'Copy link',
+  linkCopied:      'Link copied',
+  copyUnavailable: 'Copy unavailable',
+}
 
 const DEFAULT_STATE_OPTIONS: ItemStateOption[] = [
   { value: 'none', label: 'Not selected', shortLabel: 'None' },
@@ -108,6 +131,7 @@ export function localizeContent(
     locale,
     schema,
     stateOptions: buildStateOptions(requestedContent, fallbackContent),
+    uiActions: buildUiActions(requestedContent, fallbackContent),
     categories: schema.categories.map((category) => ({
       id: category.id,
       label: getCategoryLabel(
@@ -126,6 +150,26 @@ export function localizeContent(
         ),
       })),
     })),
+  }
+}
+
+function buildUiActions(
+  requestedContent: LocaleContent,
+  fallbackContent: LocaleContent,
+): UiActions {
+  const req = requestedContent.ui?.actions ?? {}
+  const fb  = fallbackContent.ui?.actions ?? {}
+  const key = <K extends keyof UiActions>(k: K) =>
+    req[k] ?? fb[k] ?? DEFAULT_UI_ACTIONS[k]
+  return {
+    wheelView:       key('wheelView'),
+    listView:        key('listView'),
+    paletteMode:     key('paletteMode'),
+    cycleMode:       key('cycleMode'),
+    reset:           key('reset'),
+    copyLink:        key('copyLink'),
+    linkCopied:      key('linkCopied'),
+    copyUnavailable: key('copyUnavailable'),
   }
 }
 

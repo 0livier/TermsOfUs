@@ -103,37 +103,10 @@ function App() {
         document.execCommand('copy')
         document.body.removeChild(textarea)
       }
-      setCopyStatus('Link copied')
+      setCopyStatus(content.uiActions.linkCopied)
     } catch {
-      setCopyStatus('Copy unavailable')
+      setCopyStatus(content.uiActions.copyUnavailable)
     }
-  }
-
-  function exportJson() {
-    const data = {
-      locale:      content.locale,
-      exportedAt:  new Date().toISOString(),
-      version:     content.schema.version,
-      items: content.categories.flatMap(cat =>
-        cat.items
-          .filter(item => selection[item.id])
-          .map(item => ({
-            category:      cat.id,
-            categoryLabel: cat.label,
-            id:            item.id,
-            label:         item.label,
-            state:         selection[item.id],
-          })),
-      ),
-    }
-
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
-    const url  = URL.createObjectURL(blob)
-    const a    = document.createElement('a')
-    a.href     = url
-    a.download = `termsofus-${new Date().toISOString().slice(0, 10)}.json`
-    a.click()
-    URL.revokeObjectURL(url)
   }
 
   const showPalette = viewMode === 'list' || interactionMode === 'palette'
@@ -181,7 +154,7 @@ function App() {
             className={`toggle-btn${viewMode === 'wheel' ? ' is-active' : ''}`}
             onClick={() => setViewMode(v => v === 'list' ? 'wheel' : 'list')}
           >
-            {viewMode === 'list' ? '⊙ Wheel' : '☰ List'}
+            {viewMode === 'list' ? `⊙ ${content.uiActions.wheelView}` : `☰ ${content.uiActions.listView}`}
           </button>
 
           {viewMode === 'wheel' && (
@@ -190,13 +163,12 @@ function App() {
               className={`toggle-btn${interactionMode === 'cycle' ? ' is-active' : ''}`}
               onClick={() => setInteractionMode(m => m === 'palette' ? 'cycle' : 'palette')}
             >
-              {interactionMode === 'cycle' ? '↻ Cycling' : '◈ Palette'}
+              {interactionMode === 'cycle' ? `↻ ${content.uiActions.cycleMode}` : `◈ ${content.uiActions.paletteMode}`}
             </button>
           )}
 
-          <button type="button" onClick={resetSelection}>Reset</button>
-          <button type="button" onClick={copyLink}>Copy link</button>
-          <button type="button" onClick={exportJson}>Export</button>
+          <button type="button" onClick={resetSelection}>{content.uiActions.reset}</button>
+          <button type="button" onClick={copyLink}>{content.uiActions.copyLink}</button>
           {copyStatus ? <span role="status">{copyStatus}</span> : null}
         </div>
       </section>

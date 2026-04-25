@@ -85,13 +85,6 @@
   white-space: nowrap;
 }
 
-.sunburst-cat-count {
-  color: var(--muted);
-  font-size: 14px;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-
 .sunburst-item-list {
   display: grid;
   gap: 6px;

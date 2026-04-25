@@ -7,7 +7,6 @@ import {
   STATE_FILL,
   STATE_STROKE,
   cycleState,
-  getCompletionPct,
 } from './sunburstColors.js'
 import './SunburstDesktop.css'
 
@@ -43,19 +42,10 @@ export function SunburstDesktop({
 
   const catCount = content.categories.length
   const catAngle = (2 * Math.PI) / catCount
-  const pct      = getCompletionPct(content, selection)
-  const total    = content.categories.reduce((n, c) => n + c.items.length, 0)
 
   const hoveredCat  = hovered ? content.categories.find(c => c.id === hovered.catId)  ?? null : null
   const hoveredItem = hoveredCat ? hoveredCat.items.find(i => i.id === hovered.itemId) ?? null : null
   const hoveredState: ItemState = hovered ? (selection[hovered.itemId] ?? 'none') : 'none'
-
-  const statRows = content.stateOptions.map(opt => ({
-    opt,
-    count: opt.value === 'none'
-      ? total - Object.keys(selection).length
-      : Object.values(selection).filter(s => s === opt.value).length,
-  }))
 
   function handleSegmentClick(itemId: ItemId) {
     const current = selection[itemId] ?? 'none'
@@ -72,7 +62,6 @@ export function SunburstDesktop({
       <svg
         viewBox="0 0 400 400"
         className="sunburst-desktop-svg"
-        onPointerLeave={() => setHovered(null)}
         role="img"
         aria-label="Relationship preference wheel"
       >
@@ -127,69 +116,38 @@ export function SunburstDesktop({
 
         {/* Center */}
         <circle cx={CX} cy={CY} r={84} fill="white" />
-        <text x={CX} y={CY - 12} textAnchor="middle" fontSize="26" fontWeight="700" fill="#111">
-          {pct}%
-        </text>
-        <text x={CX} y={CY + 14} textAnchor="middle" fontSize="12" fill="#777">
-          complete
-        </text>
       </svg>
 
       {/* ── Right panel ──────────────────────────────────────────── */}
-      <div className="sunburst-desktop-panel">
-        {hoveredItem && hoveredCat ? (
-          <div className="sunburst-panel-detail">
-            <p className="sunburst-panel-breadcrumb">
-              <span
-                className="sunburst-panel-dot"
-                style={{ background: CATEGORY_COLOR[hoveredCat.id] ?? '#888' }}
-                aria-hidden="true"
-              />
-              {hoveredCat.label}
-            </p>
-            <h3 className="sunburst-panel-item-name">{hoveredItem.label}</h3>
+      {hoveredItem && hoveredCat && (
+        <div className="sunburst-desktop-panel">
+          <p className="sunburst-panel-breadcrumb">
+            <span
+              className="sunburst-panel-dot"
+              style={{ background: CATEGORY_COLOR[hoveredCat.id] ?? '#888' }}
+              aria-hidden="true"
+            />
+            {hoveredCat.label}
+          </p>
+          <h3 className="sunburst-panel-item-name">{hoveredItem.label}</h3>
 
-            <div className="sunburst-panel-states">
-              {content.stateOptions.map(opt => {
-                const isActive = hoveredState === opt.value
-                return (
-                  <button
-                    key={opt.value}
-                    className={`sunburst-panel-state-btn is-${opt.value}${isActive ? ' is-panel-active' : ''}`}
-                    onClick={() => onItemChange(hoveredItem.id, opt.value)}
-                  >
-                    <span className="state-mark" aria-hidden="true" />
-                    {opt.shortLabel}
-                  </button>
-                )
-              })}
-            </div>
+          <div className="sunburst-panel-states">
+            {content.stateOptions.map(opt => {
+              const isActive = hoveredState === opt.value
+              return (
+                <button
+                  key={opt.value}
+                  className={`sunburst-panel-state-btn is-${opt.value}${isActive ? ' is-panel-active' : ''}`}
+                  onClick={() => onItemChange(hoveredItem.id, opt.value)}
+                >
+                  <span className="state-mark" aria-hidden="true" />
+                  {opt.shortLabel}
+                </button>
+              )
+            })}
           </div>
-        ) : (
-          <div className="sunburst-panel-stats">
-            <p className="sunburst-panel-stat-label">Progress</p>
-            <p className="sunburst-panel-completion">{pct}%</p>
-            <dl className="sunburst-panel-counts">
-              {statRows.map(({ opt, count }) => (
-                <div key={opt.value} className="sunburst-panel-count-row">
-                  <dt>
-                    <span
-                      className="sunburst-panel-count-dot"
-                      style={{
-                        background: opt.value === 'none' ? 'var(--border)' : STATE_FILL[opt.value],
-                        borderColor: STATE_STROKE[opt.value],
-                      }}
-                      aria-hidden="true"
-                    />
-                    {opt.shortLabel}
-                  </dt>
-                  <dd>{count}</dd>
-                </div>
-              ))}
-            </dl>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   )
 }

@@ -46,6 +46,16 @@ export interface ItemStateOption {
 
 export interface LocaleUiContent {
   states: Partial<Record<ItemState, { label: string; shortLabel: string }>>
+  actions?: {
+    wheelView?: string
+    listView?: string
+    paletteMode?: string
+    cycleMode?: string
+    reset?: string
+    copyLink?: string
+    linkCopied?: string
+    copyUnavailable?: string
+  }
 }
 
 export interface SelectionSummary {
