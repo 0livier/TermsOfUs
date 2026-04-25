@@ -166,14 +166,6 @@ function App() {
   const toastTimer    = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
-    replaceUrlState(new URL(window.location.href), {
-      locale,
-      schema: content.schema,
-      selection,
-    })
-  }, [content.schema, locale, selection])
-
-  useEffect(() => {
     if (!menuOpen) return
     function handleClick(e: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
@@ -190,20 +182,30 @@ function App() {
     toastTimer.current = setTimeout(() => setToast(''), 2500)
   }
 
+  function updateUrl(nextSelection: SelectionState, nextLocale = locale) {
+    replaceUrlState(new URL(window.location.href), {
+      locale: nextLocale,
+      schema: content.schema,
+      selection: nextSelection,
+    })
+  }
+
   function handleItemSelect(itemId: ItemId, state: SelectedItemState) {
-    setSelection((prev) => ({ ...prev, [itemId]: state }))
+    const next = { ...selection, [itemId]: state }
+    setSelection(next)
+    updateUrl(next)
   }
 
   function handleItemClear(itemId: ItemId) {
-    setSelection((prev) => {
-      const next = { ...prev }
-      delete next[itemId]
-      return next
-    })
+    const next = { ...selection }
+    delete next[itemId]
+    setSelection(next)
+    updateUrl(next)
   }
 
   function handleClearConfirmed() {
     setSelection({})
+    updateUrl({})
     setShowConfirm(false)
   }
 
@@ -249,6 +251,7 @@ function App() {
                 const newLocale = e.target.value as SupportedLocale
                 setLocale(newLocale)
                 saveLocalePreference(newLocale)
+                updateUrl(selection, newLocale)
               }}
               aria-label={content.languageLabel}
             >
