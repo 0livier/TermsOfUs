@@ -7,7 +7,6 @@ import {
   STATE_FILL,
   STATE_STROKE,
   cycleState,
-  getDominantState,
 } from './sunburstColors.js'
 import './SunburstMobile.css'
 
@@ -34,12 +33,27 @@ export function SunburstMobile({
   onItemChange,
 }: Props) {
   const [activeCatId, setActiveCatId] = useState<string | null>(null)
+  const [hoveredCatId, setHoveredCatId] = useState<string | null>(null)
 
   const catCount  = content.categories.length
   const catAngle  = (2 * Math.PI) / catCount
   const activeCat = activeCatId
     ? content.categories.find(c => c.id === activeCatId) ?? null
     : null
+
+  function catIdAtPointer(e: React.PointerEvent<SVGSVGElement>): string | null {
+    const rect = e.currentTarget.getBoundingClientRect()
+    const x = (e.clientX - rect.left) * (400 / rect.width)
+    const y = (e.clientY - rect.top)  * (400 / rect.height)
+    const dx = x - CX
+    const dy = y - CY
+    const r  = Math.sqrt(dx * dx + dy * dy)
+    if (r < R_STATE_INNER - 4 || r > R_ID_OUTER) return null
+    let angle = Math.atan2(dy, dx) + Math.PI / 2
+    if (angle < 0) angle += 2 * Math.PI
+    const idx = Math.floor(angle / catAngle)
+    return content.categories[idx]?.id ?? null
+  }
 
   function handleItemTap(itemId: ItemId) {
     const current = selection[itemId] ?? 'none'
@@ -61,19 +75,37 @@ export function SunburstMobile({
             className="sunburst-mobile-svg"
             role="img"
             aria-label="Category wheel"
+            onPointerDown={e => {
+              e.currentTarget.setPointerCapture(e.pointerId)
+              setHoveredCatId(catIdAtPointer(e))
+            }}
+            onPointerMove={e => {
+              setHoveredCatId(catIdAtPointer(e))
+            }}
+            onPointerUp={e => {
+              const catId = catIdAtPointer(e)
+              if (catId) setActiveCatId(catId)
+              setHoveredCatId(null)
+            }}
+            onPointerCancel={() => setHoveredCatId(null)}
+            onPointerLeave={() => setHoveredCatId(null)}
           >
             {content.categories.map((cat, i) => {
-              const start    = -Math.PI / 2 + i * catAngle + GAP / 2
-              const end      = -Math.PI / 2 + (i + 1) * catAngle - GAP / 2
-              const dominant = getDominantState(cat.items, selection)
+              const catStart  = -Math.PI / 2 + i * catAngle
+              const catEnd    = -Math.PI / 2 + (i + 1) * catAngle
+              const itemCount = cat.items.length
+              const itemAngle = catAngle / itemCount
+
+              const isHovered = hoveredCatId === cat.id
+              const isDimmed  = hoveredCatId !== null && !isHovered
 
               return (
                 <g
                   key={cat.id}
                   className="sunburst-cat-segment"
-                  onClick={() => setActiveCatId(cat.id)}
+                  opacity={isDimmed ? 0.45 : 1}
                   role="button"
-                  aria-label={`${cat.label}: ${dominant}`}
+                  aria-label={cat.label}
                   tabIndex={0}
                   onKeyDown={e => {
                     if (e.key === 'Enter' || e.key === ' ') {
@@ -82,14 +114,22 @@ export function SunburstMobile({
                     }
                   }}
                 >
+                  {cat.items.map((item, j) => {
+                    const start = catStart + j * itemAngle + GAP / 2
+                    const end   = catStart + (j + 1) * itemAngle - GAP / 2
+                    const state = selection[item.id] ?? 'none'
+                    return (
+                      <path
+                        key={item.id}
+                        d={arcPath(CX, CY, R_STATE_INNER, R_STATE_OUTER, start, end)}
+                        fill={STATE_FILL[state]}
+                        stroke={STATE_STROKE[state]}
+                        strokeWidth={0.5}
+                      />
+                    )
+                  })}
                   <path
-                    d={arcPath(CX, CY, R_STATE_INNER, R_STATE_OUTER, start, end)}
-                    fill={STATE_FILL[dominant]}
-                    stroke={STATE_STROKE[dominant]}
-                    strokeWidth={0.5}
-                  />
-                  <path
-                    d={arcPath(CX, CY, R_STATE_OUTER, R_ID_OUTER, start, end)}
+                    d={arcPath(CX, CY, R_STATE_OUTER, R_ID_OUTER, catStart + GAP / 2, catEnd - GAP / 2)}
                     fill={CATEGORY_COLOR[cat.id] ?? '#888'}
                     stroke="none"
                   />
@@ -99,6 +139,11 @@ export function SunburstMobile({
 
             <circle cx={CX} cy={CY} r={R_STATE_INNER - 4} fill="white" />
           </svg>
+          <div className="sunburst-cat-hover-label" aria-live="polite">
+            {hoveredCatId
+              ? content.categories.find(c => c.id === hoveredCatId)?.label ?? ''
+              : ''}
+          </div>
         </div>
 
         {/* ── SCREEN B: item list ───────────────────────────────────── */}
