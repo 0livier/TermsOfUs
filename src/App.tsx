@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import './App.css'
 import {
   defaultLocale,
@@ -7,19 +7,18 @@ import {
   localizeSchema,
   saveLocalePreference,
   supportedLocales,
+  type LocalizedCategory,
   type SupportedLocale,
 } from './content/loader.js'
 import {
   type ItemId,
-  type ItemState,
+  type ItemStateOption,
   type SelectedItemState,
   type SelectionState,
 } from './domain/model.js'
 import { getLocaleFromUrl, parseUrlState, replaceUrlState } from './routing/url-state.js'
-import { applyActiveState } from './app/selection.js'
-import { Palette } from './components/Palette.js'
-import { SelectableItem } from './components/SelectableItem.js'
-import { Sunburst } from './sunburst/Sunburst.js'
+import { ItemRow } from './components/ItemRow.js'
+import { CATEGORY_COLOR } from './sunburst/sunburstColors.js'
 
 function getInitialUrlState() {
   const schema = localizeSchema('en').schema
@@ -41,13 +40,106 @@ function getInitialUrlState() {
 
 const initialUrlState = getInitialUrlState()
 
+// ─── State legend ─────────────────────────────────────────────────────────────
+
+interface StateLegendProps {
+  stateOptions: Array<{ value: string; icon: string; longLabel: string }>
+}
+
+function StateLegend({ stateOptions }: StateLegendProps) {
+  return (
+    <div className="state-legend" aria-label="Legend">
+      {stateOptions.map((opt) => (
+        <div key={opt.value} className={`legend-item is-${opt.value}`}>
+          <span className="legend-icon" aria-hidden="true">{opt.icon}</span>
+          <span className="legend-label">{opt.longLabel}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
+// ─── Category card ────────────────────────────────────────────────────────────
+
+interface CategoryCardProps {
+  category: LocalizedCategory
+  selection: SelectionState
+  stateOptions: ItemStateOption[]
+  isOpen: boolean
+  onToggle: () => void
+  onItemSelect: (itemId: ItemId, state: SelectedItemState) => void
+  onItemClear: (itemId: ItemId) => void
+  color: string
+}
+
+function CategoryCard({
+  category,
+  selection,
+  stateOptions,
+  isOpen,
+  onToggle,
+  onItemSelect,
+  onItemClear,
+  color,
+}: CategoryCardProps) {
+  const answeredCount = category.items.filter((item) => selection[item.id]).length
+
+  return (
+    <div className={`category-card${isOpen ? ' category-card--open' : ''}`}>
+      <button
+        type="button"
+        className="category-card-header"
+        onClick={onToggle}
+        aria-expanded={isOpen}
+      >
+        <span
+          className="category-card-dot"
+          style={{ background: color }}
+          aria-hidden="true"
+        />
+        <span className="category-card-title">{category.label}</span>
+        <span className="category-card-meta">
+          {answeredCount > 0 && (
+            <span className="category-card-count" aria-label={`${answeredCount} answered`}>
+              {answeredCount}
+            </span>
+          )}
+          <span className="category-card-chevron" aria-hidden="true">
+            {isOpen ? '▲' : '▼'}
+          </span>
+        </span>
+      </button>
+
+      {isOpen && (
+        <div className="category-card-items">
+          {category.items.map((item) => (
+            <ItemRow
+              key={item.id}
+              id={item.id}
+              label={item.label}
+              currentState={selection[item.id] ?? 'none'}
+              stateOptions={stateOptions}
+              onSelect={onItemSelect}
+              onClear={onItemClear}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}
+
+// ─── App ──────────────────────────────────────────────────────────────────────
+
 function App() {
-  const [locale, setLocale]                   = useState<SupportedLocale>(initialUrlState.locale)
-  const [selection, setSelection]             = useState<SelectionState>(initialUrlState.selection)
-  const [activeState, setActiveState] = useState<ItemState>('want')
-  const [viewMode, setViewMode]       = useState<'wheel' | 'list'>('wheel')
-  const [copyStatus, setCopyStatus]   = useState('')
+  const [locale, setLocale]         = useState<SupportedLocale>(initialUrlState.locale)
+  const [selection, setSelection]   = useState<SelectionState>(initialUrlState.selection)
+  const [copyStatus, setCopyStatus] = useState('')
+  const [openCategoryId, setOpenCategoryId] = useState<string | null>(null)
+
   const content = useMemo(() => localizeSchema(locale), [locale])
+
+  const categoriesRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
     replaceUrlState(new URL(window.location.href), {
@@ -57,21 +149,15 @@ function App() {
     })
   }, [content.schema, locale, selection])
 
-  // For the list view: palette-driven (uses activeState + toggle logic)
-  function updateItem(itemId: ItemId) {
-    setSelection(prev => applyActiveState(prev, itemId, activeState))
+  function handleItemSelect(itemId: ItemId, state: SelectedItemState) {
+    setSelection((prev) => ({ ...prev, [itemId]: state }))
     setCopyStatus('')
   }
 
-  // For the sunburst: raw state set (component decides the next state)
-  function handleItemChange(itemId: ItemId, newState: ItemState) {
-    setSelection(prev => {
+  function handleItemClear(itemId: ItemId) {
+    setSelection((prev) => {
       const next = { ...prev }
-      if (newState === 'none') {
-        delete next[itemId]
-      } else {
-        next[itemId] = newState as SelectedItemState
-      }
+      delete next[itemId]
       return next
     })
     setCopyStatus('')
@@ -109,100 +195,95 @@ function App() {
   }
 
   return (
-    <main className="app-shell">
-      <header className="app-header">
-        <div>
-          <p className="eyebrow">Terms of Us</p>
-          <h1>{content.headline}</h1>
-          <p className="app-subheadline">{content.subheadline}</p>
-        </div>
+    <div className="app-shell">
 
-        <label className="language-select">
-          <span>Language</span>
-          <select
-            value={locale}
-            onChange={(event) => {
-              const newLocale = event.target.value as SupportedLocale
-              setLocale(newLocale)
-              saveLocalePreference(newLocale)
-              setCopyStatus('')
-            }}
-          >
-            {supportedLocales.map((supportedLocale) => (
-              <option key={supportedLocale} value={supportedLocale}>
-                {supportedLocale.toUpperCase()}
-              </option>
-            ))}
-          </select>
-        </label>
+      {/* ── Header ─────────────────────────────────────────── */}
+      <header className="app-header">
+        <span className="app-name">Terms of Us</span>
+        <div className="app-header-controls">
+          <label className="language-select">
+            <span className="sr-only">{content.languageLabel}</span>
+            <select
+              value={locale}
+              onChange={(e) => {
+                const newLocale = e.target.value as SupportedLocale
+                setLocale(newLocale)
+                saveLocalePreference(newLocale)
+                setCopyStatus('')
+              }}
+              aria-label={content.languageLabel}
+            >
+              {supportedLocales.map((l) => (
+                <option key={l} value={l}>{l.toUpperCase()}</option>
+              ))}
+            </select>
+          </label>
+          <button type="button" className="header-action-btn" onClick={resetSelection}>
+            {content.uiActions.reset}
+          </button>
+          <button type="button" className="header-action-btn" onClick={copyLink}>
+            {content.uiActions.copyLink}
+          </button>
+          {copyStatus ? <span role="status" className="copy-status">{copyStatus}</span> : null}
+        </div>
       </header>
 
-      <section className="toolbar" aria-label="Selection tools">
-        <div className="actions">
+      {/* ── Fallback notice ────────────────────────────────── */}
+      {initialUrlState.isFallback ? (
+        <p className="notice" role="status">{content.fallbackMessage}</p>
+      ) : null}
+
+      {/* ── Intro card ─────────────────────────────────────── */}
+      <section className="intro-card" aria-labelledby="intro-title">
+        <h1 id="intro-title">{content.intro.title}</h1>
+        <p className="intro-body">{content.intro.body}</p>
+        <p className="intro-privacy">{content.intro.privacy}</p>
+
+        <StateLegend stateOptions={content.stateOptions} />
+
+        <div className="intro-actions">
           <button
             type="button"
-            className={`toggle-btn${viewMode === 'wheel' ? ' is-active' : ''}`}
-            onClick={() => setViewMode(v => v === 'list' ? 'wheel' : 'list')}
+            className="btn-primary"
+            onClick={() => {
+              setOpenCategoryId(content.categories[0]?.id ?? null)
+              categoriesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+            }}
           >
-            {viewMode === 'list' ? `⊙ ${content.uiActions.wheelView}` : `☰ ${content.uiActions.listView}`}
+            {content.intro.startCategory}
           </button>
-
-          <button type="button" onClick={resetSelection}>{content.uiActions.reset}</button>
-          <button type="button" onClick={copyLink}>{content.uiActions.copyLink}</button>
-          {copyStatus ? <span role="status">{copyStatus}</span> : null}
+          <button
+            type="button"
+            className="btn-secondary"
+            onClick={() => categoriesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+          >
+            {content.intro.browseCategories}
+          </button>
         </div>
       </section>
 
-      {initialUrlState.isFallback ? (
-        <p className="notice" role="status">
-          The shared link could not be restored, so the selection was reset.
-        </p>
-      ) : null}
-
-      {viewMode === 'list' && (
-        <div className="list-palette-bar">
-          <Palette
-            activeState={activeState}
-            stateOptions={content.stateOptions}
-            onChange={setActiveState}
-          />
-        </div>
-      )}
-
-      {viewMode === 'wheel' ? (
-        <Sunburst
-          content={content}
-          selection={selection}
-          activeState={activeState}
-          onItemChange={handleItemChange}
-          onActiveStateChange={setActiveState}
-        />
-      ) : (
-        <section className="category-grid" aria-label="Relationship items">
+      {/* ── Category cards ─────────────────────────────────── */}
+      <section ref={categoriesRef} className="categories-section" aria-label="Categories">
+        <div className="category-cards-grid">
           {content.categories.map((category) => (
-            <section key={category.id} className="category-panel">
-              <h2>{category.label}</h2>
-              <div className="item-list">
-                {category.items.map((item) => {
-                  const currentState = selection[item.id] ?? 'none'
-                  return (
-                    <SelectableItem
-                      key={item.id}
-                      id={item.id}
-                      label={item.label}
-                      currentState={currentState}
-                      activeState={activeState}
-                      stateOptions={content.stateOptions}
-                      onSelect={updateItem}
-                    />
-                  )
-                })}
-              </div>
-            </section>
+            <CategoryCard
+              key={category.id}
+              category={category}
+              selection={selection}
+              stateOptions={content.stateOptions}
+              isOpen={openCategoryId === category.id}
+              onToggle={() =>
+                setOpenCategoryId((prev) => prev === category.id ? null : category.id)
+              }
+              onItemSelect={handleItemSelect}
+              onItemClear={handleItemClear}
+              color={CATEGORY_COLOR[category.id] ?? '#888'}
+            />
           ))}
-        </section>
-      )}
-    </main>
+        </div>
+      </section>
+
+    </div>
   )
 }
 

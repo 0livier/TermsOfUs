@@ -14,11 +14,11 @@ export function Palette({ activeState, stateOptions, onChange }: PaletteProps) {
           key={option.value}
           type="button"
           className={`palette-button is-${option.value}`}
-          aria-label={`Set active state to ${option.label}`}
+          aria-label={`Set active state to ${option.longLabel}`}
           aria-pressed={activeState === option.value}
           onClick={() => onChange(option.value)}
         >
-          <span className="state-mark" aria-hidden="true" />
+          <span aria-hidden="true">{option.icon}</span>
           <span>{option.label}</span>
         </button>
       ))}

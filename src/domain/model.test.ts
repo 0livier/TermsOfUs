@@ -2,9 +2,7 @@ import assert from 'node:assert/strict'
 import test from 'node:test'
 
 import {
-  decodeSelection,
   decodeSparseSelection,
-  encodeSelection,
   encodeSparseSelection,
   getCanonicalItemOrder,
   summarizeSelection,
@@ -44,43 +42,6 @@ test('returns canonical flattened item order from schema order', () => {
   ])
 })
 
-test('encodes and decodes an empty selection', () => {
-  const itemOrder = getCanonicalItemOrder(schema)
-
-  assert.equal(encodeSelection(itemOrder, {}), 'AAA')
-  assert.deepEqual(decodeSelection(itemOrder, 'AAA'), {})
-})
-
-test('roundtrips non-empty selection state and summarizes counts', () => {
-  const itemOrder = getCanonicalItemOrder(schema)
-  const selection: SelectionState = {
-    video: 'want',
-    'sleeping-together': 'avoid',
-    cuddling: 'have',
-  }
-
-  const payload = encodeSelection(itemOrder, selection)
-
-  assert.deepEqual(decodeSelection(itemOrder, payload), selection)
-  assert.deepEqual(summarizeSelection(selection), {
-    want: 1,
-    avoid: 1,
-    have: 1,
-  })
-})
-
-test('fails safely for malformed payloads', () => {
-  const itemOrder = getCanonicalItemOrder(schema)
-
-  assert.equal(decodeSelection(itemOrder, 'not*base64'), null)
-})
-
-test('fails safely when payload length does not match schema item count', () => {
-  const itemOrder = getCanonicalItemOrder(schema)
-
-  assert.equal(decodeSelection(itemOrder, 'AA'), null)
-})
-
 test('validates permanent item codes', () => {
   assert.deepEqual(validateItemCodes(schema), [])
   assert.deepEqual(
@@ -104,19 +65,79 @@ test('validates permanent item codes', () => {
   )
 })
 
-test('sparse codec omits none items and roundtrips selected states by code', () => {
+test('sparse v2 codec omits none items and roundtrips selected states by code', () => {
   const selection: SelectionState = {
-    video: 'want',
-    cuddling: 'have',
+    video:    'important',
+    cuddling: 'present',
   }
 
-  assert.equal(encodeSparseSelection(schema, selection), 'afat')
-  assert.deepEqual(decodeSparseSelection(schema, 'afat'), selection)
+  // video (code=1, important=1): (1<<3)|1 = 9 → 'aj'
+  // cuddling (code=4, present=2): (4<<3)|2 = 34 → 'aI'
+  // sorted by code: video(1), cuddling(4) → s2ajaI
+  assert.equal(encodeSparseSelection(schema, selection), 's2ajaI')
+  assert.deepEqual(decodeSparseSelection(schema, 's2ajaI'), selection)
 })
 
-test('sparse decoder fails safely for malformed payloads', () => {
-  assert.equal(decodeSparseSelection(schema, 'a'), null)
-  assert.equal(decodeSparseSelection(schema, 'a*'), null)
-  assert.equal(decodeSparseSelection(schema, 'aa'), null)
-  assert.equal(decodeSparseSelection(schema, 'afaf'), null)
+test('sparse v2 encodes discuss and no states', () => {
+  const selection: SelectionState = {
+    sms:     'discuss',
+    kissing: 'no',
+  }
+
+  // sms (code=2, discuss=3): (2<<3)|3 = 19 → 'at'
+  // kissing (code=5, no=4):  (5<<3)|4 = 44 → 'aS'
+  // sorted by code: sms(2), kissing(5) → s2ataS
+  assert.equal(encodeSparseSelection(schema, selection), 's2ataS')
+  assert.deepEqual(decodeSparseSelection(schema, 's2ataS'), selection)
+})
+
+test('sparse v2 encodes empty selection as empty string', () => {
+  assert.equal(encodeSparseSelection(schema, {}), '')
+  assert.deepEqual(decodeSparseSelection(schema, ''), {})
+})
+
+test('sparse v2 decoder fails safely for malformed payloads', () => {
+  assert.equal(decodeSparseSelection(schema, 's2a'), null)
+  assert.equal(decodeSparseSelection(schema, 's2a*'), null)
+  assert.equal(decodeSparseSelection(schema, 's2ajajai'), null) // duplicate code
+})
+
+test('sparse v2 decoder fails safely for unknown item codes', () => {
+  // code 99 does not exist in schema
+  // (99<<3)|1 = 793 → encodeSparseChunk(793): high=floor(793/62)=12, low=793%62=49 → 'mX'
+  assert.equal(decodeSparseSelection(schema, 's2mX'), null)
+})
+
+test('legacy v1 decoder migrates old want/avoid/have payloads', () => {
+  // Old format (no prefix): (code<<2)|state_bits, want=1, avoid=2, have=3
+  // video (code=1, want=1): (1<<2)|1 = 5 → 'af'
+  // cuddling (code=4, have=3): (4<<2)|3 = 19 → 'at'
+  // old encoded: 'afat' → migrated: { video:'important', cuddling:'present' }
+  assert.deepEqual(decodeSparseSelection(schema, 'afat'), {
+    video:    'important',
+    cuddling: 'present',
+  })
+})
+
+test('legacy v1 decoder migrates avoid to no', () => {
+  // sms (code=2, avoid=2): (2<<2)|2 = 10 → 'ak'
+  assert.deepEqual(decodeSparseSelection(schema, 'ak'), {
+    sms: 'no',
+  })
+})
+
+test('summarizes selection counts by state', () => {
+  const selection: SelectionState = {
+    video:           'important',
+    sms:             'present',
+    'sleeping-together': 'discuss',
+    cuddling:        'no',
+  }
+
+  assert.deepEqual(summarizeSelection(selection), {
+    important: 1,
+    present:   1,
+    discuss:   1,
+    no:        1,
+  })
 })

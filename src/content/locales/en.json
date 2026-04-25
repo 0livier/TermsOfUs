@@ -2,65 +2,48 @@
   "locale": "en",
   "ui": {
     "appName": "Terms of Us",
-    "headline": "What do you need in a relationship?",
+    "headline": "What matters to you in a relationship?",
     "subheadline": "A quiet space to reflect on what matters, what's already there, and what isn't right for you.",
     "states": {
-      "none":  { "label": "Not yet answered", "shortLabel": "–" },
-      "want":  { "label": "This matters to me", "shortLabel": "Matters" },
-      "have":  { "label": "Already present", "shortLabel": "Present" },
-      "avoid": { "label": "Not for me", "shortLabel": "Limit" }
+      "important": { "label": "Important", "longLabel": "Important to me",  "shortLabel": "Important" },
+      "present":   { "label": "Present",   "longLabel": "Already present",   "shortLabel": "Present"   },
+      "discuss":   { "label": "Discuss",   "longLabel": "To discuss",        "shortLabel": "Discuss"   },
+      "no":        { "label": "No",        "longLabel": "Not for me",        "shortLabel": "No"        }
     },
     "actions": {
-      "wheelView":       "Map",
-      "listView":        "List",
       "reset":           "Clear all",
-      "resetConfirm":    "Clear all answers?",
-      "resetYes":        "Yes, clear",
-      "resetNo":         "Keep answers",
       "copyLink":        "Copy link",
       "linkCopied":      "Link copied",
       "copyUnavailable": "Could not copy"
     },
     "wheel": {
-      "tabLabel":    "Map",
-      "description": "Each slice is one item. Colour shows your answer. Tap a slice to review or change it.",
-      "emptyHint":   "Tap any slice to begin. There are no right or wrong answers.",
-      "legend":      "Map legend"
+      "description": "Each slice is one item. Colour shows your answer.",
+      "emptyHint":   "Tap a category to begin. There are no right or wrong answers."
     },
-    "list": {
-      "tabLabel":  "List",
-      "emptyHint": "Tap an item to mark how you feel about it."
+    "intro": {
+      "title":            "What matters to you in a relationship?",
+      "body":             "Mark what matters, what already exists, what you want to discuss, and what is not for you. There are no right or wrong answers.",
+      "privacy":          "Private and local unless you share a link.",
+      "startCategory":    "Start with one category",
+      "browseCategories": "Browse all categories",
+      "seeMap":           "See the map"
     },
-    "guided": {
-      "entryLabel":    "Go through items one by one",
-      "entryHint":     "Take your time. There are no right or wrong answers.",
-      "questionPrompt":"How does {itemName} feel for you?",
-      "skip":          "Skip for now",
-      "next":          "Next",
-      "previous":      "Previous",
-      "finish":        "Done",
-      "progressLabel": "{count} of {total}"
+    "mapPreview": {
+      "title":       "Your relationship map",
+      "stopAnytime": "Stop anytime"
     },
-    "progress": {
-      "summary":    "You've answered {count} of {total} items.",
-      "complete":   "You've answered everything.",
-      "notStarted": "You haven't answered anything yet."
+    "allItems": {
+      "title":             "All items",
+      "subtitle":          "One page to review and mark items at your own pace.",
+      "searchPlaceholder": "Search items",
+      "allCategories":     "All categories",
+      "showUnanswered":    "Show unanswered"
+    },
+    "header": {
+      "languageLabel": "Language"
     },
     "fallback": {
       "linkRestoreFailed": "The shared link could not be fully restored. Your answers have been reset."
-    },
-    "language": {
-      "label":  "Language",
-      "select": "Change language"
-    },
-    "accessibility": {
-      "itemButton":       "{itemName} — {currentState}. Activate to {action}.",
-      "actionSetState":   "mark as {stateName}",
-      "actionClearState": "remove your answer",
-      "paletteGroup":     "Choose an answer to apply",
-      "wheelRegion":      "Relationship map",
-      "listRegion":       "Relationship items",
-      "toolbarRegion":    "View and actions"
     }
   },
   "categories": {

@@ -4,11 +4,10 @@ import fr from './locales/fr.json' with { type: 'json' }
 import type {
   CategoryId,
   ItemId,
-  ItemState,
   ItemStateOption,
-  LocaleCode,
   LocaleContent,
   SchemaDefinition,
+  SelectedItemState,
 } from '../domain/model.js'
 
 export const defaultLocale = 'en'
@@ -28,8 +27,6 @@ export interface LocalizedCategory {
 }
 
 export interface UiActions {
-  wheelView: string
-  listView: string
   reset: string
   copyLink: string
   linkCopied: string
@@ -41,22 +38,54 @@ export interface UiWheel {
   emptyHint: string
 }
 
+export interface UiIntro {
+  title: string
+  body: string
+  privacy: string
+  startCategory: string
+  browseCategories: string
+  seeMap: string
+}
+
+export interface UiMapPreview {
+  title: string
+  stopAnytime: string
+}
+
+export interface UiAllItems {
+  title: string
+  subtitle: string
+  searchPlaceholder: string
+  allCategories: string
+  showUnanswered: string
+}
+
 export interface LocalizedContent {
   locale: SupportedLocale
   schema: SchemaDefinition
   categories: LocalizedCategory[]
   stateOptions: ItemStateOption[]
   uiActions: UiActions
+  intro: UiIntro
+  mapPreview: UiMapPreview
+  allItems: UiAllItems
   headline: string
   subheadline: string
   wheel: UiWheel
+  languageLabel: string
+  fallbackMessage: string
 }
 
-const ITEM_STATES: ItemState[] = ['none', 'want', 'have', 'avoid']
+const SELECTED_STATES: SelectedItemState[] = ['important', 'present', 'discuss', 'no']
+
+const DEFAULT_STATE_OPTIONS: ItemStateOption[] = [
+  { value: 'important', label: 'Important', longLabel: 'Important to me',  shortLabel: 'Important', icon: '★' },
+  { value: 'present',   label: 'Present',   longLabel: 'Already present',   shortLabel: 'Present',   icon: '✓' },
+  { value: 'discuss',   label: 'Discuss',   longLabel: 'To discuss',        shortLabel: 'Discuss',   icon: '◆' },
+  { value: 'no',        label: 'No',        longLabel: 'Not for me',        shortLabel: 'No',        icon: '✕' },
+]
 
 const DEFAULT_UI_ACTIONS: UiActions = {
-  wheelView:       'Map',
-  listView:        'List',
   reset:           'Clear all',
   copyLink:        'Copy link',
   linkCopied:      'Link copied',
@@ -64,19 +93,36 @@ const DEFAULT_UI_ACTIONS: UiActions = {
 }
 
 const DEFAULT_UI_WHEEL: UiWheel = {
-  description: 'Each slice is one item. Colour shows your answer. Tap a slice to review or change it.',
-  emptyHint:   'Tap any slice to begin. There are no right or wrong answers.',
+  description: 'Each slice is one item. Colour shows your answer.',
+  emptyHint:   'Tap a category to begin. There are no right or wrong answers.',
+}
+
+const DEFAULT_UI_INTRO: UiIntro = {
+  title:            'What matters to you in a relationship?',
+  body:             'Mark what matters, what already exists, what you want to discuss, and what is not for you. There are no right or wrong answers.',
+  privacy:          'Private and local unless you share a link.',
+  startCategory:    'Start with one category',
+  browseCategories: 'Browse all categories',
+  seeMap:           'See the map',
+}
+
+const DEFAULT_UI_MAP_PREVIEW: UiMapPreview = {
+  title:      'Your relationship map',
+  stopAnytime: 'Stop anytime',
+}
+
+const DEFAULT_UI_ALL_ITEMS: UiAllItems = {
+  title:             'All items',
+  subtitle:          'One page to review and mark items at your own pace.',
+  searchPlaceholder: 'Search items',
+  allCategories:     'All categories',
+  showUnanswered:    'Show unanswered',
 }
 
 const DEFAULT_HEADLINE    = 'What do you need in a relationship?'
 const DEFAULT_SUBHEADLINE = "A quiet space to reflect on what matters, what's already there, and what isn't right for you."
-
-const DEFAULT_STATE_OPTIONS: ItemStateOption[] = [
-  { value: 'none', label: 'Not yet answered',  shortLabel: '–' },
-  { value: 'want', label: 'This matters to me', shortLabel: 'Matters' },
-  { value: 'have', label: 'Already present',    shortLabel: 'Present' },
-  { value: 'avoid', label: 'Not for me',        shortLabel: 'Limit' },
-]
+const DEFAULT_LANGUAGE_LABEL = 'Language'
+const DEFAULT_FALLBACK_MESSAGE = 'The shared link could not be restored, so the selection was reset.'
 
 const schema = schemaV1 as SchemaDefinition
 const locales: Record<SupportedLocale, LocaleContent> = {
@@ -88,11 +134,11 @@ export function getSchema(): SchemaDefinition {
   return schema
 }
 
-export function getLocaleContent(locale: LocaleCode): LocaleContent {
+export function getLocaleContent(locale: string): LocaleContent {
   return locales[resolveLocale(locale)]
 }
 
-export function resolveLocale(locale: LocaleCode | null | undefined): SupportedLocale {
+export function resolveLocale(locale: string | null | undefined): SupportedLocale {
   if (isSupportedLocale(locale)) {
     return locale
   }
@@ -124,7 +170,7 @@ export function getLocaleFromBrowser(): SupportedLocale | null {
 }
 
 export function localizeSchema(
-  requestedLocale: LocaleCode | null | undefined,
+  requestedLocale: string | null | undefined,
   options: { logMissing?: boolean } = {},
 ): LocalizedContent {
   const locale = resolveLocale(requestedLocale)
@@ -144,9 +190,14 @@ export function localizeContent(
     schema,
     stateOptions: buildStateOptions(requestedContent, fallbackContent),
     uiActions:    buildUiActions(requestedContent, fallbackContent),
-    headline:     requestedContent.ui?.headline ?? fallbackContent.ui?.headline ?? DEFAULT_HEADLINE,
+    intro:        buildUiIntro(requestedContent, fallbackContent),
+    mapPreview:   buildUiMapPreview(requestedContent, fallbackContent),
+    allItems:     buildUiAllItems(requestedContent, fallbackContent),
+    headline:     requestedContent.ui?.headline    ?? fallbackContent.ui?.headline    ?? DEFAULT_HEADLINE,
     subheadline:  requestedContent.ui?.subheadline ?? fallbackContent.ui?.subheadline ?? DEFAULT_SUBHEADLINE,
     wheel:        buildUiWheel(requestedContent, fallbackContent),
+    languageLabel:   requestedContent.ui?.header?.languageLabel   ?? fallbackContent.ui?.header?.languageLabel   ?? DEFAULT_LANGUAGE_LABEL,
+    fallbackMessage: requestedContent.ui?.fallback?.linkRestoreFailed ?? fallbackContent.ui?.fallback?.linkRestoreFailed ?? DEFAULT_FALLBACK_MESSAGE,
     categories: schema.categories.map((category) => ({
       id: category.id,
       label: getCategoryLabel(
@@ -177,8 +228,6 @@ function buildUiActions(
   const key = <K extends keyof UiActions>(k: K) =>
     req[k] ?? fb[k] ?? DEFAULT_UI_ACTIONS[k]
   return {
-    wheelView:       key('wheelView'),
-    listView:        key('listView'),
     reset:           key('reset'),
     copyLink:        key('copyLink'),
     linkCopied:      key('linkCopied'),
@@ -198,28 +247,75 @@ function buildUiWheel(
   }
 }
 
+function buildUiIntro(
+  requestedContent: LocaleContent,
+  fallbackContent: LocaleContent,
+): UiIntro {
+  const req = requestedContent.ui?.intro ?? {}
+  const fb  = fallbackContent.ui?.intro  ?? {}
+  const key = <K extends keyof UiIntro>(k: K) =>
+    req[k] ?? fb[k] ?? DEFAULT_UI_INTRO[k]
+  return {
+    title:            key('title'),
+    body:             key('body'),
+    privacy:          key('privacy'),
+    startCategory:    key('startCategory'),
+    browseCategories: key('browseCategories'),
+    seeMap:           key('seeMap'),
+  }
+}
+
+function buildUiMapPreview(
+  requestedContent: LocaleContent,
+  fallbackContent: LocaleContent,
+): UiMapPreview {
+  const req = requestedContent.ui?.mapPreview ?? {}
+  const fb  = fallbackContent.ui?.mapPreview  ?? {}
+  const key = <K extends keyof UiMapPreview>(k: K) =>
+    req[k] ?? fb[k] ?? DEFAULT_UI_MAP_PREVIEW[k]
+  return {
+    title:       key('title'),
+    stopAnytime: key('stopAnytime'),
+  }
+}
+
+function buildUiAllItems(
+  requestedContent: LocaleContent,
+  fallbackContent: LocaleContent,
+): UiAllItems {
+  const req = requestedContent.ui?.allItems ?? {}
+  const fb  = fallbackContent.ui?.allItems  ?? {}
+  const key = <K extends keyof UiAllItems>(k: K) =>
+    req[k] ?? fb[k] ?? DEFAULT_UI_ALL_ITEMS[k]
+  return {
+    title:             key('title'),
+    subtitle:          key('subtitle'),
+    searchPlaceholder: key('searchPlaceholder'),
+    allCategories:     key('allCategories'),
+    showUnanswered:    key('showUnanswered'),
+  }
+}
+
 function buildStateOptions(
   requestedContent: LocaleContent,
   fallbackContent: LocaleContent,
 ): ItemStateOption[] {
-  return ITEM_STATES.map((state) => {
+  return SELECTED_STATES.map((state) => {
     const defaultOption = DEFAULT_STATE_OPTIONS.find((o) => o.value === state)!
+    const req = requestedContent.ui?.states?.[state] ?? {}
+    const fb  = fallbackContent.ui?.states?.[state]  ?? {}
     return {
-      value: state,
-      label:
-        requestedContent.ui?.states?.[state]?.label ??
-        fallbackContent.ui?.states?.[state]?.label ??
-        defaultOption.label,
-      shortLabel:
-        requestedContent.ui?.states?.[state]?.shortLabel ??
-        fallbackContent.ui?.states?.[state]?.shortLabel ??
-        defaultOption.shortLabel,
+      value:      state,
+      icon:       defaultOption.icon,
+      label:      req.label      ?? fb.label      ?? defaultOption.label,
+      longLabel:  req.longLabel  ?? fb.longLabel  ?? defaultOption.longLabel,
+      shortLabel: req.shortLabel ?? fb.shortLabel ?? defaultOption.shortLabel,
     }
   })
 }
 
 function isSupportedLocale(
-  locale: LocaleCode | null | undefined,
+  locale: string | null | undefined,
 ): locale is SupportedLocale {
   return supportedLocales.some((supportedLocale) => supportedLocale === locale)
 }

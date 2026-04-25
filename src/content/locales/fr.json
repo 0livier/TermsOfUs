@@ -2,65 +2,48 @@
   "locale": "fr",
   "ui": {
     "appName": "Terms of Us",
-    "headline": "De quoi avez-vous besoin dans une relation ?",
+    "headline": "Qu'est-ce qui compte pour vous dans une relation ?",
     "subheadline": "Un espace calme pour explorer ce qui compte pour vous, ce qui est déjà là, et ce qui ne vous convient pas.",
     "states": {
-      "none":  { "label": "Pas encore répondu", "shortLabel": "–" },
-      "want":  { "label": "C'est important pour moi", "shortLabel": "Important" },
-      "have":  { "label": "Déjà présent", "shortLabel": "Présent" },
-      "avoid": { "label": "Pas pour moi", "shortLabel": "Limite" }
+      "important": { "label": "Important",  "longLabel": "Important pour moi", "shortLabel": "Important"  },
+      "present":   { "label": "Présent",    "longLabel": "Déjà présent",        "shortLabel": "Présent"    },
+      "discuss":   { "label": "À discuter", "longLabel": "À discuter",          "shortLabel": "À discuter" },
+      "no":        { "label": "Non",        "longLabel": "Pas pour moi",        "shortLabel": "Non"        }
     },
     "actions": {
-      "wheelView":       "Carte",
-      "listView":        "Liste",
       "reset":           "Tout effacer",
-      "resetConfirm":    "Effacer toutes les réponses ?",
-      "resetYes":        "Oui, effacer",
-      "resetNo":         "Garder mes réponses",
       "copyLink":        "Copier le lien",
       "linkCopied":      "Lien copié",
       "copyUnavailable": "Impossible de copier"
     },
     "wheel": {
-      "tabLabel":    "Carte",
-      "description": "Chaque part correspond à un élément. La couleur indique votre réponse. Appuyez sur une part pour la consulter ou la modifier.",
-      "emptyHint":   "Appuyez sur une part pour commencer. Il n'y a pas de bonne ou mauvaise réponse.",
-      "legend":      "Légende de la carte"
+      "description": "Chaque part correspond à un élément. La couleur indique votre réponse.",
+      "emptyHint":   "Appuyez sur une catégorie pour commencer. Il n'y a pas de bonne ou mauvaise réponse."
     },
-    "list": {
-      "tabLabel":  "Liste",
-      "emptyHint": "Appuyez sur un élément pour indiquer comment vous vous situez par rapport à lui."
+    "intro": {
+      "title":            "Qu'est-ce qui compte pour vous dans une relation ?",
+      "body":             "Marquez ce qui compte, ce qui est déjà là, ce que vous voulez discuter, et ce qui ne vous convient pas. Il n'y a pas de bonne ou mauvaise réponse.",
+      "privacy":          "Privé et local, sauf si vous partagez un lien.",
+      "startCategory":    "Commencer avec une catégorie",
+      "browseCategories": "Parcourir les catégories",
+      "seeMap":           "Voir la carte"
     },
-    "guided": {
-      "entryLabel":    "Parcourir élément par élément",
-      "entryHint":     "Prenez votre temps. Il n'y a pas de bonne ou mauvaise réponse.",
-      "questionPrompt":"Comment vous situez-vous par rapport à : {itemName} ?",
-      "skip":          "Passer",
-      "next":          "Suivant",
-      "previous":      "Précédent",
-      "finish":        "Terminer",
-      "progressLabel": "{count} sur {total}"
+    "mapPreview": {
+      "title":       "Votre carte relationnelle",
+      "stopAnytime": "Arrêtez quand vous voulez"
     },
-    "progress": {
-      "summary":    "Vous avez répondu à {count} éléments sur {total}.",
-      "complete":   "Vous avez répondu à tout.",
-      "notStarted": "Vous n'avez pas encore répondu."
+    "allItems": {
+      "title":             "Tous les éléments",
+      "subtitle":          "Une page pour consulter et marquer les éléments à votre rythme.",
+      "searchPlaceholder": "Rechercher des éléments",
+      "allCategories":     "Toutes les catégories",
+      "showUnanswered":    "Afficher les non-répondus"
+    },
+    "header": {
+      "languageLabel": "Langue"
     },
     "fallback": {
       "linkRestoreFailed": "Le lien partagé n'a pas pu être entièrement restauré. Vos réponses ont été réinitialisées."
-    },
-    "language": {
-      "label":  "Langue",
-      "select": "Changer de langue"
-    },
-    "accessibility": {
-      "itemButton":       "{itemName} — {currentState}. Activer pour {action}.",
-      "actionSetState":   "marquer comme : {stateName}",
-      "actionClearState": "supprimer votre réponse",
-      "paletteGroup":     "Choisir une réponse à appliquer",
-      "wheelRegion":      "Carte relationnelle",
-      "listRegion":       "Éléments relationnels",
-      "toolbarRegion":    "Vue et actions"
     }
   },
   "categories": {

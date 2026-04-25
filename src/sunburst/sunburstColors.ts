@@ -2,17 +2,19 @@ import type { ItemState, SelectionState } from '../domain/model.js'
 import type { LocalizedItem } from '../content/loader.js'
 
 export const STATE_FILL: Record<ItemState, string> = {
-  none:  '#D3D1C7',
-  want:  '#fff2a8',
-  have:  '#c7f1cf',
-  avoid: '#ffd2df',
+  none:      '#D3D1C7',
+  important: '#bbf0c0',
+  present:   '#bdd9f7',
+  discuss:   '#fde9a0',
+  no:        '#fbbfbf',
 }
 
 export const STATE_STROKE: Record<ItemState, string> = {
-  none:  '#b5b3a9',
-  want:  '#927516',
-  have:  '#2e7a43',
-  avoid: '#a23b5a',
+  none:      '#b5b3a9',
+  important: '#2d7a3f',
+  present:   '#1e5a9c',
+  discuss:   '#b07a00',
+  no:        '#9e2a2a',
 }
 
 // One identity color per category — order mirrors schema.v1.json
@@ -42,19 +44,15 @@ export function getDominantState(
   items: LocalizedItem[],
   selection: SelectionState,
 ): ItemState {
-  const counts = { want: 0, have: 0, avoid: 0 }
+  const counts = { important: 0, present: 0, discuss: 0, no: 0 }
   for (const item of items) {
     const s = selection[item.id]
     if (s) counts[s]++
   }
-  const max = Math.max(counts.have, counts.want, counts.avoid)
+  const max = Math.max(counts.important, counts.present, counts.discuss, counts.no)
   if (max === 0) return 'none'
-  if (counts.have === max) return 'have'
-  if (counts.want === max) return 'want'
-  return 'avoid'
-}
-
-export function cycleState(current: ItemState): ItemState {
-  const order: ItemState[] = ['none', 'want', 'have', 'avoid']
-  return order[(order.indexOf(current) + 1) % order.length]
+  if (counts.important === max) return 'important'
+  if (counts.present   === max) return 'present'
+  if (counts.discuss   === max) return 'discuss'
+  return 'no'
 }

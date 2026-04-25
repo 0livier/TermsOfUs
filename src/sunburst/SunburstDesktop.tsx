@@ -49,6 +49,8 @@ export function SunburstDesktop({
     onItemChange(itemId, activeState === 'none' || current === activeState ? 'none' : activeState)
   }
 
+  // SunburstDesktop is kept for potential future use; primary UI is in App.tsx
+
   return (
     <div className="sunburst-desktop">
       {/* ── SVG ──────────────────────────────────────────────────── */}

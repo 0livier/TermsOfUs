@@ -29,7 +29,7 @@ export function SelectableItem({
     >
       <span>{label}</span>
       <span className="item-state">
-        <span className="state-mark" aria-hidden="true" />
+        <span aria-hidden="true">{currentOption.icon ?? '–'}</span>
         <span>{currentOption.shortLabel}</span>
       </span>
     </button>

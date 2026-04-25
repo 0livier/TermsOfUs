@@ -73,6 +73,8 @@ export function SunburstMobile({
     onItemChange(itemId, activeState === 'none' || current === activeState ? 'none' : activeState)
   }
 
+  // SunburstMobile is kept for optional use; primary category exploration is in App.tsx
+
   return (
     <div className="sunburst-mobile">
       <div className={`sunburst-mobile-slides${activeCat ? ' on-b' : ''}`}>
@@ -166,9 +168,9 @@ export function SunburstMobile({
                 <button
                   className="sunburst-back-btn"
                   onClick={() => history.back()}
-                  aria-label={`← ${content.uiActions.wheelView}`}
+                  aria-label="← Map"
                 >
-                  ← {content.uiActions.wheelView}
+                  ← Map
                 </button>
                 <span
                   className="sunburst-cat-dot"
