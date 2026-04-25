@@ -1,0 +1,139 @@
+.sunburst-desktop {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.sunburst-desktop-svg {
+  flex: 0 0 auto;
+  width: clamp(280px, 50%, 460px);
+  display: block;
+}
+
+/* ── Right panel ──────────────────────────────────────────────── */
+
+.sunburst-desktop-panel {
+  flex: 1 1 240px;
+  max-width: 360px;
+  min-width: 220px;
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+/* Detail view (item hovered) */
+
+.sunburst-panel-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin: 0 0 6px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.sunburst-panel-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sunburst-panel-item-name {
+  margin: 0 0 18px;
+  font-size: 18px;
+  line-height: 1.3;
+  color: var(--heading);
+}
+
+.sunburst-panel-states {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Reuses --state-bg / --state-border CSS vars set by .is-* classes in App.css */
+.sunburst-panel-state-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 12px;
+  min-height: 38px;
+  background: var(--state-bg, var(--panel));
+  border: 1.5px solid var(--state-border, var(--border));
+  border-radius: 6px;
+  font: 700 13px/1 var(--sans);
+  color: #171717;
+  cursor: pointer;
+  transition: box-shadow 0.1s;
+}
+
+.sunburst-panel-state-btn:hover {
+  border-color: var(--focus);
+}
+
+.sunburst-panel-state-btn.is-panel-active {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px var(--focus-soft);
+}
+
+/* Stats view (nothing hovered) */
+
+.sunburst-panel-stat-label {
+  margin: 0 0 4px;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+}
+
+.sunburst-panel-completion {
+  margin: 0 0 20px;
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--heading);
+}
+
+.sunburst-panel-counts {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+}
+
+.sunburst-panel-count-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--bg);
+  border-radius: 6px;
+}
+
+.sunburst-panel-count-row dt {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.sunburst-panel-count-dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1.5px solid;
+  flex-shrink: 0;
+}
+
+.sunburst-panel-count-row dd {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--heading);
+}

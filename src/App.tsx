@@ -12,27 +12,25 @@ import {
 import {
   type ItemId,
   type ItemState,
+  type SelectedItemState,
   type SelectionState,
 } from './domain/model.js'
 import { getLocaleFromUrl, parseUrlState, replaceUrlState } from './routing/url-state.js'
 import { applyActiveState } from './app/selection.js'
 import { Palette } from './components/Palette.js'
 import { SelectableItem } from './components/SelectableItem.js'
+import { Sunburst } from './sunburst/Sunburst.js'
 
 function getInitialUrlState() {
   const schema = localizeSchema('en').schema
 
   if (typeof window === 'undefined') {
-    return {
-      locale: 'en' as SupportedLocale,
-      selection: {},
-      isFallback: false,
-    }
+    return { locale: 'en' as SupportedLocale, selection: {}, isFallback: false }
   }
 
-  const url = new URL(window.location.href)
+  const url      = new URL(window.location.href)
   const urlState = parseUrlState(url, schema)
-  const locale =
+  const locale   =
     getLocaleFromUrl(url) ??
     getLocalePreference() ??
     getLocaleFromBrowser() ??
@@ -44,12 +42,12 @@ function getInitialUrlState() {
 const initialUrlState = getInitialUrlState()
 
 function App() {
-  const [locale, setLocale] = useState<SupportedLocale>(initialUrlState.locale)
-  const [selection, setSelection] = useState<SelectionState>(
-    initialUrlState.selection,
-  )
-  const [activeState, setActiveState] = useState<ItemState>('want')
-  const [copyStatus, setCopyStatus] = useState('')
+  const [locale, setLocale]                   = useState<SupportedLocale>(initialUrlState.locale)
+  const [selection, setSelection]             = useState<SelectionState>(initialUrlState.selection)
+  const [activeState, setActiveState]         = useState<ItemState>('want')
+  const [viewMode, setViewMode]               = useState<'wheel' | 'list'>('wheel')
+  const [interactionMode, setInteractionMode] = useState<'palette' | 'cycle'>('palette')
+  const [copyStatus, setCopyStatus]           = useState('')
   const content = useMemo(() => localizeSchema(locale), [locale])
 
   useEffect(() => {
@@ -60,10 +58,23 @@ function App() {
     })
   }, [content.schema, locale, selection])
 
+  // For the list view: palette-driven (uses activeState + toggle logic)
   function updateItem(itemId: ItemId) {
-    setSelection((currentSelection) =>
-      applyActiveState(currentSelection, itemId, activeState),
-    )
+    setSelection(prev => applyActiveState(prev, itemId, activeState))
+    setCopyStatus('')
+  }
+
+  // For the sunburst: raw state set (component decides the next state)
+  function handleItemChange(itemId: ItemId, newState: ItemState) {
+    setSelection(prev => {
+      const next = { ...prev }
+      if (newState === 'none') {
+        delete next[itemId]
+      } else {
+        next[itemId] = newState as SelectedItemState
+      }
+      return next
+    })
     setCopyStatus('')
   }
 
@@ -98,6 +109,35 @@ function App() {
     }
   }
 
+  function exportJson() {
+    const data = {
+      locale:      content.locale,
+      exportedAt:  new Date().toISOString(),
+      version:     content.schema.version,
+      items: content.categories.flatMap(cat =>
+        cat.items
+          .filter(item => selection[item.id])
+          .map(item => ({
+            category:      cat.id,
+            categoryLabel: cat.label,
+            id:            item.id,
+            label:         item.label,
+            state:         selection[item.id],
+          })),
+      ),
+    }
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+    const url  = URL.createObjectURL(blob)
+    const a    = document.createElement('a')
+    a.href     = url
+    a.download = `termsofus-${new Date().toISOString().slice(0, 10)}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  const showPalette = viewMode === 'list' || interactionMode === 'palette'
+
   return (
     <main className="app-shell">
       <header className="app-header">
@@ -127,15 +167,36 @@ function App() {
       </header>
 
       <section className="toolbar" aria-label="Selection tools">
-        <Palette activeState={activeState} stateOptions={content.stateOptions} onChange={setActiveState} />
+        {showPalette && (
+          <Palette
+            activeState={activeState}
+            stateOptions={content.stateOptions}
+            onChange={setActiveState}
+          />
+        )}
 
         <div className="actions">
-          <button type="button" onClick={resetSelection}>
-            Reset
+          <button
+            type="button"
+            className={`toggle-btn${viewMode === 'wheel' ? ' is-active' : ''}`}
+            onClick={() => setViewMode(v => v === 'list' ? 'wheel' : 'list')}
+          >
+            {viewMode === 'list' ? '⊙ Wheel' : '☰ List'}
           </button>
-          <button type="button" onClick={copyLink}>
-            Copy link
-          </button>
+
+          {viewMode === 'wheel' && (
+            <button
+              type="button"
+              className={`toggle-btn${interactionMode === 'cycle' ? ' is-active' : ''}`}
+              onClick={() => setInteractionMode(m => m === 'palette' ? 'cycle' : 'palette')}
+            >
+              {interactionMode === 'cycle' ? '↻ Cycling' : '◈ Palette'}
+            </button>
+          )}
+
+          <button type="button" onClick={resetSelection}>Reset</button>
+          <button type="button" onClick={copyLink}>Copy link</button>
+          <button type="button" onClick={exportJson}>Export</button>
           {copyStatus ? <span role="status">{copyStatus}</span> : null}
         </div>
       </section>
@@ -146,30 +207,39 @@ function App() {
         </p>
       ) : null}
 
-      <section className="category-grid" aria-label="Relationship items">
-        {content.categories.map((category) => (
-          <section key={category.id} className="category-panel">
-            <h2>{category.label}</h2>
-            <div className="item-list">
-              {category.items.map((item) => {
-                const currentState = selection[item.id] ?? 'none'
-
-                return (
-                  <SelectableItem
-                    key={item.id}
-                    id={item.id}
-                    label={item.label}
-                    currentState={currentState}
-                    activeState={activeState}
-                    stateOptions={content.stateOptions}
-                    onSelect={updateItem}
-                  />
-                )
-              })}
-            </div>
-          </section>
-        ))}
-      </section>
+      {viewMode === 'wheel' ? (
+        <Sunburst
+          content={content}
+          selection={selection}
+          activeState={activeState}
+          interactionMode={interactionMode}
+          onItemChange={handleItemChange}
+        />
+      ) : (
+        <section className="category-grid" aria-label="Relationship items">
+          {content.categories.map((category) => (
+            <section key={category.id} className="category-panel">
+              <h2>{category.label}</h2>
+              <div className="item-list">
+                {category.items.map((item) => {
+                  const currentState = selection[item.id] ?? 'none'
+                  return (
+                    <SelectableItem
+                      key={item.id}
+                      id={item.id}
+                      label={item.label}
+                      currentState={currentState}
+                      activeState={activeState}
+                      stateOptions={content.stateOptions}
+                      onSelect={updateItem}
+                    />
+                  )
+                })}
+              </div>
+            </section>
+          ))}
+        </section>
+      )}
     </main>
   )
 }

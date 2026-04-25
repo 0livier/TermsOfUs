@@ -175,6 +175,11 @@
   font-weight: 700;
 }
 
+.toggle-btn.is-active {
+  border-color: var(--focus);
+  box-shadow: 0 0 0 3px var(--focus-soft);
+}
+
 .actions span,
 .notice {
   color: var(--muted);
