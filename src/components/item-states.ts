@@ -2,7 +2,7 @@ import type { ItemState, ItemStateOption, SelectedItemState } from '../domain/mo
 
 export type { ItemStateOption }
 
-export const SELECTED_STATES: SelectedItemState[] = ['important', 'present', 'discuss', 'no']
+export const SELECTED_STATES: SelectedItemState[] = ['present', 'important', 'discuss', 'no']
 
 export const STATE_ICONS: Record<SelectedItemState, string> = {
   important: '★',
@@ -12,8 +12,8 @@ export const STATE_ICONS: Record<SelectedItemState, string> = {
 }
 
 export const itemStateOptions: ItemStateOption[] = [
-  { value: 'important', label: 'Important',  longLabel: 'Important to me',  shortLabel: 'Important', icon: '★' },
   { value: 'present',   label: 'Present',    longLabel: 'Already present',   shortLabel: 'Present',   icon: '✓' },
+  { value: 'important', label: 'Important',  longLabel: 'Important to me',  shortLabel: 'Important', icon: '★' },
   { value: 'discuss',   label: 'Discuss',    longLabel: 'To discuss',        shortLabel: 'Discuss',   icon: '◆' },
   { value: 'no',        label: 'No',         longLabel: 'Not for me',        shortLabel: 'No',        icon: '✕' },
 ]
