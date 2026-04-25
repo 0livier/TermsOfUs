@@ -44,6 +44,17 @@
     },
     "fallback": {
       "linkRestoreFailed": "The shared link could not be fully restored. Your answers have been reset."
+    },
+    "menu": {
+      "open":     "Menu",
+      "copyLink": "Copy link",
+      "clearAll": "Clear all"
+    },
+    "confirm": {
+      "clearTitle":   "Clear your marks?",
+      "clearBody":    "This will remove all your answers. You can share a link first to keep them.",
+      "clearCancel":  "Keep them",
+      "clearConfirm": "Clear marks"
     }
   },
   "categories": {

@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react'
 import type { ItemId, ItemState, ItemStateOption, SelectedItemState } from '../domain/model.js'
+import { StateIcon } from './StateIcon.js'
 
 interface ItemRowProps {
   id: ItemId
@@ -58,7 +59,7 @@ export function ItemRow({
             aria-label={`${currentOption.longLabel}. Tap to change.`}
             aria-pressed={false}
           >
-            <span aria-hidden="true">{currentOption.icon}</span>
+            <StateIcon state={currentOption.value} icon={currentOption.icon} />
             <span>{currentOption.label}</span>
           </button>
         ) : null}
@@ -75,7 +76,7 @@ export function ItemRow({
               aria-pressed={currentState === opt.value}
               onClick={() => handleStateSelect(opt.value as SelectedItemState)}
             >
-              <span aria-hidden="true">{opt.icon}</span>
+              <StateIcon state={opt.value} icon={opt.icon} />
               <span className="state-btn-label">{opt.label}</span>
             </button>
           ))}

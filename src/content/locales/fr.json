@@ -44,6 +44,17 @@
     },
     "fallback": {
       "linkRestoreFailed": "Le lien partagé n'a pas pu être entièrement restauré. Vos réponses ont été réinitialisées."
+    },
+    "menu": {
+      "open":     "Menu",
+      "copyLink": "Copier le lien",
+      "clearAll": "Tout effacer"
+    },
+    "confirm": {
+      "clearTitle":   "Effacer vos réponses ?",
+      "clearBody":    "Cela supprimera toutes vos réponses. Vous pouvez d'abord copier le lien pour les conserver.",
+      "clearCancel":  "Les garder",
+      "clearConfirm": "Tout effacer"
     }
   },
   "categories": {

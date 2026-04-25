@@ -60,6 +60,19 @@ export interface UiAllItems {
   showUnanswered: string
 }
 
+export interface UiMenu {
+  open: string
+  copyLink: string
+  clearAll: string
+}
+
+export interface UiConfirm {
+  clearTitle: string
+  clearBody: string
+  clearCancel: string
+  clearConfirm: string
+}
+
 export interface LocalizedContent {
   locale: SupportedLocale
   schema: SchemaDefinition
@@ -74,6 +87,8 @@ export interface LocalizedContent {
   wheel: UiWheel
   languageLabel: string
   fallbackMessage: string
+  menu: UiMenu
+  confirm: UiConfirm
 }
 
 const SELECTED_STATES: SelectedItemState[] = ['present', 'important', 'discuss', 'no']
@@ -117,6 +132,19 @@ const DEFAULT_UI_ALL_ITEMS: UiAllItems = {
   searchPlaceholder: 'Search items',
   allCategories:     'All categories',
   showUnanswered:    'Show unanswered',
+}
+
+const DEFAULT_UI_MENU: UiMenu = {
+  open:     'Menu',
+  copyLink: 'Copy link',
+  clearAll: 'Clear all',
+}
+
+const DEFAULT_UI_CONFIRM: UiConfirm = {
+  clearTitle:   'Clear your marks?',
+  clearBody:    'This will remove all your answers. You can share a link first to keep them.',
+  clearCancel:  'Keep them',
+  clearConfirm: 'Clear marks',
 }
 
 const DEFAULT_HEADLINE    = 'What do you need in a relationship?'
@@ -198,6 +226,8 @@ export function localizeContent(
     wheel:        buildUiWheel(requestedContent, fallbackContent),
     languageLabel:   requestedContent.ui?.header?.languageLabel   ?? fallbackContent.ui?.header?.languageLabel   ?? DEFAULT_LANGUAGE_LABEL,
     fallbackMessage: requestedContent.ui?.fallback?.linkRestoreFailed ?? fallbackContent.ui?.fallback?.linkRestoreFailed ?? DEFAULT_FALLBACK_MESSAGE,
+    menu:    buildUiMenu(requestedContent, fallbackContent),
+    confirm: buildUiConfirm(requestedContent, fallbackContent),
     categories: schema.categories.map((category) => ({
       id: category.id,
       label: getCategoryLabel(
@@ -293,6 +323,37 @@ function buildUiAllItems(
     searchPlaceholder: key('searchPlaceholder'),
     allCategories:     key('allCategories'),
     showUnanswered:    key('showUnanswered'),
+  }
+}
+
+function buildUiMenu(
+  requestedContent: LocaleContent,
+  fallbackContent: LocaleContent,
+): UiMenu {
+  const req = requestedContent.ui?.menu ?? {}
+  const fb  = fallbackContent.ui?.menu  ?? {}
+  const key = <K extends keyof UiMenu>(k: K) =>
+    req[k] ?? fb[k] ?? DEFAULT_UI_MENU[k]
+  return {
+    open:     key('open'),
+    copyLink: key('copyLink'),
+    clearAll: key('clearAll'),
+  }
+}
+
+function buildUiConfirm(
+  requestedContent: LocaleContent,
+  fallbackContent: LocaleContent,
+): UiConfirm {
+  const req = requestedContent.ui?.confirm ?? {}
+  const fb  = fallbackContent.ui?.confirm  ?? {}
+  const key = <K extends keyof UiConfirm>(k: K) =>
+    req[k] ?? fb[k] ?? DEFAULT_UI_CONFIRM[k]
+  return {
+    clearTitle:   key('clearTitle'),
+    clearBody:    key('clearBody'),
+    clearCancel:  key('clearCancel'),
+    clearConfirm: key('clearConfirm'),
   }
 }
 

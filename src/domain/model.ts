@@ -64,6 +64,17 @@ export interface LocaleUiContent {
     description?: string
     emptyHint?: string
   }
+  menu?: {
+    open?: string
+    copyLink?: string
+    clearAll?: string
+  }
+  confirm?: {
+    clearTitle?: string
+    clearBody?: string
+    clearCancel?: string
+    clearConfirm?: string
+  }
   intro?: {
     title?: string
     body?: string

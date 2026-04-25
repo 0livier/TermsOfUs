@@ -3,16 +3,16 @@ import type { LocalizedItem } from '../content/loader.js'
 
 export const STATE_FILL: Record<ItemState, string> = {
   none:      '#D3D1C7',
-  important: '#bbf0c0',
-  present:   '#bdd9f7',
+  important: '#bdd9f7',
+  present:   '#bbf0c0',
   discuss:   '#fde9a0',
   no:        '#fbbfbf',
 }
 
 export const STATE_STROKE: Record<ItemState, string> = {
   none:      '#b5b3a9',
-  important: '#2d7a3f',
-  present:   '#1e5a9c',
+  important: '#1e5a9c',
+  present:   '#2d7a3f',
   discuss:   '#b07a00',
   no:        '#9e2a2a',
 }

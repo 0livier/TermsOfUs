@@ -18,6 +18,7 @@ import {
 } from './domain/model.js'
 import { getLocaleFromUrl, parseUrlState, replaceUrlState } from './routing/url-state.js'
 import { ItemRow } from './components/ItemRow.js'
+import { StateIcon } from './components/StateIcon.js'
 import { CATEGORY_COLOR } from './sunburst/sunburstColors.js'
 
 function getInitialUrlState() {
@@ -51,7 +52,9 @@ function StateLegend({ stateOptions }: StateLegendProps) {
     <div className="state-legend" aria-label="Legend">
       {stateOptions.map((opt) => (
         <div key={opt.value} className={`legend-item is-${opt.value}`}>
-          <span className="legend-icon" aria-hidden="true">{opt.icon}</span>
+          <span className="legend-icon">
+            <StateIcon state={opt.value} icon={opt.icon} />
+          </span>
           <span className="legend-label">{opt.longLabel}</span>
         </div>
       ))}
@@ -82,10 +85,10 @@ function CategoryCard({
   onItemClear,
   color,
 }: CategoryCardProps) {
-  const answeredCount = category.items.filter((item) => selection[item.id]).length
+  const hasAnswered = category.items.some((item) => selection[item.id])
 
   return (
-    <div className={`category-card${isOpen ? ' category-card--open' : ''}`}>
+    <div className={`category-card${isOpen ? ' category-card--open' : ''}${hasAnswered ? ' category-card--active' : ''}`}>
       <button
         type="button"
         className="category-card-header"
@@ -99,10 +102,8 @@ function CategoryCard({
         />
         <span className="category-card-title">{category.label}</span>
         <span className="category-card-meta">
-          {answeredCount > 0 && (
-            <span className="category-card-count" aria-label={`${answeredCount} answered`}>
-              {answeredCount}
-            </span>
+          {hasAnswered && (
+            <span className="category-card-activity" aria-hidden="true" style={{ color }} />
           )}
           <span className="category-card-chevron" aria-hidden="true">
             {isOpen ? '▲' : '▼'}
@@ -129,17 +130,47 @@ function CategoryCard({
   )
 }
 
+// ─── Confirm dialog ───────────────────────────────────────────────────────────
+
+interface ConfirmDialogProps {
+  title: string
+  body: string
+  cancelLabel: string
+  confirmLabel: string
+  onCancel: () => void
+  onConfirm: () => void
+}
+
+function ConfirmDialog({ title, body, cancelLabel, confirmLabel, onCancel, onConfirm }: ConfirmDialogProps) {
+  return (
+    <div className="dialog-backdrop" role="dialog" aria-modal="true" aria-labelledby="dialog-title">
+      <div className="dialog-card">
+        <h2 id="dialog-title" className="dialog-title">{title}</h2>
+        <p className="dialog-body">{body}</p>
+        <div className="dialog-actions">
+          <button type="button" className="btn-secondary" onClick={onCancel}>{cancelLabel}</button>
+          <button type="button" className="btn-danger" onClick={onConfirm}>{confirmLabel}</button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // ─── App ──────────────────────────────────────────────────────────────────────
 
 function App() {
-  const [locale, setLocale]         = useState<SupportedLocale>(initialUrlState.locale)
-  const [selection, setSelection]   = useState<SelectionState>(initialUrlState.selection)
-  const [copyStatus, setCopyStatus] = useState('')
+  const [locale, setLocale]           = useState<SupportedLocale>(initialUrlState.locale)
+  const [selection, setSelection]     = useState<SelectionState>(initialUrlState.selection)
+  const [menuOpen, setMenuOpen]             = useState(false)
+  const [showConfirm, setShowConfirm]       = useState(false)
+  const [toast, setToast]                   = useState('')
   const [openCategoryId, setOpenCategoryId] = useState<string | null>(null)
 
   const content = useMemo(() => localizeSchema(locale), [locale])
 
   const categoriesRef = useRef<HTMLElement>(null)
+  const menuRef       = useRef<HTMLDivElement>(null)
+  const toastTimer    = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
     replaceUrlState(new URL(window.location.href), {
@@ -149,9 +180,25 @@ function App() {
     })
   }, [content.schema, locale, selection])
 
+  useEffect(() => {
+    if (!menuOpen) return
+    function handleClick(e: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [menuOpen])
+
+  function showToast(message: string) {
+    setToast(message)
+    if (toastTimer.current) clearTimeout(toastTimer.current)
+    toastTimer.current = setTimeout(() => setToast(''), 2500)
+  }
+
   function handleItemSelect(itemId: ItemId, state: SelectedItemState) {
     setSelection((prev) => ({ ...prev, [itemId]: state }))
-    setCopyStatus('')
   }
 
   function handleItemClear(itemId: ItemId) {
@@ -160,15 +207,15 @@ function App() {
       delete next[itemId]
       return next
     })
-    setCopyStatus('')
   }
 
-  function resetSelection() {
+  function handleClearConfirmed() {
     setSelection({})
-    setCopyStatus('')
+    setShowConfirm(false)
   }
 
-  async function copyLink() {
+  async function handleCopyLink() {
+    setMenuOpen(false)
     const path = replaceUrlState(new URL(window.location.href), {
       locale,
       schema: content.schema,
@@ -188,9 +235,9 @@ function App() {
         document.execCommand('copy')
         document.body.removeChild(textarea)
       }
-      setCopyStatus(content.uiActions.linkCopied)
+      showToast(content.uiActions.linkCopied)
     } catch {
-      setCopyStatus(content.uiActions.copyUnavailable)
+      showToast(content.uiActions.copyUnavailable)
     }
   }
 
@@ -209,7 +256,6 @@ function App() {
                 const newLocale = e.target.value as SupportedLocale
                 setLocale(newLocale)
                 saveLocalePreference(newLocale)
-                setCopyStatus('')
               }}
               aria-label={content.languageLabel}
             >
@@ -218,15 +264,59 @@ function App() {
               ))}
             </select>
           </label>
-          <button type="button" className="header-action-btn" onClick={resetSelection}>
-            {content.uiActions.reset}
-          </button>
-          <button type="button" className="header-action-btn" onClick={copyLink}>
-            {content.uiActions.copyLink}
-          </button>
-          {copyStatus ? <span role="status" className="copy-status">{copyStatus}</span> : null}
+
+          <div className="menu-container" ref={menuRef}>
+            <button
+              type="button"
+              className="header-action-btn menu-btn"
+              onClick={() => setMenuOpen((prev) => !prev)}
+              aria-haspopup="true"
+              aria-expanded={menuOpen}
+              aria-label={content.menu.open}
+            >
+              ☰
+            </button>
+            {menuOpen && (
+              <div className="menu-dropdown" role="menu">
+                <button
+                  type="button"
+                  className="menu-item"
+                  role="menuitem"
+                  onClick={handleCopyLink}
+                >
+                  {content.menu.copyLink}
+                </button>
+                <div className="menu-separator" />
+                <button
+                  type="button"
+                  className="menu-item menu-item--danger"
+                  role="menuitem"
+                  onClick={() => { setMenuOpen(false); setShowConfirm(true) }}
+                >
+                  {content.menu.clearAll}
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </header>
+
+      {/* ── Toast ──────────────────────────────────────────── */}
+      {toast && (
+        <div className="toast" role="status" aria-live="polite">{toast}</div>
+      )}
+
+      {/* ── Confirm dialog ─────────────────────────────────── */}
+      {showConfirm && (
+        <ConfirmDialog
+          title={content.confirm.clearTitle}
+          body={content.confirm.clearBody}
+          cancelLabel={content.confirm.clearCancel}
+          confirmLabel={content.confirm.clearConfirm}
+          onCancel={() => setShowConfirm(false)}
+          onConfirm={handleClearConfirmed}
+        />
+      )}
 
       {/* ── Fallback notice ────────────────────────────────── */}
       {initialUrlState.isFallback ? (
