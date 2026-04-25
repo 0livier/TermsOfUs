@@ -44,10 +44,9 @@ const initialUrlState = getInitialUrlState()
 function App() {
   const [locale, setLocale]                   = useState<SupportedLocale>(initialUrlState.locale)
   const [selection, setSelection]             = useState<SelectionState>(initialUrlState.selection)
-  const [activeState, setActiveState]         = useState<ItemState>('want')
-  const [viewMode, setViewMode]               = useState<'wheel' | 'list'>('wheel')
-  const [interactionMode, setInteractionMode] = useState<'palette' | 'cycle'>('palette')
-  const [copyStatus, setCopyStatus]           = useState('')
+  const [activeState, setActiveState] = useState<ItemState>('want')
+  const [viewMode, setViewMode]       = useState<'wheel' | 'list'>('wheel')
+  const [copyStatus, setCopyStatus]   = useState('')
   const content = useMemo(() => localizeSchema(locale), [locale])
 
   useEffect(() => {
@@ -109,8 +108,6 @@ function App() {
     }
   }
 
-  const showPalette = viewMode === 'list' || interactionMode === 'palette'
-
   return (
     <main className="app-shell">
       <header className="app-header">
@@ -140,14 +137,6 @@ function App() {
       </header>
 
       <section className="toolbar" aria-label="Selection tools">
-        {showPalette && (
-          <Palette
-            activeState={activeState}
-            stateOptions={content.stateOptions}
-            onChange={setActiveState}
-          />
-        )}
-
         <div className="actions">
           <button
             type="button"
@@ -156,16 +145,6 @@ function App() {
           >
             {viewMode === 'list' ? `⊙ ${content.uiActions.wheelView}` : `☰ ${content.uiActions.listView}`}
           </button>
-
-          {viewMode === 'wheel' && (
-            <button
-              type="button"
-              className={`toggle-btn${interactionMode === 'cycle' ? ' is-active' : ''}`}
-              onClick={() => setInteractionMode(m => m === 'palette' ? 'cycle' : 'palette')}
-            >
-              {interactionMode === 'cycle' ? `↻ ${content.uiActions.cycleMode}` : `◈ ${content.uiActions.paletteMode}`}
-            </button>
-          )}
 
           <button type="button" onClick={resetSelection}>{content.uiActions.reset}</button>
           <button type="button" onClick={copyLink}>{content.uiActions.copyLink}</button>
@@ -179,13 +158,23 @@ function App() {
         </p>
       ) : null}
 
+      {viewMode === 'list' && (
+        <div className="list-palette-bar">
+          <Palette
+            activeState={activeState}
+            stateOptions={content.stateOptions}
+            onChange={setActiveState}
+          />
+        </div>
+      )}
+
       {viewMode === 'wheel' ? (
         <Sunburst
           content={content}
           selection={selection}
           activeState={activeState}
-          interactionMode={interactionMode}
           onItemChange={handleItemChange}
+          onActiveStateChange={setActiveState}
         />
       ) : (
         <section className="category-grid" aria-label="Relationship items">

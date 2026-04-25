@@ -5,11 +5,11 @@ import { SunburstMobile } from './SunburstMobile.js'
 import { SunburstDesktop } from './SunburstDesktop.js'
 
 export interface SunburstProps {
-  content:         LocalizedContent
-  selection:       SelectionState
-  activeState:     ItemState
-  interactionMode: 'palette' | 'cycle'
-  onItemChange:    (itemId: ItemId, newState: ItemState) => void
+  content:             LocalizedContent
+  selection:           SelectionState
+  activeState:         ItemState
+  onItemChange:        (itemId: ItemId, newState: ItemState) => void
+  onActiveStateChange: (state: ItemState) => void
 }
 
 function useIsMobile(): boolean {

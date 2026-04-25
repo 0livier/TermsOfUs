@@ -1,5 +1,5 @@
 .sunburst-mobile {
-  overflow: hidden;
+  overflow-x: clip;
   width: 100%;
 }
 
@@ -54,6 +54,16 @@
 }
 
 /* ── Screen B ─────────────────────────────────────────────────── */
+
+.sunburst-mobile-palette {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--bg);
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+}
 
 .sunburst-mobile-header {
   display: flex;

@@ -6,7 +6,6 @@ import {
   CATEGORY_COLOR,
   STATE_FILL,
   STATE_STROKE,
-  cycleState,
 } from './sunburstColors.js'
 import './SunburstDesktop.css'
 
@@ -24,18 +23,16 @@ interface HoveredSegment {
 }
 
 interface Props {
-  content:         LocalizedContent
-  selection:       SelectionState
-  activeState:     ItemState
-  interactionMode: 'palette' | 'cycle'
-  onItemChange:    (itemId: ItemId, newState: ItemState) => void
+  content:      LocalizedContent
+  selection:    SelectionState
+  activeState:  ItemState
+  onItemChange: (itemId: ItemId, newState: ItemState) => void
 }
 
 export function SunburstDesktop({
   content,
   selection,
   activeState,
-  interactionMode,
   onItemChange,
 }: Props) {
   const [hovered, setHovered] = useState<HoveredSegment | null>(null)
@@ -49,11 +46,7 @@ export function SunburstDesktop({
 
   function handleSegmentClick(itemId: ItemId) {
     const current = selection[itemId] ?? 'none'
-    if (interactionMode === 'cycle') {
-      onItemChange(itemId, cycleState(current))
-    } else {
-      onItemChange(itemId, activeState === 'none' || current === activeState ? 'none' : activeState)
-    }
+    onItemChange(itemId, activeState === 'none' || current === activeState ? 'none' : activeState)
   }
 
   return (

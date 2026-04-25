@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import type { ItemId, ItemState, SelectionState } from '../domain/model.js'
 import type { LocalizedContent } from '../content/loader.js'
+import { Palette } from '../components/Palette.js'
 import { arcPath } from './arcPath.js'
 import {
   CATEGORY_COLOR,
   STATE_FILL,
   STATE_STROKE,
-  cycleState,
 } from './sunburstColors.js'
 import './SunburstMobile.css'
 
@@ -18,19 +18,19 @@ const R_ID_OUTER    = 173
 const GAP = 0.008
 
 interface Props {
-  content: LocalizedContent
-  selection: SelectionState
-  activeState: ItemState
-  interactionMode: 'palette' | 'cycle'
-  onItemChange: (itemId: ItemId, newState: ItemState) => void
+  content:             LocalizedContent
+  selection:           SelectionState
+  activeState:         ItemState
+  onItemChange:        (itemId: ItemId, newState: ItemState) => void
+  onActiveStateChange: (state: ItemState) => void
 }
 
 export function SunburstMobile({
   content,
   selection,
   activeState,
-  interactionMode,
   onItemChange,
+  onActiveStateChange,
 }: Props) {
   const [activeCatId, setActiveCatId] = useState<string | null>(null)
   const [hoveredCatId, setHoveredCatId] = useState<string | null>(null)
@@ -57,11 +57,7 @@ export function SunburstMobile({
 
   function handleItemTap(itemId: ItemId) {
     const current = selection[itemId] ?? 'none'
-    if (interactionMode === 'cycle') {
-      onItemChange(itemId, cycleState(current))
-    } else {
-      onItemChange(itemId, activeState === 'none' || current === activeState ? 'none' : activeState)
-    }
+    onItemChange(itemId, activeState === 'none' || current === activeState ? 'none' : activeState)
   }
 
   return (
@@ -164,6 +160,14 @@ export function SunburstMobile({
                   aria-hidden="true"
                 />
                 <span className="sunburst-cat-name">{activeCat.label}</span>
+              </div>
+
+              <div className="sunburst-mobile-palette">
+                <Palette
+                  activeState={activeState}
+                  stateOptions={content.stateOptions}
+                  onChange={onActiveStateChange}
+                />
               </div>
 
               <div className="sunburst-item-list">

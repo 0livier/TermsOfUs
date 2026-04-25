@@ -54,6 +54,16 @@
   gap: 8px;
 }
 
+.list-palette-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--bg);
+  padding: 12px 32px;
+  margin: 0 -32px;
+  border-bottom: 1px solid var(--border);
+}
+
 .palette-button,
 .actions button,
 .item-button {
@@ -254,6 +264,11 @@ select:focus-visible {
 @media (max-width: 760px) {
   .app-shell {
     padding: 20px;
+  }
+
+  .list-palette-bar {
+    padding: 10px 20px;
+    margin: 0 -20px;
   }
 
   .app-header,
