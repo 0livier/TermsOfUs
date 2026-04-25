@@ -82,8 +82,6 @@ function CategoryCard({
   onItemSelect,
   onItemClear,
 }: CategoryCardProps) {
-  const answeredCount = category.items.filter((item) => selection[item.id]).length
-
   return (
     <div className={`category-card${isOpen ? ' category-card--open' : ''}`}>
       <button
@@ -92,12 +90,7 @@ function CategoryCard({
         onClick={onToggle}
         aria-expanded={isOpen}
       >
-        <div>
-          <div className="category-card-title">{category.label}</div>
-          <div className="category-card-meta">
-            {category.items.length} items{answeredCount > 0 ? ` · ${answeredCount} answered` : ''}
-          </div>
-        </div>
+        <span className="category-card-title">{category.label}</span>
         <svg
           className="category-card-chevron"
           viewBox="0 0 24 24"
@@ -387,20 +380,6 @@ function App() {
         <StateLegend stateOptions={content.stateOptions} />
 
         <div className="intro-actions">
-          <button
-            type="button"
-            className="btn-primary"
-            onClick={handleStart}
-          >
-            {content.intro.startCategory}
-          </button>
-          <button
-            type="button"
-            className="btn-secondary"
-            onClick={() => categoriesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
-          >
-            {content.intro.browseCategories}
-          </button>
           <button
             type="button"
             className="btn-secondary"
