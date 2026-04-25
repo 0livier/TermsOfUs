@@ -26,6 +26,11 @@ export function ItemRow({
   const currentOption = stateOptions.find((o) => o.value === currentState)
 
   function handleStateSelect(state: SelectedItemState) {
+    if (state === currentState) {
+      onClear(id)
+      setEditing(false)
+      return
+    }
     onSelect(id, state)
     setEditing(false)
     requestAnimationFrame(() => {
@@ -36,11 +41,6 @@ export function ItemRow({
 
   function handleBadgeClick() {
     setEditing((prev) => !prev)
-  }
-
-  function handleClear() {
-    onClear(id)
-    setEditing(false)
   }
 
   return (
@@ -62,16 +62,6 @@ export function ItemRow({
                 <span className="state-btn-label">{opt.shortLabel}</span>
               </button>
             ))}
-            {isAnswered && (
-              <button
-                type="button"
-                className="state-btn-clear"
-                onClick={handleClear}
-                aria-label="Clear answer"
-              >
-                ×
-              </button>
-            )}
           </div>
         ) : (
           currentOption && (
