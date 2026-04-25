@@ -24,7 +24,7 @@
       "copyLink":        "Copier le lien"
     },
     "review": {
-      "label":           "Voir où j’en suis",
+      "label":           "Où j’en suis",
       "accessibleLabel": "Voir où j’en suis dans mes réponses",
       "title":           "Voilà où j'en suis",
       "countLabel":      "{count} réponses ajoutées",

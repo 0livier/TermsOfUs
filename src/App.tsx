@@ -229,24 +229,6 @@ function ShareDialog({
   )
 }
 
-function LinkIcon() {
-  return (
-    <svg
-      className="header-action-icon"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={2}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-    </svg>
-  )
-}
-
 function ListChecksIcon() {
   return (
     <svg
@@ -322,7 +304,6 @@ function App() {
   const categoriesRef = useRef<HTMLElement>(null)
   const menuRef       = useRef<HTMLDivElement>(null)
   const headerRef     = useRef<HTMLElement>(null)
-  const shareButtonRef = useRef<HTMLButtonElement>(null)
   const shareCopyButtonRef = useRef<HTMLButtonElement>(null)
   const toastTimer    = useRef<ReturnType<typeof setTimeout> | null>(null)
   const initializedStatePageHistory = useRef(false)
@@ -445,9 +426,11 @@ function App() {
 
   function closeShareDialog() {
     setShowShareDialog(false)
-    requestAnimationFrame(() => {
-      shareButtonRef.current?.focus()
-    })
+  }
+
+  function openShareDialog() {
+    setMenuOpen(false)
+    setShowShareDialog(true)
   }
 
   function handleStart() {
@@ -562,38 +545,6 @@ function App() {
             <span>{content.review.label}</span>
           </button>
 
-          <button
-            ref={shareButtonRef}
-            type="button"
-            className="header-action-btn share-btn"
-            onClick={() => {
-              setMenuOpen(false)
-              setShowShareDialog(true)
-            }}
-            aria-label={content.share.accessibleLabel}
-          >
-            <LinkIcon />
-            <span>{content.share.label}</span>
-          </button>
-
-          <label className="language-select">
-            <span className="sr-only">{content.languageLabel}</span>
-            <select
-              value={locale}
-              onChange={(e) => {
-                const newLocale = e.target.value as SupportedLocale
-                setLocale(newLocale)
-                saveLocalePreference(newLocale)
-                updateUrl(selection, newLocale, currentView)
-              }}
-              aria-label={content.languageLabel}
-            >
-              {supportedLocales.map((l) => (
-                <option key={l} value={l}>{l.toUpperCase()}</option>
-              ))}
-            </select>
-          </label>
-
           <div className="menu-container" ref={menuRef}>
             <button
               type="button"
@@ -607,6 +558,24 @@ function App() {
             </button>
             {menuOpen && (
               <div className="menu-dropdown" role="menu">
+                <label className="language-select menu-language-select">
+                  <span className="sr-only">{content.languageLabel}</span>
+                  <select
+                    value={locale}
+                    onChange={(e) => {
+                      const newLocale = e.target.value as SupportedLocale
+                      setLocale(newLocale)
+                      saveLocalePreference(newLocale)
+                      updateUrl(selection, newLocale, currentView)
+                      setMenuOpen(false)
+                    }}
+                    aria-label={content.languageLabel}
+                  >
+                    {supportedLocales.map((l) => (
+                      <option key={l} value={l}>{l.toUpperCase()}</option>
+                    ))}
+                  </select>
+                </label>
                 <button
                   type="button"
                   className="menu-item menu-item--danger"
@@ -666,6 +635,9 @@ function App() {
           selection={selection}
           onBackToEdit={handleBackToEdit}
           onStartAnswering={handleStart}
+          onShare={openShareDialog}
+          shareLabel={content.share.label}
+          shareAccessibleLabel={content.share.accessibleLabel}
         />
       ) : (
         <>

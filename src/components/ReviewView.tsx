@@ -10,6 +10,9 @@ interface ReviewViewProps {
   selection: SelectionState
   onBackToEdit: () => void
   onStartAnswering: () => void
+  onShare: () => void
+  shareLabel: string
+  shareAccessibleLabel: string
 }
 
 interface AnsweredItem {
@@ -26,6 +29,9 @@ export function ReviewView({
   selection,
   onBackToEdit,
   onStartAnswering,
+  onShare,
+  shareLabel,
+  shareAccessibleLabel,
 }: ReviewViewProps) {
   const [grouping, setGrouping] = useState<ReviewGrouping>('answer')
   const titleRef = useRef<HTMLHeadingElement>(null)
@@ -96,9 +102,20 @@ export function ReviewView({
             </div>
           </div>
 
-          <button type="button" className="btn-secondary" onClick={onBackToEdit}>
-            {content.review.backToEdit}
-          </button>
+          <div className="review-toolbar-actions">
+            <button
+              type="button"
+              className="btn-primary review-share-btn"
+              onClick={onShare}
+              aria-label={shareAccessibleLabel}
+            >
+              {shareLabel}
+            </button>
+
+            <button type="button" className="btn-secondary review-back-btn" onClick={onBackToEdit}>
+              {content.review.backToEdit}
+            </button>
+          </div>
         </div>
       </section>
 

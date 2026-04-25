@@ -32,6 +32,8 @@
 - Use expandable DOM category cards as the primary V1 interface.
 - Derive the Review view from the current localized content and selection state instead of storing a second review-specific model.
 - Use an optional `view` query parameter for shareable UI views such as `review` and `learn-more`, while keeping answer data in the hash payload.
+- Put the share action in the Review view toolbar and generate share links with `view=review` so shared links open directly to the review state.
+- Keep the language selector inside the header menu so the header stays compact and the locale control lives with other secondary actions.
 - Keep the Review grouping preference local to the Review view and out of the URL so shared links continue to encode only locale and answers.
 - Keep the SVG/DOM Sunburst components in `src/sunburst/` as optional future visual map work, not as the current primary UI.
 - Do not use D3 in V1.
