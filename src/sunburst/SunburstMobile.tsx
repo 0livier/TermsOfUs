@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import type { ItemId, ItemState, SelectionState } from '../domain/model.js'
 import type { LocalizedContent } from '../content/loader.js'
 import { Palette } from '../components/Palette.js'
@@ -41,6 +41,19 @@ export function SunburstMobile({
     ? content.categories.find(c => c.id === activeCatId) ?? null
     : null
 
+  useEffect(() => {
+    function handlePopState() {
+      setActiveCatId(null)
+    }
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [])
+
+  function openCategory(catId: string) {
+    history.pushState(null, '')
+    setActiveCatId(catId)
+  }
+
   function catIdAtPointer(e: React.PointerEvent<SVGSVGElement>): string | null {
     const rect = e.currentTarget.getBoundingClientRect()
     const x = (e.clientX - rect.left) * (400 / rect.width)
@@ -70,7 +83,7 @@ export function SunburstMobile({
             viewBox="0 0 400 400"
             className="sunburst-mobile-svg"
             role="img"
-            aria-label="Category wheel"
+            aria-label={content.wheel.description}
             onPointerDown={e => {
               e.currentTarget.setPointerCapture(e.pointerId)
               setHoveredCatId(catIdAtPointer(e))
@@ -80,7 +93,7 @@ export function SunburstMobile({
             }}
             onPointerUp={e => {
               const catId = catIdAtPointer(e)
-              if (catId) setActiveCatId(catId)
+              if (catId) openCategory(catId)
               setHoveredCatId(null)
             }}
             onPointerCancel={() => setHoveredCatId(null)}
@@ -106,7 +119,7 @@ export function SunburstMobile({
                   onKeyDown={e => {
                     if (e.key === 'Enter' || e.key === ' ') {
                       e.preventDefault()
-                      setActiveCatId(cat.id)
+                      openCategory(cat.id)
                     }
                   }}
                 >
@@ -140,6 +153,9 @@ export function SunburstMobile({
               ? content.categories.find(c => c.id === hoveredCatId)?.label ?? ''
               : ''}
           </div>
+          {Object.keys(selection).length === 0 && (
+            <p className="sunburst-mobile-hint">{content.wheel.emptyHint}</p>
+          )}
         </div>
 
         {/* ── SCREEN B: item list ───────────────────────────────────── */}
@@ -149,10 +165,10 @@ export function SunburstMobile({
               <div className="sunburst-mobile-header">
                 <button
                   className="sunburst-back-btn"
-                  onClick={() => setActiveCatId(null)}
-                  aria-label="Back to category wheel"
+                  onClick={() => history.back()}
+                  aria-label={`← ${content.uiActions.wheelView}`}
                 >
-                  ‹ Back
+                  ← {content.uiActions.wheelView}
                 </button>
                 <span
                   className="sunburst-cat-dot"

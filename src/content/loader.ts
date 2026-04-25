@@ -30,12 +30,15 @@ export interface LocalizedCategory {
 export interface UiActions {
   wheelView: string
   listView: string
-  paletteMode: string
-  cycleMode: string
   reset: string
   copyLink: string
   linkCopied: string
   copyUnavailable: string
+}
+
+export interface UiWheel {
+  description: string
+  emptyHint: string
 }
 
 export interface LocalizedContent {
@@ -44,26 +47,35 @@ export interface LocalizedContent {
   categories: LocalizedCategory[]
   stateOptions: ItemStateOption[]
   uiActions: UiActions
+  headline: string
+  subheadline: string
+  wheel: UiWheel
 }
 
 const ITEM_STATES: ItemState[] = ['none', 'want', 'have', 'avoid']
 
 const DEFAULT_UI_ACTIONS: UiActions = {
-  wheelView:       'Wheel',
+  wheelView:       'Map',
   listView:        'List',
-  paletteMode:     'Palette',
-  cycleMode:       'Cycling',
-  reset:           'Reset',
+  reset:           'Clear all',
   copyLink:        'Copy link',
   linkCopied:      'Link copied',
-  copyUnavailable: 'Copy unavailable',
+  copyUnavailable: 'Could not copy',
 }
 
+const DEFAULT_UI_WHEEL: UiWheel = {
+  description: 'Each slice is one item. Colour shows your answer. Tap a slice to review or change it.',
+  emptyHint:   'Tap any slice to begin. There are no right or wrong answers.',
+}
+
+const DEFAULT_HEADLINE    = 'What do you need in a relationship?'
+const DEFAULT_SUBHEADLINE = "A quiet space to reflect on what matters, what's already there, and what isn't right for you."
+
 const DEFAULT_STATE_OPTIONS: ItemStateOption[] = [
-  { value: 'none', label: 'Not selected', shortLabel: 'None' },
-  { value: 'want', label: 'I want this', shortLabel: 'Want' },
-  { value: 'have', label: 'We already have this', shortLabel: 'Have' },
-  { value: 'avoid', label: 'I do not want this', shortLabel: 'Avoid' },
+  { value: 'none', label: 'Not yet answered',  shortLabel: '–' },
+  { value: 'want', label: 'This matters to me', shortLabel: 'Matters' },
+  { value: 'have', label: 'Already present',    shortLabel: 'Present' },
+  { value: 'avoid', label: 'Not for me',        shortLabel: 'Limit' },
 ]
 
 const schema = schemaV1 as SchemaDefinition
@@ -131,7 +143,10 @@ export function localizeContent(
     locale,
     schema,
     stateOptions: buildStateOptions(requestedContent, fallbackContent),
-    uiActions: buildUiActions(requestedContent, fallbackContent),
+    uiActions:    buildUiActions(requestedContent, fallbackContent),
+    headline:     requestedContent.ui?.headline ?? fallbackContent.ui?.headline ?? DEFAULT_HEADLINE,
+    subheadline:  requestedContent.ui?.subheadline ?? fallbackContent.ui?.subheadline ?? DEFAULT_SUBHEADLINE,
+    wheel:        buildUiWheel(requestedContent, fallbackContent),
     categories: schema.categories.map((category) => ({
       id: category.id,
       label: getCategoryLabel(
@@ -164,12 +179,22 @@ function buildUiActions(
   return {
     wheelView:       key('wheelView'),
     listView:        key('listView'),
-    paletteMode:     key('paletteMode'),
-    cycleMode:       key('cycleMode'),
     reset:           key('reset'),
     copyLink:        key('copyLink'),
     linkCopied:      key('linkCopied'),
     copyUnavailable: key('copyUnavailable'),
+  }
+}
+
+function buildUiWheel(
+  requestedContent: LocaleContent,
+  fallbackContent: LocaleContent,
+): UiWheel {
+  const req = requestedContent.ui?.wheel ?? {}
+  const fb  = fallbackContent.ui?.wheel ?? {}
+  return {
+    description: req.description ?? fb.description ?? DEFAULT_UI_WHEEL.description,
+    emptyHint:   req.emptyHint   ?? fb.emptyHint   ?? DEFAULT_UI_WHEEL.emptyHint,
   }
 }
 

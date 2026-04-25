@@ -1,5 +1,5 @@
 import type { ItemState, SelectionState } from '../domain/model.js'
-import type { LocalizedContent, LocalizedItem } from '../content/loader.js'
+import type { LocalizedItem } from '../content/loader.js'
 
 export const STATE_FILL: Record<ItemState, string> = {
   none:  '#D3D1C7',

@@ -45,16 +45,20 @@ export interface ItemStateOption {
 }
 
 export interface LocaleUiContent {
+  headline?: string
+  subheadline?: string
   states: Partial<Record<ItemState, { label: string; shortLabel: string }>>
   actions?: {
     wheelView?: string
     listView?: string
-    paletteMode?: string
-    cycleMode?: string
     reset?: string
     copyLink?: string
     linkCopied?: string
     copyUnavailable?: string
+  }
+  wheel?: {
+    description?: string
+    emptyHint?: string
   }
 }
 

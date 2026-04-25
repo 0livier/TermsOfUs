@@ -112,8 +112,9 @@ function App() {
     <main className="app-shell">
       <header className="app-header">
         <div>
-          <p className="eyebrow">TermsOfUs</p>
-          <h1>Relationship expectations</h1>
+          <p className="eyebrow">Terms of Us</p>
+          <h1>{content.headline}</h1>
+          <p className="app-subheadline">{content.subheadline}</p>
         </div>
 
         <label className="language-select">

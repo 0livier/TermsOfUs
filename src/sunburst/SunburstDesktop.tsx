@@ -56,7 +56,7 @@ export function SunburstDesktop({
         viewBox="0 0 400 400"
         className="sunburst-desktop-svg"
         role="img"
-        aria-label="Relationship preference wheel"
+        aria-label={content.wheel.description}
       >
         {content.categories.map((cat, catIdx) => {
           const catStart = -Math.PI / 2 + catIdx * catAngle
@@ -112,7 +112,7 @@ export function SunburstDesktop({
       </svg>
 
       {/* ── Right panel ──────────────────────────────────────────── */}
-      {hoveredItem && hoveredCat && (
+      {hoveredItem && hoveredCat ? (
         <div className="sunburst-desktop-panel">
           <p className="sunburst-panel-breadcrumb">
             <span
@@ -140,7 +140,12 @@ export function SunburstDesktop({
             })}
           </div>
         </div>
-      )}
+      ) : Object.keys(selection).length === 0 ? (
+        <div className="sunburst-desktop-panel sunburst-desktop-hint">
+          <p className="sunburst-hint-description">{content.wheel.description}</p>
+          <p className="sunburst-hint-empty">{content.wheel.emptyHint}</p>
+        </div>
+      ) : null}
     </div>
   )
 }

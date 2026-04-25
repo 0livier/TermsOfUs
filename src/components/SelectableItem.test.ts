@@ -7,20 +7,20 @@ import { itemStateOptions } from './item-states.js'
 test('describes the current item state and next selection action', () => {
   assert.equal(
     getSelectableItemAriaLabel('Video calls', 'none', 'want', itemStateOptions),
-    'Video calls, current state: Not selected. Activate to mark as I want this.',
+    'Video calls, current state: Not yet answered. Activate to mark as This matters to me.',
   )
 })
 
 test('describes clearing when active state matches current state', () => {
   assert.equal(
     getSelectableItemAriaLabel('Video calls', 'avoid', 'avoid', itemStateOptions),
-    'Video calls, current state: I do not want this. Activate to clear state.',
+    'Video calls, current state: Not for me. Activate to clear state.',
   )
 })
 
 test('describes clearing when active state is none', () => {
   assert.equal(
     getSelectableItemAriaLabel('Video calls', 'have', 'none', itemStateOptions),
-    'Video calls, current state: We already have this. Activate to clear state.',
+    'Video calls, current state: Already present. Activate to clear state.',
   )
 })

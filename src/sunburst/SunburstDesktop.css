@@ -22,6 +22,29 @@
   border-radius: 12px;
 }
 
+/* Empty / first-visit hint */
+
+.sunburst-desktop-hint {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sunburst-hint-description {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--muted);
+}
+
+.sunburst-hint-empty {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--text);
+  font-weight: 600;
+}
+
 /* Detail view (item hovered) */
 
 .sunburst-panel-breadcrumb {
