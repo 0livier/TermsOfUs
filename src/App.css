@@ -25,9 +25,8 @@
 .app-name {
   font-family: var(--display);
   font-weight: 500;
-  font-size: 15px;
+  font-size: 20px;
   color: var(--heading);
-  letter-spacing: -0.01em;
 }
 
 .app-header-controls {

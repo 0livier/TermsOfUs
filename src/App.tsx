@@ -68,7 +68,7 @@ interface CategoryCardProps {
   selection: SelectionState
   stateOptions: ItemStateOption[]
   isOpen: boolean
-  onToggle: () => void
+  onToggle: (cardElement: HTMLDivElement) => void
   onItemSelect: (itemId: ItemId, state: SelectedItemState) => void
   onItemClear: (itemId: ItemId) => void
 }
@@ -82,12 +82,18 @@ function CategoryCard({
   onItemSelect,
   onItemClear,
 }: CategoryCardProps) {
+  const cardRef = useRef<HTMLDivElement>(null)
+
   return (
-    <div className={`category-card${isOpen ? ' category-card--open' : ''}`}>
+    <div ref={cardRef} className={`category-card${isOpen ? ' category-card--open' : ''}`}>
       <button
         type="button"
         className="category-card-header"
-        onClick={onToggle}
+        onClick={() => {
+          if (cardRef.current) {
+            onToggle(cardRef.current)
+          }
+        }}
         aria-expanded={isOpen}
       >
         <span className="category-card-title">{category.label}</span>
@@ -198,6 +204,7 @@ function App() {
 
   const categoriesRef = useRef<HTMLElement>(null)
   const menuRef       = useRef<HTMLDivElement>(null)
+  const headerRef     = useRef<HTMLElement>(null)
   const toastTimer    = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
@@ -252,6 +259,25 @@ function App() {
     })
   }
 
+  function scrollCardBelowHeader(cardElement: HTMLElement) {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        const headerHeight = headerRef.current?.getBoundingClientRect().height ?? 0
+        const cardTop = cardElement.getBoundingClientRect().top + window.scrollY
+
+        window.scrollTo({
+          top: Math.max(0, cardTop - headerHeight - 10),
+          behavior: 'smooth',
+        })
+      })
+    })
+  }
+
+  function handleCategoryToggle(categoryId: string, cardElement: HTMLDivElement) {
+    setOpenCategoryId((prev) => prev === categoryId ? null : categoryId)
+    scrollCardBelowHeader(cardElement)
+  }
+
   async function handleCopyLink() {
     setMenuOpen(false)
     const path = replaceUrlState(new URL(window.location.href), {
@@ -283,7 +309,7 @@ function App() {
     <div className="app-shell">
 
       {/* ── Header ─────────────────────────────────────────── */}
-      <header className="app-header">
+      <header ref={headerRef} className="app-header">
         <span className="app-name">Terms of Us</span>
         <div className="app-header-controls">
           <label className="language-select">
@@ -400,9 +426,7 @@ function App() {
               selection={selection}
               stateOptions={content.stateOptions}
               isOpen={openCategoryId === category.id}
-              onToggle={() =>
-                setOpenCategoryId((prev) => prev === category.id ? null : category.id)
-              }
+              onToggle={(cardElement) => handleCategoryToggle(category.id, cardElement)}
               onItemSelect={handleItemSelect}
               onItemClear={handleItemClear}
             />
