@@ -41,7 +41,7 @@ export function SunburstDesktop({
   const catAngle = (2 * Math.PI) / catCount
 
   const hoveredCat  = hovered ? content.categories.find(c => c.id === hovered.catId)  ?? null : null
-  const hoveredItem = hoveredCat ? hoveredCat.items.find(i => i.id === hovered.itemId) ?? null : null
+  const hoveredItem = hoveredCat && hovered ? hoveredCat.items.find(i => i.id === hovered.itemId) ?? null : null
   const hoveredState: ItemState = hovered ? (selection[hovered.itemId] ?? 'none') : 'none'
 
   function handleSegmentClick(itemId: ItemId) {
