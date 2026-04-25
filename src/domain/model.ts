@@ -60,13 +60,32 @@ export interface LocaleUiContent {
     linkCopied?: string
     copyUnavailable?: string
   }
+  share?: {
+    label?: string
+    accessibleLabel?: string
+    title?: string
+    body?: string
+    copyLink?: string
+  }
+  review?: {
+    label?: string
+    accessibleLabel?: string
+    title?: string
+    countLabel?: string
+    organizeBy?: string
+    byAnswer?: string
+    byCategory?: string
+    backToEdit?: string
+    emptyTitle?: string
+    emptyBody?: string
+    emptyCta?: string
+  }
   wheel?: {
     description?: string
     emptyHint?: string
   }
   menu?: {
     open?: string
-    copyLink?: string
     clearAll?: string
   }
   confirm?: {

@@ -30,6 +30,8 @@
 - Encode sparse selected item/state pairs in item-code order with a URL-safe base62 alphabet.
 - Use React component state for the V1 shared shell until the app has enough cross-view complexity to justify a separate state library.
 - Use expandable DOM category cards as the primary V1 interface.
+- Derive the Review view from the current localized content and selection state instead of storing a second review-specific model.
+- Keep the Review grouping preference local to the Review view and out of the URL so shared links continue to encode only locale and answers.
 - Keep the SVG/DOM Sunburst components in `src/sunburst/` as optional future visual map work, not as the current primary UI.
 - Do not use D3 in V1.
 - Do not add analytics in V1.

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import './App.css'
 import {
   defaultLocale,
@@ -18,6 +18,7 @@ import {
 } from './domain/model.js'
 import { getLocaleFromUrl, parseUrlState, replaceUrlState } from './routing/url-state.js'
 import { ItemRow } from './components/ItemRow.js'
+import { ReviewView } from './components/ReviewView.js'
 import { StateIcon } from './components/StateIcon.js'
 
 function getInitialUrlState() {
@@ -83,6 +84,7 @@ function CategoryCard({
   onItemClear,
 }: CategoryCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
+  const hasAnswers = category.items.some((item) => selection[item.id])
 
   return (
     <div ref={cardRef} className={`category-card${isOpen ? ' category-card--open' : ''}`}>
@@ -97,18 +99,25 @@ function CategoryCard({
         aria-expanded={isOpen}
       >
         <span className="category-card-title">{category.label}</span>
-        <svg
-          className="category-card-chevron"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth={2}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          aria-hidden="true"
-        >
-          <polyline points="6 9 12 15 18 9" />
-        </svg>
+        <span className="category-card-status">
+          {hasAnswers && (
+            <span className="category-card-indicator" aria-hidden="true">
+              <StateIcon state="present" size={12} />
+            </span>
+          )}
+          <svg
+            className="category-card-chevron"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </span>
       </button>
 
       {isOpen && category.items.map((item) => (
@@ -149,6 +158,94 @@ function ConfirmDialog({ title, body, cancelLabel, confirmLabel, onCancel, onCon
         </div>
       </div>
     </div>
+  )
+}
+
+// ─── Share dialog ────────────────────────────────────────────────────────────
+
+interface ShareDialogProps {
+  title: string
+  body: string
+  copyLabel: string
+  onCancel: () => void
+  onCopy: () => void
+  copyButtonRef: RefObject<HTMLButtonElement | null>
+}
+
+function ShareDialog({
+  title,
+  body,
+  copyLabel,
+  onCancel,
+  onCopy,
+  copyButtonRef,
+}: ShareDialogProps) {
+  return (
+    <div
+      className="dialog-backdrop"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="share-dialog-title"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) {
+          onCancel()
+        }
+      }}
+    >
+      <div className="dialog-card share-dialog-card">
+        <h2 id="share-dialog-title" className="dialog-title">{title}</h2>
+        <p className="dialog-body">{body}</p>
+        <div className="dialog-actions">
+          <button
+            ref={copyButtonRef}
+            type="button"
+            className="btn-primary"
+            onClick={onCopy}
+          >
+            {copyLabel}
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function LinkIcon() {
+  return (
+    <svg
+      className="header-action-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+    </svg>
+  )
+}
+
+function ListChecksIcon() {
+  return (
+    <svg
+      className="header-action-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m3 17 2 2 4-4" />
+      <path d="m3 7 2 2 4-4" />
+      <path d="M13 6h8" />
+      <path d="M13 12h8" />
+      <path d="M13 18h8" />
+    </svg>
   )
 }
 
@@ -196,15 +293,19 @@ function App() {
   const [selection, setSelection]     = useState<SelectionState>(initialUrlState.selection)
   const [menuOpen, setMenuOpen]             = useState(false)
   const [showConfirm, setShowConfirm]       = useState(false)
+  const [showShareDialog, setShowShareDialog] = useState(false)
   const [toast, setToast]                   = useState('')
   const [openCategoryId, setOpenCategoryId] = useState<string | null>(null)
   const [showLearnMore, setShowLearnMore]   = useState(false)
+  const [showReview, setShowReview]         = useState(false)
 
   const content = useMemo(() => localizeSchema(locale), [locale])
 
   const categoriesRef = useRef<HTMLElement>(null)
   const menuRef       = useRef<HTMLDivElement>(null)
   const headerRef     = useRef<HTMLElement>(null)
+  const shareButtonRef = useRef<HTMLButtonElement>(null)
+  const shareCopyButtonRef = useRef<HTMLButtonElement>(null)
   const toastTimer    = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
@@ -217,6 +318,21 @@ function App() {
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [menuOpen])
+
+  useEffect(() => {
+    if (!showShareDialog) return
+
+    shareCopyButtonRef.current?.focus()
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        closeShareDialog()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [showShareDialog])
 
   function showToast(message: string) {
     setToast(message)
@@ -251,12 +367,32 @@ function App() {
     setShowConfirm(false)
   }
 
+  function closeShareDialog() {
+    setShowShareDialog(false)
+    requestAnimationFrame(() => {
+      shareButtonRef.current?.focus()
+    })
+  }
+
   function handleStart() {
     setShowLearnMore(false)
+    setShowReview(false)
     setOpenCategoryId(content.categories[0]?.id ?? null)
     requestAnimationFrame(() => {
       categoriesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     })
+  }
+
+  function handleReviewOpen() {
+    setMenuOpen(false)
+    setShowLearnMore(false)
+    setShowReview(true)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  function handleBackToEdit() {
+    setShowReview(false)
+    window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   function scrollCardBelowHeader(cardElement: HTMLElement) {
@@ -278,14 +414,18 @@ function App() {
     scrollCardBelowHeader(cardElement)
   }
 
-  async function handleCopyLink() {
-    setMenuOpen(false)
+  function getShareUrl() {
     const path = replaceUrlState(new URL(window.location.href), {
       locale,
       schema: content.schema,
       selection,
     })
-    const url = `${window.location.origin}${path}`
+
+    return `${window.location.origin}${path}`
+  }
+
+  async function handleCopyLink() {
+    const url = getShareUrl()
 
     try {
       if (navigator.clipboard) {
@@ -305,6 +445,11 @@ function App() {
     }
   }
 
+  async function handleShareCopy() {
+    setShowShareDialog(false)
+    await handleCopyLink()
+  }
+
   return (
     <div className="app-shell">
 
@@ -312,6 +457,30 @@ function App() {
       <header ref={headerRef} className="app-header">
         <span className="app-name">Terms of Us</span>
         <div className="app-header-controls">
+          <button
+            type="button"
+            className="header-action-btn review-btn"
+            onClick={handleReviewOpen}
+            aria-label={content.review.accessibleLabel}
+          >
+            <ListChecksIcon />
+            <span>{content.review.label}</span>
+          </button>
+
+          <button
+            ref={shareButtonRef}
+            type="button"
+            className="header-action-btn share-btn"
+            onClick={() => {
+              setMenuOpen(false)
+              setShowShareDialog(true)
+            }}
+            aria-label={content.share.accessibleLabel}
+          >
+            <LinkIcon />
+            <span>{content.share.label}</span>
+          </button>
+
           <label className="language-select">
             <span className="sr-only">{content.languageLabel}</span>
             <select
@@ -345,15 +514,6 @@ function App() {
               <div className="menu-dropdown" role="menu">
                 <button
                   type="button"
-                  className="menu-item"
-                  role="menuitem"
-                  onClick={handleCopyLink}
-                >
-                  {content.menu.copyLink}
-                </button>
-                <div className="menu-separator" />
-                <button
-                  type="button"
                   className="menu-item menu-item--danger"
                   role="menuitem"
                   onClick={() => { setMenuOpen(false); setShowConfirm(true) }}
@@ -383,6 +543,17 @@ function App() {
         />
       )}
 
+      {showShareDialog && (
+        <ShareDialog
+          title={content.share.title}
+          body={content.share.body}
+          copyLabel={content.share.copyLink}
+          onCancel={closeShareDialog}
+          onCopy={handleShareCopy}
+          copyButtonRef={shareCopyButtonRef}
+        />
+      )}
+
       {/* ── Fallback notice ────────────────────────────────── */}
       {initialUrlState.isFallback ? (
         <p className="notice" role="status">{content.fallbackMessage}</p>
@@ -393,6 +564,13 @@ function App() {
           content={content}
           onStart={handleStart}
           onBack={() => setShowLearnMore(false)}
+        />
+      ) : showReview ? (
+        <ReviewView
+          content={content}
+          selection={selection}
+          onBackToEdit={handleBackToEdit}
+          onStartAnswering={handleStart}
         />
       ) : (
         <>

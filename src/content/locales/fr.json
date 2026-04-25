@@ -16,6 +16,26 @@
       "linkCopied":      "Lien copié",
       "copyUnavailable": "Impossible de copier"
     },
+    "share": {
+      "label":           "Partager",
+      "accessibleLabel": "Partager ma réflexion",
+      "title":           "Partager ma réflexion",
+      "body":            "Cela crée un lien contenant tes réponses actuelles. Toute personne ayant ce lien peut les voir.",
+      "copyLink":        "Copier le lien"
+    },
+    "review": {
+      "label":           "Voir où j’en suis",
+      "accessibleLabel": "Voir où j’en suis dans mes réponses",
+      "title":           "Ma réflexion",
+      "countLabel":      "{count} réponses ajoutées",
+      "organizeBy":      "Organiser par",
+      "byAnswer":        "Réponse",
+      "byCategory":      "Catégorie",
+      "backToEdit":      "Modifier mes réponses",
+      "emptyTitle":      "Rien à relire pour l’instant",
+      "emptyBody":       "Commence par marquer quelques éléments, puis reviens ici pour voir ta réflexion.",
+      "emptyCta":        "Commencer"
+    },
     "wheel": {
       "description": "Chaque part correspond à un élément. La couleur indique votre réponse.",
       "emptyHint":   "Appuyez sur une catégorie pour commencer. Il n'y a pas de bonne ou mauvaise réponse."
@@ -76,7 +96,6 @@
     },
     "menu": {
       "open":     "Menu",
-      "copyLink": "Copier le lien",
       "clearAll": "Tout effacer"
     },
     "confirm": {

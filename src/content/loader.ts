@@ -33,6 +33,28 @@ export interface UiActions {
   copyUnavailable: string
 }
 
+export interface UiShare {
+  label: string
+  accessibleLabel: string
+  title: string
+  body: string
+  copyLink: string
+}
+
+export interface UiReview {
+  label: string
+  accessibleLabel: string
+  title: string
+  countLabel: string
+  organizeBy: string
+  byAnswer: string
+  byCategory: string
+  backToEdit: string
+  emptyTitle: string
+  emptyBody: string
+  emptyCta: string
+}
+
 export interface UiWheel {
   description: string
   emptyHint: string
@@ -76,7 +98,6 @@ export interface UiAllItems {
 
 export interface UiMenu {
   open: string
-  copyLink: string
   clearAll: string
 }
 
@@ -93,6 +114,8 @@ export interface LocalizedContent {
   categories: LocalizedCategory[]
   stateOptions: ItemStateOption[]
   uiActions: UiActions
+  share: UiShare
+  review: UiReview
   intro: UiIntro
   learnMore: UiLearnMore
   mapPreview: UiMapPreview
@@ -120,6 +143,28 @@ const DEFAULT_UI_ACTIONS: UiActions = {
   copyLink:        'Copy link',
   linkCopied:      'Link copied',
   copyUnavailable: 'Could not copy',
+}
+
+const DEFAULT_UI_SHARE: UiShare = {
+  label:           'Share',
+  accessibleLabel: 'Share your reflection',
+  title:           'Share your reflection',
+  body:            'This creates a link containing your current answers. Anyone with the link can view them.',
+  copyLink:        'Copy link',
+}
+
+const DEFAULT_UI_REVIEW: UiReview = {
+  label:           'See where I’m at',
+  accessibleLabel: 'See where I’m at in my answers',
+  title:           'Your reflection',
+  countLabel:      '{count} answers added',
+  organizeBy:      'Organize by',
+  byAnswer:        'Answer',
+  byCategory:      'Category',
+  backToEdit:      'Back to edit',
+  emptyTitle:      'Nothing to review yet',
+  emptyBody:       'Start by marking a few items, then come back here to see your reflection.',
+  emptyCta:        'Start answering',
 }
 
 const DEFAULT_UI_WHEEL: UiWheel = {
@@ -160,7 +205,6 @@ const DEFAULT_UI_ALL_ITEMS: UiAllItems = {
 
 const DEFAULT_UI_MENU: UiMenu = {
   open:     'Menu',
-  copyLink: 'Copy link',
   clearAll: 'Clear all',
 }
 
@@ -244,6 +288,8 @@ export function localizeContent(
     schema,
     stateOptions: buildStateOptions(requestedContent, fallbackContent),
     uiActions:    buildUiActions(requestedContent, fallbackContent),
+    share:        buildUiShare(requestedContent, fallbackContent),
+    review:       buildUiReview(requestedContent, fallbackContent),
     intro:        buildUiIntro(requestedContent, fallbackContent),
     learnMore:    buildUiLearnMore(requestedContent, fallbackContent),
     mapPreview:   buildUiMapPreview(requestedContent, fallbackContent),
@@ -273,6 +319,46 @@ export function localizeContent(
         ),
       })),
     })),
+  }
+}
+
+function buildUiReview(
+  requestedContent: LocaleContent,
+  fallbackContent: LocaleContent,
+): UiReview {
+  const req = requestedContent.ui?.review ?? {}
+  const fb  = fallbackContent.ui?.review ?? {}
+  const key = <K extends keyof UiReview>(k: K) =>
+    req[k] ?? fb[k] ?? DEFAULT_UI_REVIEW[k]
+  return {
+    label:           key('label'),
+    accessibleLabel: key('accessibleLabel'),
+    title:           key('title'),
+    countLabel:      key('countLabel'),
+    organizeBy:      key('organizeBy'),
+    byAnswer:        key('byAnswer'),
+    byCategory:      key('byCategory'),
+    backToEdit:      key('backToEdit'),
+    emptyTitle:      key('emptyTitle'),
+    emptyBody:       key('emptyBody'),
+    emptyCta:        key('emptyCta'),
+  }
+}
+
+function buildUiShare(
+  requestedContent: LocaleContent,
+  fallbackContent: LocaleContent,
+): UiShare {
+  const req = requestedContent.ui?.share ?? {}
+  const fb  = fallbackContent.ui?.share ?? {}
+  const key = <K extends keyof UiShare>(k: K) =>
+    req[k] ?? fb[k] ?? DEFAULT_UI_SHARE[k]
+  return {
+    label:           key('label'),
+    accessibleLabel: key('accessibleLabel'),
+    title:           key('title'),
+    body:            key('body'),
+    copyLink:        key('copyLink'),
   }
 }
 
@@ -383,7 +469,6 @@ function buildUiMenu(
     req[k] ?? fb[k] ?? DEFAULT_UI_MENU[k]
   return {
     open:     key('open'),
-    copyLink: key('copyLink'),
     clearAll: key('clearAll'),
   }
 }

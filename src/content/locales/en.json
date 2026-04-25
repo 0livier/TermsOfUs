@@ -16,6 +16,26 @@
       "linkCopied":      "Link copied",
       "copyUnavailable": "Could not copy"
     },
+    "share": {
+      "label":           "Share",
+      "accessibleLabel": "Share your reflection",
+      "title":           "Share your reflection",
+      "body":            "This creates a link containing your current answers. Anyone with the link can view them.",
+      "copyLink":        "Copy link"
+    },
+    "review": {
+      "label":           "See where I’m at",
+      "accessibleLabel": "See where I’m at in my answers",
+      "title":           "Your reflection",
+      "countLabel":      "{count} answers added",
+      "organizeBy":      "Organize by",
+      "byAnswer":        "Answer",
+      "byCategory":      "Category",
+      "backToEdit":      "Back to edit",
+      "emptyTitle":      "Nothing to review yet",
+      "emptyBody":       "Start by marking a few items, then come back here to see your reflection.",
+      "emptyCta":        "Start answering"
+    },
     "wheel": {
       "description": "Each slice is one item. Colour shows your answer.",
       "emptyHint":   "Tap a category to begin. There are no right or wrong answers."
@@ -76,7 +96,6 @@
     },
     "menu": {
       "open":     "Menu",
-      "copyLink": "Copy link",
       "clearAll": "Clear all"
     },
     "confirm": {
