@@ -366,22 +366,6 @@
   color: var(--heading);
 }
 
-.category-card-meta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-shrink: 0;
-}
-
-.category-card-activity {
-  display: inline-block;
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: currentColor;
-  opacity: 0.6;
-}
-
 .category-card-chevron {
   font-size: 10px;
   color: var(--muted);
@@ -397,10 +381,13 @@
 /* ── Item row ──────────────────────────────────────────────────────────────── */
 
 .item-row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 4px;
+  padding: 9px 12px 10px;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 8px;
-  overflow: hidden;
 }
 
 .item-row--answered {
@@ -408,20 +395,14 @@
   background: var(--bg);
 }
 
-.item-row-content {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  padding: 10px 12px;
-  min-height: 44px;
-}
-
 .item-row-label {
-  flex: 1;
   font-size: 14px;
   line-height: 1.4;
   color: var(--text);
+}
+
+.item-row-answer {
+  display: flex;
 }
 
 /* ── State badge ───────────────────────────────────────────────────────────── */
@@ -437,7 +418,6 @@
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
-  flex-shrink: 0;
 }
 
 /* ── State selector (4-button row) ─────────────────────────────────────────── */
@@ -445,7 +425,6 @@
 .item-state-selector {
   display: flex;
   gap: 6px;
-  padding: 8px 12px 10px;
   flex-wrap: wrap;
 }
 
@@ -573,6 +552,33 @@ select:focus-visible,
 input:focus-visible {
   outline: 3px solid var(--focus);
   outline-offset: 2px;
+}
+
+/* ── Item row: 2-col layout on tablet+ ────────────────────────────────────── */
+
+@media (min-width: 480px) {
+  .item-row {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 8px 10px;
+    padding: 8px 12px;
+  }
+
+  .item-row-answer {
+    justify-content: flex-end;
+  }
+
+  .item-state-selector {
+    flex-wrap: nowrap;
+  }
+
+  .state-btn {
+    padding: 7px 9px;
+  }
+
+  .state-btn-label {
+    display: none;
+  }
 }
 
 /* ── Tablet / Desktop ──────────────────────────────────────────────────────── */

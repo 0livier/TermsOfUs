@@ -23,7 +23,6 @@ export function ItemRow({
   const [editing, setEditing] = useState(false)
   const isAnswered = currentState !== 'none'
   const showSelector = !isAnswered || editing
-
   const currentOption = stateOptions.find((o) => o.value === currentState)
 
   function handleStateSelect(state: SelectedItemState) {
@@ -31,9 +30,7 @@ export function ItemRow({
     setEditing(false)
     requestAnimationFrame(() => {
       const next = rowRef.current?.nextElementSibling
-      if (next) {
-        next.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
-      }
+      if (next) next.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
     })
   }
 
@@ -48,50 +45,49 @@ export function ItemRow({
 
   return (
     <div ref={rowRef} className={`item-row${isAnswered ? ' item-row--answered' : ''}`}>
-      <div className="item-row-content">
-        <span className="item-row-label">{label}</span>
-
-        {isAnswered && !editing && currentOption ? (
-          <button
-            type="button"
-            className={`item-badge is-${currentState}`}
-            onClick={handleBadgeClick}
-            aria-label={`${currentOption.longLabel}. Tap to change.`}
-            aria-pressed={false}
-          >
-            <StateIcon state={currentOption.value} icon={currentOption.icon} />
-            <span>{currentOption.label}</span>
-          </button>
-        ) : null}
+      <span className="item-row-label">{label}</span>
+      <div className="item-row-answer">
+        {showSelector ? (
+          <div className="item-state-selector" role="group" aria-label={`Mark ${label}`}>
+            {stateOptions.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                className={`state-btn is-${opt.value}${currentState === opt.value ? ' is-selected' : ''}`}
+                aria-label={opt.longLabel}
+                aria-pressed={currentState === opt.value}
+                onClick={() => handleStateSelect(opt.value as SelectedItemState)}
+              >
+                <StateIcon state={opt.value} icon={opt.icon} />
+                <span className="state-btn-label">{opt.shortLabel}</span>
+              </button>
+            ))}
+            {isAnswered && (
+              <button
+                type="button"
+                className="state-btn-clear"
+                onClick={handleClear}
+                aria-label="Clear answer"
+              >
+                ×
+              </button>
+            )}
+          </div>
+        ) : (
+          currentOption && (
+            <button
+              type="button"
+              className={`item-badge is-${currentState}`}
+              onClick={handleBadgeClick}
+              aria-label={`${currentOption.longLabel}. Tap to change.`}
+              aria-pressed={false}
+            >
+              <StateIcon state={currentState} icon={currentOption.icon} />
+              <span>{currentOption.label}</span>
+            </button>
+          )
+        )}
       </div>
-
-      {showSelector && (
-        <div className="item-state-selector" role="group" aria-label={`Mark ${label}`}>
-          {stateOptions.map((opt) => (
-            <button
-              key={opt.value}
-              type="button"
-              className={`state-btn is-${opt.value}${currentState === opt.value ? ' is-selected' : ''}`}
-              aria-label={opt.longLabel}
-              aria-pressed={currentState === opt.value}
-              onClick={() => handleStateSelect(opt.value as SelectedItemState)}
-            >
-              <StateIcon state={opt.value} icon={opt.icon} />
-              <span className="state-btn-label">{opt.label}</span>
-            </button>
-          ))}
-          {isAnswered && (
-            <button
-              type="button"
-              className="state-btn-clear"
-              onClick={handleClear}
-              aria-label="Clear answer"
-            >
-              ×
-            </button>
-          )}
-        </div>
-      )}
     </div>
   )
 }

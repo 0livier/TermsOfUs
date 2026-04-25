@@ -85,10 +85,8 @@ function CategoryCard({
   onItemClear,
   color,
 }: CategoryCardProps) {
-  const hasAnswered = category.items.some((item) => selection[item.id])
-
   return (
-    <div className={`category-card${isOpen ? ' category-card--open' : ''}${hasAnswered ? ' category-card--active' : ''}`}>
+    <div className={`category-card${isOpen ? ' category-card--open' : ''}`}>
       <button
         type="button"
         className="category-card-header"
@@ -101,13 +99,8 @@ function CategoryCard({
           aria-hidden="true"
         />
         <span className="category-card-title">{category.label}</span>
-        <span className="category-card-meta">
-          {hasAnswered && (
-            <span className="category-card-activity" aria-hidden="true" style={{ color }} />
-          )}
-          <span className="category-card-chevron" aria-hidden="true">
-            {isOpen ? '▲' : '▼'}
-          </span>
+        <span className="category-card-chevron" aria-hidden="true">
+          {isOpen ? '▲' : '▼'}
         </span>
       </button>
 
