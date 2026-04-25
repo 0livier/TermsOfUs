@@ -26,7 +26,7 @@
     "review": {
       "label":           "Voir où j’en suis",
       "accessibleLabel": "Voir où j’en suis dans mes réponses",
-      "title":           "Ma réflexion",
+      "title":           "Voilà où j'en suis",
       "countLabel":      "{count} réponses ajoutées",
       "organizeBy":      "Organiser par",
       "byAnswer":        "Réponse",

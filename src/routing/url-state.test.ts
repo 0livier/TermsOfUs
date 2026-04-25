@@ -7,6 +7,7 @@ import {
   buildUrlStatePath,
   getLocaleFromUrl,
   parseUrlState,
+  pushUrlState,
   replaceUrlState,
 } from './url-state.js'
 
@@ -57,6 +58,7 @@ test('restores locale, version, and sparse selection from the URL', () => {
     locale:     'fr',
     version:    1,
     selection,
+    view:       'edit',
     isFallback: false,
   })
 })
@@ -68,6 +70,7 @@ test('falls back safely for unknown locale and invalid payload', () => {
       locale:     'en',
       version:    1,
       selection:  {},
+      view:       'edit',
       isFallback: true,
     },
   )
@@ -78,6 +81,7 @@ test('falls back safely for unknown locale and invalid payload', () => {
       locale:     'fr',
       version:    1,
       selection:  {},
+      view:       'edit',
       isFallback: true,
     },
   )
@@ -104,6 +108,62 @@ test('builds hash payload URLs and omits default locale and empty selections', (
   )
 })
 
+test('parses and builds review view URLs without changing the hash payload', () => {
+  const selection: SelectionState = {
+    cuddling: 'important',
+  }
+  const payload = encodeSparseSelection(schema, selection)
+
+  assert.deepEqual(
+    parseUrlState(new URL(`https://example.test/?lang=fr&view=review#${payload}`), schema),
+    {
+      locale:     'fr',
+      version:    1,
+      selection,
+      view:       'review',
+      isFallback: false,
+    },
+  )
+
+  assert.equal(
+    buildUrlStatePath(new URL('https://example.test/TermsOfUs/?view=old'), {
+      locale:    'fr',
+      schema,
+      selection,
+      view:      'review',
+    }),
+    `/TermsOfUs/?lang=fr&view=review#${payload}`,
+  )
+})
+
+test('parses and builds learn more view URLs without changing the hash payload', () => {
+  const selection: SelectionState = {
+    kissing: 'discuss',
+  }
+  const payload = encodeSparseSelection(schema, selection)
+
+  assert.deepEqual(
+    parseUrlState(new URL(`https://example.test/?view=learn-more#${payload}`), schema),
+    {
+      locale:     'en',
+      version:    1,
+      selection,
+      view:       'learn-more',
+      isFallback: false,
+    },
+  )
+
+  assert.equal(
+    buildUrlStatePath(new URL('https://example.test/TermsOfUs/'), {
+      locale:    'fr',
+      schema,
+      selection,
+      view:      'learn-more',
+    }),
+    `/TermsOfUs/?lang=fr&view=learn-more#${payload}`,
+  )
+})
+
 test('updates browser history without a reload hook', () => {
   let nextPath = ''
   const history = {
@@ -119,12 +179,49 @@ test('updates browser history without a reload hook', () => {
       locale:    'fr',
       schema,
       selection: { 'text-messages': 'present' },
+      view:      'review',
     },
     history,
   )
 
-  assert.equal(path, '/?lang=fr#s1as')
+  assert.equal(path, '/?lang=fr&view=review#s1as')
   assert.equal(nextPath, path)
+})
+
+test('pushes view changes onto browser history', () => {
+  let nextPath = ''
+  const history = {
+    pushState: (_data: unknown, _unused: string, url?: string | URL | null) => {
+      nextPath = String(url)
+    },
+  }
+
+  const path = pushUrlState(
+    new URL('https://example.test/?lang=fr'),
+    {
+      locale:    'fr',
+      schema,
+      selection: {},
+      view:      'learn-more',
+    },
+    history,
+  )
+
+  assert.equal(path, '/?lang=fr&view=learn-more')
+  assert.equal(nextPath, path)
+})
+
+test('unknown view falls back to edit', () => {
+  assert.deepEqual(
+    parseUrlState(new URL('https://example.test/?view=unknown'), schema),
+    {
+      locale:     'en',
+      version:    1,
+      selection:  {},
+      view:       'edit',
+      isFallback: false,
+    },
+  )
 })
 
 test('unversioned sparse payloads fail safely', () => {
@@ -134,6 +231,7 @@ test('unversioned sparse payloads fail safely', () => {
       locale:     'fr',
       version:    1,
       selection:  {},
+      view:       'edit',
       isFallback: true,
     },
   )

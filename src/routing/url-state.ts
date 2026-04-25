@@ -12,10 +12,13 @@ import {
   type SupportedLocale,
 } from '../content/loader.js'
 
+export type AppView = 'edit' | 'review' | 'learn-more'
+
 export interface ParsedUrlState {
   locale: SupportedLocale
   version: SchemaVersion
   selection: SelectionState
+  view: AppView
   isFallback: boolean
 }
 
@@ -23,6 +26,7 @@ export interface UrlStateInput {
   locale: SupportedLocale
   schema: SchemaDefinition
   selection: SelectionState
+  view?: AppView
 }
 
 export function parseUrlState(
@@ -36,6 +40,7 @@ export function parseUrlState(
       locale: getUrlLocale(url),
       version: schema.version,
       selection: {},
+      view: getUrlView(url),
       isFallback: false,
     }
   }
@@ -46,6 +51,7 @@ export function parseUrlState(
     locale: getUrlLocale(url),
     version: schema.version,
     selection: selection ?? {},
+    view: getUrlView(url),
     isFallback: selection === null,
   }
 }
@@ -63,6 +69,10 @@ export function buildUrlStatePath(
 
   if (state.locale !== defaultLocale) {
     nextUrl.searchParams.set('lang', state.locale)
+  }
+
+  if (state.view && state.view !== 'edit') {
+    nextUrl.searchParams.set('view', state.view)
   }
 
   if (!isEmptySelection(state.selection)) {
@@ -84,6 +94,18 @@ export function replaceUrlState(
   return path
 }
 
+export function pushUrlState(
+  currentUrl: URL,
+  state: UrlStateInput,
+  history: Pick<History, 'pushState'> = window.history,
+): string {
+  const path = buildUrlStatePath(currentUrl, state)
+
+  history.pushState(null, '', path)
+
+  return path
+}
+
 export function getLocaleFromUrl(url: URL): SupportedLocale | null {
   const lang = url.searchParams.get('lang')
   if (lang === null) return null
@@ -93,6 +115,12 @@ export function getLocaleFromUrl(url: URL): SupportedLocale | null {
 
 function getUrlLocale(url: URL): SupportedLocale {
   return resolveLocale(url.searchParams.get('lang'))
+}
+
+function getUrlView(url: URL): AppView {
+  const view = url.searchParams.get('view')
+
+  return view === 'review' || view === 'learn-more' ? view : 'edit'
 }
 
 function getBasePath(pathname: string): string {

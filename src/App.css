@@ -24,10 +24,14 @@
 
 .app-name {
   flex-shrink: 0;
+  padding: 0;
+  background: none;
+  border: none;
   font-family: var(--display);
   font-weight: 500;
   font-size: 20px;
   color: var(--heading);
+  text-align: left;
 }
 
 .app-header-controls {
@@ -499,8 +503,9 @@
 }
 
 .review-item {
-  display: grid;
-  gap: 2px;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
   padding: 0 0 9px;
   border-bottom: 1px solid var(--divider);
 }
@@ -511,12 +516,14 @@
 }
 
 .review-item-label {
+  min-width: 0;
   color: var(--heading);
   font-size: 15px;
   line-height: 1.35;
 }
 
 .review-item-meta {
+  flex-shrink: 0;
   color: var(--muted);
   font-size: 13px;
   line-height: 1.35;
@@ -574,6 +581,10 @@
 }
 
 .category-card-title {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-family: var(--display);
   font-size: 15px;
   font-weight: 500;
@@ -585,19 +596,30 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
+  margin-left: 10px;
   flex-shrink: 0;
+}
+
+.category-card-indicators {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
 }
 
 .category-card-indicator {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   color: #fff;
-  background: var(--present);
   border-radius: var(--radius-pill);
 }
+
+.category-card-indicator.is-present { background: var(--present); }
+.category-card-indicator.is-important { background: var(--important); }
+.category-card-indicator.is-discuss { background: var(--discuss); }
+.category-card-indicator.is-no { background: var(--no); }
 
 .category-card-chevron {
   width: 20px;

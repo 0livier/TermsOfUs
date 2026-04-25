@@ -16,7 +16,13 @@ import {
   type SelectedItemState,
   type SelectionState,
 } from './domain/model.js'
-import { getLocaleFromUrl, parseUrlState, replaceUrlState } from './routing/url-state.js'
+import {
+  getLocaleFromUrl,
+  parseUrlState,
+  pushUrlState,
+  replaceUrlState,
+  type AppView,
+} from './routing/url-state.js'
 import { ItemRow } from './components/ItemRow.js'
 import { ReviewView } from './components/ReviewView.js'
 import { StateIcon } from './components/StateIcon.js'
@@ -25,7 +31,12 @@ function getInitialUrlState() {
   const schema = localizeSchema('en').schema
 
   if (typeof window === 'undefined') {
-    return { locale: 'en' as SupportedLocale, selection: {}, isFallback: false }
+    return {
+      locale: 'en' as SupportedLocale,
+      selection: {},
+      view: 'edit' as AppView,
+      isFallback: false,
+    }
   }
 
   const url      = new URL(window.location.href)
@@ -84,7 +95,11 @@ function CategoryCard({
   onItemClear,
 }: CategoryCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
-  const hasAnswers = category.items.some((item) => selection[item.id])
+  const activeStates = stateOptions.flatMap((option) =>
+    category.items.some((item) => selection[item.id] === option.value)
+      ? [option.value as SelectedItemState]
+      : [],
+  )
 
   return (
     <div ref={cardRef} className={`category-card${isOpen ? ' category-card--open' : ''}`}>
@@ -100,9 +115,13 @@ function CategoryCard({
       >
         <span className="category-card-title">{category.label}</span>
         <span className="category-card-status">
-          {hasAnswers && (
-            <span className="category-card-indicator" aria-hidden="true">
-              <StateIcon state="present" size={12} />
+          {activeStates.length > 0 && (
+            <span className="category-card-indicators" aria-hidden="true">
+              {activeStates.map((state) => (
+                <span key={state} className={`category-card-indicator is-${state}`}>
+                  <StateIcon state={state} size={11} />
+                </span>
+              ))}
             </span>
           )}
           <svg
@@ -296,8 +315,7 @@ function App() {
   const [showShareDialog, setShowShareDialog] = useState(false)
   const [toast, setToast]                   = useState('')
   const [openCategoryId, setOpenCategoryId] = useState<string | null>(null)
-  const [showLearnMore, setShowLearnMore]   = useState(false)
-  const [showReview, setShowReview]         = useState(false)
+  const [currentView, setCurrentView]       = useState<AppView>(initialUrlState.view)
 
   const content = useMemo(() => localizeSchema(locale), [locale])
 
@@ -307,6 +325,7 @@ function App() {
   const shareButtonRef = useRef<HTMLButtonElement>(null)
   const shareCopyButtonRef = useRef<HTMLButtonElement>(null)
   const toastTimer    = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const initializedStatePageHistory = useRef(false)
 
   useEffect(() => {
     if (!menuOpen) return
@@ -334,17 +353,74 @@ function App() {
     return () => document.removeEventListener('keydown', handleKeyDown)
   }, [showShareDialog])
 
+  useEffect(() => {
+    if (
+      initializedStatePageHistory.current ||
+      initialUrlState.view === 'edit' ||
+      typeof window === 'undefined'
+    ) {
+      return
+    }
+
+    initializedStatePageHistory.current = true
+
+    const currentUrl = new URL(window.location.href)
+    const currentState = {
+      locale,
+      schema: content.schema,
+      selection,
+      view: initialUrlState.view,
+    }
+
+    replaceUrlState(currentUrl, { ...currentState, view: 'edit' })
+    pushUrlState(new URL(window.location.href), currentState)
+  }, [content.schema, locale, selection])
+
+  useEffect(() => {
+    function handlePopState() {
+      const nextUrlState = parseUrlState(new URL(window.location.href), content.schema)
+
+      setLocale(nextUrlState.locale)
+      setSelection(nextUrlState.selection)
+      setCurrentView(nextUrlState.view)
+      setMenuOpen(false)
+      setShowShareDialog(false)
+      setShowConfirm(false)
+    }
+
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [content.schema])
+
   function showToast(message: string) {
     setToast(message)
     if (toastTimer.current) clearTimeout(toastTimer.current)
     toastTimer.current = setTimeout(() => setToast(''), 2500)
   }
 
-  function updateUrl(nextSelection: SelectionState, nextLocale = locale) {
+  function updateUrl(
+    nextSelection: SelectionState,
+    nextLocale = locale,
+    nextView = currentView,
+  ) {
     replaceUrlState(new URL(window.location.href), {
       locale: nextLocale,
       schema: content.schema,
       selection: nextSelection,
+      view: nextView,
+    })
+  }
+
+  function pushUrl(
+    nextSelection: SelectionState,
+    nextLocale = locale,
+    nextView = currentView,
+  ) {
+    pushUrlState(new URL(window.location.href), {
+      locale: nextLocale,
+      schema: content.schema,
+      selection: nextSelection,
+      view: nextView,
     })
   }
 
@@ -375,9 +451,9 @@ function App() {
   }
 
   function handleStart() {
-    setShowLearnMore(false)
-    setShowReview(false)
+    setCurrentView('edit')
     setOpenCategoryId(content.categories[0]?.id ?? null)
+    updateUrl(selection, locale, 'edit')
     requestAnimationFrame(() => {
       categoriesRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
     })
@@ -385,13 +461,29 @@ function App() {
 
   function handleReviewOpen() {
     setMenuOpen(false)
-    setShowLearnMore(false)
-    setShowReview(true)
+    setCurrentView('review')
+    pushUrl(selection, locale, 'review')
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
   function handleBackToEdit() {
-    setShowReview(false)
+    setCurrentView('edit')
+    updateUrl(selection, locale, 'edit')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  function handleLearnMoreOpen() {
+    setCurrentView('learn-more')
+    pushUrl(selection, locale, 'learn-more')
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+
+  function handleHome() {
+    setCurrentView('edit')
+    setMenuOpen(false)
+    setShowShareDialog(false)
+    setShowConfirm(false)
+    updateUrl(selection, locale, 'edit')
     window.scrollTo({ top: 0, behavior: 'smooth' })
   }
 
@@ -419,6 +511,7 @@ function App() {
       locale,
       schema: content.schema,
       selection,
+      view: currentView,
     })
 
     return `${window.location.origin}${path}`
@@ -455,7 +548,9 @@ function App() {
 
       {/* ── Header ─────────────────────────────────────────── */}
       <header ref={headerRef} className="app-header">
-        <span className="app-name">Terms of Us</span>
+        <button type="button" className="app-name" onClick={handleHome}>
+          Terms of Us
+        </button>
         <div className="app-header-controls">
           <button
             type="button"
@@ -489,7 +584,7 @@ function App() {
                 const newLocale = e.target.value as SupportedLocale
                 setLocale(newLocale)
                 saveLocalePreference(newLocale)
-                updateUrl(selection, newLocale)
+                updateUrl(selection, newLocale, currentView)
               }}
               aria-label={content.languageLabel}
             >
@@ -559,13 +654,13 @@ function App() {
         <p className="notice" role="status">{content.fallbackMessage}</p>
       ) : null}
 
-      {showLearnMore ? (
+      {currentView === 'learn-more' ? (
         <LearnMorePage
           content={content}
           onStart={handleStart}
-          onBack={() => setShowLearnMore(false)}
+          onBack={handleBackToEdit}
         />
-      ) : showReview ? (
+      ) : currentView === 'review' ? (
         <ReviewView
           content={content}
           selection={selection}
@@ -587,7 +682,7 @@ function App() {
           <button
             type="button"
             className="btn-secondary"
-            onClick={() => setShowLearnMore(true)}
+            onClick={handleLearnMoreOpen}
           >
             {content.intro.learnMore}
           </button>

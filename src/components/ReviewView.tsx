@@ -132,8 +132,8 @@ function ReviewByAnswer({
             <ul className="review-item-list">
               {items.map((item) => (
                 <li key={item.id} className="review-item">
-                  <span className="review-item-label">{item.label}</span>
                   <span className="review-item-meta">{item.categoryLabel}</span>
+                  <span className="review-item-label">{item.label}</span>
                 </li>
               ))}
             </ul>
@@ -157,7 +157,7 @@ function ReviewByCategory({
         const answeredItems = category.items.flatMap((item) => {
           const state = selection[item.id]
           if (!state) return []
-          return [{ id: item.id, label: item.label, state }]
+          return [{ id: item.id, label: item.label, categoryLabel: category.label, state }]
         })
 
         if (answeredItems.length === 0) return null
@@ -178,6 +178,7 @@ function ReviewByCategory({
                     <ul className="review-item-list">
                       {items.map((item) => (
                         <li key={item.id} className="review-item">
+                          <span className="review-item-meta">{item.categoryLabel}</span>
                           <span className="review-item-label">{item.label}</span>
                         </li>
                       ))}
