@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useRef } from 'react'
 import type { ItemId, ItemState, ItemStateOption, SelectedItemState } from '../domain/model.js'
 import { StateIcon } from './StateIcon.js'
 
@@ -20,63 +20,38 @@ export function ItemRow({
   onClear,
 }: ItemRowProps) {
   const rowRef = useRef<HTMLDivElement>(null)
-  const [editing, setEditing] = useState(false)
-  const isAnswered = currentState !== 'none'
-  const showSelector = !isAnswered || editing
-  const currentOption = stateOptions.find((o) => o.value === currentState)
 
   function handleStateSelect(state: SelectedItemState) {
     if (state === currentState) {
       onClear(id)
-      setEditing(false)
       return
     }
     onSelect(id, state)
-    setEditing(false)
     requestAnimationFrame(() => {
       const next = rowRef.current?.nextElementSibling
       if (next) next.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
     })
   }
 
-  function handleBadgeClick() {
-    setEditing((prev) => !prev)
-  }
-
   return (
-    <div ref={rowRef} className={`item-row${isAnswered ? ' item-row--answered' : ''}`}>
+    <div ref={rowRef} className="item-row">
       <span className="item-row-label">{label}</span>
-      <div className="item-row-answer">
-        {showSelector ? (
-          <div className="item-state-selector" role="group" aria-label={`Mark ${label}`}>
-            {stateOptions.map((opt) => (
-              <button
-                key={opt.value}
-                type="button"
-                className={`state-btn is-${opt.value}${currentState === opt.value ? ' is-selected' : ''}`}
-                aria-label={opt.longLabel}
-                aria-pressed={currentState === opt.value}
-                onClick={() => handleStateSelect(opt.value as SelectedItemState)}
-              >
-                <StateIcon state={opt.value} icon={opt.icon} />
-                <span className="state-btn-label">{opt.shortLabel}</span>
-              </button>
-            ))}
-          </div>
-        ) : (
-          currentOption && (
+      <div className="item-row-answer" role="group" aria-label={label}>
+        {stateOptions.map((opt) => {
+          const isActive = currentState === opt.value
+          return (
             <button
+              key={opt.value}
               type="button"
-              className={`item-badge is-${currentState}`}
-              onClick={handleBadgeClick}
-              aria-label={`${currentOption.longLabel}. Tap to change.`}
-              aria-pressed={false}
+              className={`sel-btn sel-btn-${opt.value}${isActive ? ` active-${opt.value}` : ''}`}
+              aria-label={opt.longLabel}
+              aria-pressed={isActive}
+              onClick={() => handleStateSelect(opt.value as SelectedItemState)}
             >
-              <StateIcon state={currentState} icon={currentOption.icon} />
-              <span>{currentOption.label}</span>
+              <StateIcon state={opt.value} size={18} />
             </button>
           )
-        )}
+        })}
       </div>
     </div>
   )

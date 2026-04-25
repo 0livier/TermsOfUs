@@ -1,14 +1,70 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
 :root {
-  --bg: #f7f7f2;
-  --panel: #ffffff;
-  --text: #242424;
-  --heading: #111111;
-  --muted: #66695f;
-  --border: #d8d8cf;
-  --focus: #315c99;
-  --focus-soft: rgba(49, 92, 153, 0.18);
-  --notice: #eef5ff;
-  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  /* Surfaces */
+  --bg:        #FAF8F4;
+  --panel:     #FFFFFF;
+  --panel-sub: #F5F1EB;
+
+  /* Borders */
+  --border:  #EDE8E0;
+  --divider: #F0EBE3;
+
+  /* Text */
+  --text:    #5E5750;
+  --heading: #201C18;
+  --muted:   #8C8278;
+
+  /* Neutral scale */
+  --neutral-100: #F7F4EF;
+  --neutral-200: #EDE8E0;
+  --neutral-300: #D9D2C8;
+  --neutral-400: #B5ADA1;
+
+  /* Focus (blue) */
+  --focus:      #4A90D9;
+  --focus-soft: rgba(74, 144, 217, 0.18);
+
+  /* Notice */
+  --notice: #EBF2FB;
+
+  /* State: Present (green) */
+  --present:        #3A9E68;
+  --present-light:  #EBF6EE;
+  --present-border: #C3E6D0;
+  --present-text:   #2D7A50;
+
+  /* State: Important (blue) */
+  --important:        #4A90D9;
+  --important-light:  #EBF2FB;
+  --important-border: #BDDAF5;
+  --important-text:   #2E68A8;
+
+  /* State: Discuss (amber) */
+  --discuss:        #D4922A;
+  --discuss-light:  #FDF4E3;
+  --discuss-border: #F5D99A;
+  --discuss-text:   #A06B18;
+
+  /* State: No (rose) */
+  --no:        #C85C5C;
+  --no-light:  #FAEAEA;
+  --no-border: #EDB8B8;
+  --no-text:   #9B3A3A;
+
+  /* Shadows */
+  --shadow-card:     0 2px 8px rgba(0,0,0,0.06);
+  --shadow-elevated: 0 8px 32px rgba(0,0,0,0.10);
+
+  /* Radii */
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+  --radius-pill: 999px;
+
+  /* Fonts */
+  --display: 'Lora', 'Georgia', serif;
+  --sans:    'DM Sans', 'Helvetica Neue', sans-serif;
 
   font: 16px/1.5 var(--sans);
   color: var(--text);
@@ -19,32 +75,25 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-body {
-  margin: 0;
-}
+body { margin: 0; }
+#root { min-height: 100svh; }
 
-#root {
-  min-height: 100svh;
-}
+h1, h2, p { margin: 0; }
 
-h1,
-h2,
-p {
-  margin: 0;
-}
-
-h1,
-h2 {
+h1 {
+  font-family: var(--display);
+  font-size: clamp(22px, 5vw, 32px);
+  font-weight: 500;
+  line-height: 1.2;
+  letter-spacing: -0.02em;
   color: var(--heading);
 }
 
-h1 {
-  font-size: clamp(32px, 6vw, 56px);
-  line-height: 1.05;
-}
-
 h2 {
-  margin-bottom: 14px;
+  font-family: var(--display);
   font-size: 20px;
-  line-height: 1.2;
+  font-weight: 400;
+  line-height: 1.35;
+  color: var(--heading);
+  margin-bottom: 14px;
 }

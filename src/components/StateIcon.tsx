@@ -1,22 +1,53 @@
 interface StateIconProps {
   state: string
-  icon: string
+  size?: number
 }
 
-export function StateIcon({ state, icon }: StateIconProps) {
-  if (state === 'discuss') {
+export function StateIcon({ state, size = 16 }: StateIconProps) {
+  const props = {
+    width: size,
+    height: size,
+    viewBox: '0 0 24 24',
+    fill: 'none',
+    stroke: 'currentColor',
+    strokeWidth: 1.75,
+    strokeLinecap: 'round' as const,
+    strokeLinejoin: 'round' as const,
+    'aria-hidden': true,
+  }
+
+  if (state === 'present') {
     return (
-      <svg
-        width="14"
-        height="14"
-        viewBox="0 0 14 14"
-        fill="currentColor"
-        aria-hidden="true"
-        style={{ display: 'inline-block', verticalAlign: 'middle' }}
-      >
-        <path d="M7 1C3.686 1 1 3.239 1 6c0 1.497.69 2.843 1.8 3.797L2.5 13l3-1.5C5.979 11.832 6.485 12 7 12c3.314 0 6-2.239 6-5S10.314 1 7 1z" />
+      <svg {...props}>
+        <path d="M5 13l4 4L19 7" />
       </svg>
     )
   }
-  return <span aria-hidden="true">{icon}</span>
+
+  if (state === 'important') {
+    return (
+      <svg {...props}>
+        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+      </svg>
+    )
+  }
+
+  if (state === 'discuss') {
+    return (
+      <svg {...props}>
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+    )
+  }
+
+  if (state === 'no') {
+    return (
+      <svg {...props}>
+        <line x1="18" y1="6" x2="6" y2="18" />
+        <line x1="6" y1="6" x2="18" y2="18" />
+      </svg>
+    )
+  }
+
+  return null
 }

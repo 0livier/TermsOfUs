@@ -44,7 +44,7 @@ const initialUrlState = getInitialUrlState()
 // ─── State legend ─────────────────────────────────────────────────────────────
 
 interface StateLegendProps {
-  stateOptions: Array<{ value: string; icon: string; longLabel: string }>
+  stateOptions: Array<{ value: string; longLabel: string }>
 }
 
 function StateLegend({ stateOptions }: StateLegendProps) {
@@ -53,7 +53,7 @@ function StateLegend({ stateOptions }: StateLegendProps) {
       {stateOptions.map((opt) => (
         <div key={opt.value} className={`legend-item is-${opt.value}`}>
           <span className="legend-icon">
-            <StateIcon state={opt.value} icon={opt.icon} />
+            <StateIcon state={opt.value} size={14} />
           </span>
           <span className="legend-label">{opt.longLabel}</span>
         </div>
