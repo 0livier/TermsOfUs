@@ -18,22 +18,22 @@
     },
     "share": {
       "label":           "Partager",
-      "accessibleLabel": "Partager ma réflexion",
-      "title":           "Partager ma réflexion",
-      "body":            "Cela crée un lien contenant tes réponses actuelles. Toute personne ayant ce lien peut les voir.",
+      "accessibleLabel": "Partager vos réponses",
+      "title":           "Partager vos réponses",
+      "body":            "Ce lien contiendra vos réponses actuelles. Toute personne qui y a accès pourra les voir.",
       "copyLink":        "Copier le lien"
     },
     "review": {
-      "label":           "Où j’en suis",
-      "accessibleLabel": "Voir où j’en suis dans mes réponses",
-      "title":           "Voilà où j'en suis",
+      "label":           "Faire le point",
+      "accessibleLabel": "Faire le point sur vos réponses",
+      "title":           "Voilà où vous en êtes",
       "countLabel":      "{count} réponses ajoutées",
       "organizeBy":      "Organiser par",
-      "byAnswer":        "Réponse",
-      "byCategory":      "Catégorie",
-      "backToEdit":      "Modifier mes réponses",
+      "byAnswer":        "Par réponse",
+      "byCategory":      "Par catégorie",
+      "backToEdit":      "Modifier vos réponses",
       "emptyTitle":      "Rien à relire pour l’instant",
-      "emptyBody":       "Commence par marquer quelques éléments, puis reviens ici pour voir ta réflexion.",
+      "emptyBody":       "Commencez par marquer quelques éléments, puis revenez ici pour faire le point.",
       "emptyCta":        "Commencer"
     },
     "wheel": {
@@ -42,7 +42,7 @@
     },
     "intro": {
       "title":            "Qu'est-ce qui compte pour vous dans une relation ?",
-      "body":             "Marquez ce qui compte, ce qui est déjà là, ce que vous voulez discuter, et ce qui ne vous convient pas. Il n'y a pas de bonne ou mauvaise réponse.",
+      "body":             "Terms of Us vous aide à mettre des mots sur une relation : ce qui est déjà là, ce que vous aimeriez, ce qui mérite discussion, et ce qui ne vous convient pas.\n\nCommencez par les catégories qui vous parlent. Inutile de tout remplir : l’idée est surtout d’identifier ce qui compte vraiment pour vous.\n\nVous pourrez ensuite faire le point, relire votre synthèse, puis la partager si vous souhaitez ouvrir une discussion.",
       "privacy":          "Vos réponses restent sur votre appareil. Si vous partagez un lien, il contiendra vos réponses.",
       "startCategory":    "Commencer avec une catégorie",
       "browseCategories": "Parcourir les catégories",
@@ -55,23 +55,23 @@
       "sections": [
         {
           "title": "Ce que l’outil permet",
-          "body": "Terms of Us peut t’aider à repérer ce qui est important pour toi, ce qui est déjà présent dans une relation, ce que tu ne souhaites pas, et les sujets qui mériteraient une discussion. Il ne s’agit pas de tout remplir, ni de trouver une bonne réponse. L’idée est plutôt d’ouvrir un espace de réflexion, puis éventuellement de conversation."
+          "body": "Terms of Us peut vous aider à repérer ce qui est important pour vous, ce qui est déjà présent dans une relation, ce que vous ne souhaitez pas, et les sujets qui mériteraient une discussion. Il ne s’agit pas de tout remplir, ni de trouver une bonne réponse. L’idée est plutôt d’ouvrir un espace de réflexion, puis éventuellement de conversation."
         },
         {
           "title": "Comment l’utiliser",
-          "body": "Tu peux commencer par une catégorie, parcourir la carte, ou ouvrir la liste complète. Pour chaque élément, tu peux le marquer comme Présent, Important, À discuter ou Non. Tu peux aussi ne rien choisir. Ne pas répondre est une réponse valable : cela peut simplement vouloir dire que ce n’est pas le moment, que le sujet n’est pas clair, ou qu’il n’a pas d’importance pour toi."
+          "body": "Vous pouvez commencer par une catégorie, parcourir la carte, ou ouvrir la liste complète. Pour chaque élément, vous pouvez le marquer comme Présent, Important, À discuter ou Non. Vous pouvez aussi ne rien choisir. Ne pas répondre est une réponse valable : cela peut simplement vouloir dire que ce n’est pas le moment, que le sujet n’est pas clair, ou qu’il n’a pas d’importance pour vous."
         },
         {
           "title": "Pour quelles relations ?",
-          "body": "Tu peux utiliser Terms of Us pour une relation amoureuse, une relation longue, une relation récente, une amitié importante, une relation queerplatonique, une coparentalité, une relation ouverte ou non monogame, ou toute relation où tu as envie de mieux comprendre ce qui compte pour toi. L’outil ne suppose pas une forme de relation particulière."
+          "body": "Vous pouvez utiliser Terms of Us pour une relation amoureuse, une relation longue, une relation récente, une amitié importante, une relation queerplatonique, une coparentalité, une relation ouverte ou non monogame, ou toute relation où vous avez envie de mieux comprendre ce qui compte pour vous. L’outil ne suppose pas une forme de relation particulière."
         },
         {
           "title": "Ce que ce n’est pas",
-          "body": "Terms of Us n’est pas un test de compatibilité, un score de relation, un outil de diagnostic ou une méthode pour décider à ta place. Il ne remplace pas une discussion honnête, un accompagnement professionnel, ni le respect du consentement et des limites de chacun·e."
+          "body": "Terms of Us n’est pas un test de compatibilité, un score de relation, un outil de diagnostic ou une méthode pour décider à votre place. Il ne remplace pas une discussion honnête, un accompagnement professionnel, ni le respect du consentement et des limites de chacun·e."
         },
         {
           "title": "Confidentialité",
-          "body": "Tes choix restent sur ton appareil. Il n’y a pas de compte et pas de serveur pour enregistrer tes réponses. Si tu copies ou partages un lien, les personnes qui ont ce lien peuvent voir les choix qu’il contient."
+          "body": "Vos réponses restent sur votre appareil. Il n’y a pas de compte et pas de serveur pour les enregistrer. Si vous copiez ou partagez un lien, les personnes qui ont ce lien peuvent voir les réponses qu’il contient."
         }
       ],
       "cta": "Commencer doucement",

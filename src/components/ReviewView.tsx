@@ -75,9 +75,6 @@ export function ReviewView({
         <h1 id="review-title" tabIndex={-1} ref={titleRef}>
           {content.review.title}
         </h1>
-        <p className="review-count">
-          {content.review.countLabel.replace('{count}', String(answeredCount))}
-        </p>
 
         <div className="review-toolbar">
           <div className="review-grouping">
@@ -144,7 +141,7 @@ function ReviewByAnswer({
         return (
           <section key={state} className={`review-group is-${state}`}>
             <StateHeading level={2} state={state}>
-              {getStateLabel(content, state)} · {items.length}
+              {getStateLabel(content, state)}
             </StateHeading>
             <ul className="review-item-list">
               {items.map((item) => (
