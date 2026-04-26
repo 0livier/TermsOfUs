@@ -11,9 +11,11 @@
       "no":        { "label": "No",        "longLabel": "Not for me",        "shortLabel": "No"        }
     },
     "actions": {
+      "back":            "Back",
       "reset":           "Clear all",
       "copyLink":        "Copy link",
       "linkCopied":      "Link copied",
+      "summaryCopied":   "Summary copied",
       "copyUnavailable": "Could not copy"
     },
     "share": {
@@ -28,10 +30,13 @@
       "accessibleLabel": "See where I’m at in my answers",
       "title":           "Here where I am at",
       "countLabel":      "{count} answers added",
+      "copySummary":     "Copy",
+      "copySummaryAccessibleLabel": "Copy your summary",
+      "copySummaryIntro": "What follows is my assessment of a relationship using the Relationship Anarchy Smorgasbord framework.",
       "organizeBy":      "Organize by",
       "byAnswer":        "Answer",
       "byCategory":      "Category",
-      "backToEdit":      "Back to edit",
+      "backToEdit":      "Edit",
       "emptyTitle":      "Nothing to review yet",
       "emptyBody":       "Start by marking a few items, then come back here to see your reflection.",
       "emptyCta":        "Start answering"
@@ -42,7 +47,7 @@
     },
     "intro": {
       "title":            "What matters to you in a relationship?",
-      "body":             "Terms of Us helps you put words on a relationship: what is already there, what you would like, what deserves a conversation, and what does not work for you.\n\nStart with the categories that speak to you. You do not need to fill in everything: the goal is to identify what truly matters to you.\n\nYou can then review your summary, read it back, and share it if you want to open a conversation.",
+      "body":             "Terms of Us helps you put words on a relationship: what is already there, what you would like, what deserves a conversation, and what does not work for you.\n\nStart with the categories that speak to you. You do not need to fill in everything: the goal is to identify what truly matters to you.\n\nYou can then review your summary, read it back, and share it if you want to open a conversation.\n\nIt is inspired by the Relationship Anarchy Smorgasbord, a discussion tool created in relationship anarchy communities to help clarify what each relationship can contain.",
       "privacy":          "Your answers stay on your device. If you share a link, it will contain your answers.",
       "startCategory":    "Start with one category",
       "browseCategories": "Browse all categories",
@@ -72,6 +77,10 @@
         {
           "title": "Privacy",
           "body": "Your choices stay on your device. There is no account and no server storing your answers. If you copy or share a link, anyone with that link can see the choices it contains."
+        },
+        {
+          "title": "Origins and credits",
+          "body": "Terms of Us is a free and interactive adaptation of the Relationship Anarchy Smorgasbord.\n\nThe original Relationship Anarchy Smorgasbord was created by Lyrica Lawrence and Heather Orr of Vancouver Polyamory in December 2016. It was later reworked and expanded by Maxx Hill, with feedback from communities around relationship anarchy, polyamory, and solo polyamory, up to version 5 published in 2019.\n\nThe concept of relationship anarchy is notably part of the lineage of Andie Nordgren’s manifesto, The short instructional manifesto for relationship anarchy, published in Swedish in 2006.\n\nTerms of Us is not an official version of the original Smorgasbord. It is an independent adaptation, designed to make personal reflection, summary, and sharing easier."
         }
       ],
       "cta": "Start gently",

@@ -26,6 +26,7 @@ import {
 import { ItemRow } from './components/ItemRow.js'
 import { ReviewView } from './components/ReviewView.js'
 import { StateIcon } from './components/StateIcon.js'
+import { buildReviewSummary } from './app/review-summary.js'
 
 function getInitialUrlState() {
   const schema = localizeSchema('en').schema
@@ -254,13 +255,18 @@ function ListChecksIcon() {
 
 interface LearnMorePageProps {
   content: ReturnType<typeof localizeSchema>
-  onStart: () => void
+  backLabel: string
   onBack: () => void
 }
 
-function LearnMorePage({ content, onStart, onBack }: LearnMorePageProps) {
+function LearnMorePage({ content, backLabel, onBack }: LearnMorePageProps) {
   return (
     <main className="learn-more-page" aria-labelledby="learn-more-title">
+      <button type="button" className="btn-secondary top-back-btn" onClick={onBack}>
+        <BackArrowIcon />
+        {backLabel}
+      </button>
+
       <section className="learn-more-hero">
         <h1 id="learn-more-title">{content.learnMore.title}</h1>
         <p>{content.learnMore.intro}</p>
@@ -273,15 +279,6 @@ function LearnMorePage({ content, onStart, onBack }: LearnMorePageProps) {
             <p>{section.body}</p>
           </section>
         ))}
-      </div>
-
-      <div className="learn-more-actions">
-        <button type="button" className="btn-primary" onClick={onStart}>
-          {content.learnMore.cta}
-        </button>
-        <button type="button" className="btn-secondary" onClick={onBack}>
-          {content.learnMore.back}
-        </button>
       </div>
     </main>
   )
@@ -526,6 +523,27 @@ function App() {
     await handleCopyLink()
   }
 
+  async function handleCopySummary() {
+    const summary = buildReviewSummary(content, selection)
+
+    try {
+      if (navigator.clipboard) {
+        await navigator.clipboard.writeText(summary)
+      } else {
+        const textarea = document.createElement('textarea')
+        textarea.value = summary
+        textarea.style.cssText = 'position:fixed;opacity:0'
+        document.body.appendChild(textarea)
+        textarea.select()
+        document.execCommand('copy')
+        document.body.removeChild(textarea)
+      }
+      showToast(content.uiActions.summaryCopied)
+    } catch {
+      showToast(content.uiActions.copyUnavailable)
+    }
+  }
+
   return (
     <div className="app-shell">
 
@@ -626,18 +644,22 @@ function App() {
       {currentView === 'learn-more' ? (
         <LearnMorePage
           content={content}
-          onStart={handleStart}
+          backLabel={content.uiActions.back}
           onBack={handleBackToEdit}
         />
       ) : currentView === 'review' ? (
         <ReviewView
           content={content}
           selection={selection}
+          backLabel={content.uiActions.back}
           onBackToEdit={handleBackToEdit}
           onStartAnswering={handleStart}
           onShare={openShareDialog}
+          onCopySummary={handleCopySummary}
           shareLabel={content.share.label}
           shareAccessibleLabel={content.share.accessibleLabel}
+          copySummaryLabel={content.review.copySummary}
+          copySummaryAccessibleLabel={content.review.copySummaryAccessibleLabel}
         />
       ) : (
         <>
@@ -686,3 +708,21 @@ function App() {
 }
 
 export default App
+
+function BackArrowIcon() {
+  return (
+    <svg
+      className="header-action-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m15 18-6-6 6-6" />
+      <path d="M21 12H9" />
+    </svg>
+  )
+}

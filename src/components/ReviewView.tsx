@@ -8,11 +8,15 @@ type ReviewGrouping = 'answer' | 'category'
 interface ReviewViewProps {
   content: LocalizedContent
   selection: SelectionState
+  backLabel: string
   onBackToEdit: () => void
   onStartAnswering: () => void
   onShare: () => void
+  onCopySummary: () => void
   shareLabel: string
   shareAccessibleLabel: string
+  copySummaryLabel: string
+  copySummaryAccessibleLabel: string
 }
 
 interface AnsweredItem {
@@ -27,11 +31,15 @@ const STATE_ORDER: SelectedItemState[] = ['present', 'important', 'discuss', 'no
 export function ReviewView({
   content,
   selection,
+  backLabel,
   onBackToEdit,
   onStartAnswering,
   onShare,
+  onCopySummary,
   shareLabel,
   shareAccessibleLabel,
+  copySummaryLabel,
+  copySummaryAccessibleLabel,
 }: ReviewViewProps) {
   const [grouping, setGrouping] = useState<ReviewGrouping>('answer')
   const titleRef = useRef<HTMLHeadingElement>(null)
@@ -48,9 +56,6 @@ export function ReviewView({
 
   function setReviewGrouping(nextGrouping: ReviewGrouping) {
     setGrouping(nextGrouping)
-    requestAnimationFrame(() => {
-      titleRef.current?.scrollIntoView({ block: 'start' })
-    })
   }
 
   if (answeredCount === 0) {
@@ -71,10 +76,17 @@ export function ReviewView({
 
   return (
     <main className="review-page" aria-labelledby="review-title">
+      <button type="button" className="btn-secondary top-back-btn" onClick={onBackToEdit}>
+        <BackIcon />
+        {backLabel}
+      </button>
+
       <section className="review-header">
-        <h1 id="review-title" tabIndex={-1} ref={titleRef}>
-          {content.review.title}
-        </h1>
+        <div className="review-header-top">
+          <h1 id="review-title" tabIndex={-1} ref={titleRef}>
+            {content.review.title}
+          </h1>
+        </div>
 
         <div className="review-toolbar">
           <div className="review-grouping">
@@ -102,15 +114,22 @@ export function ReviewView({
           <div className="review-toolbar-actions">
             <button
               type="button"
+              className="btn-primary review-copy-btn"
+              onClick={onCopySummary}
+              aria-label={copySummaryAccessibleLabel}
+            >
+              <CopyIcon />
+              {copySummaryLabel}
+            </button>
+
+            <button
+              type="button"
               className="btn-primary review-share-btn"
               onClick={onShare}
               aria-label={shareAccessibleLabel}
             >
+              <ShareIcon />
               {shareLabel}
-            </button>
-
-            <button type="button" className="btn-secondary review-back-btn" onClick={onBackToEdit}>
-              {content.review.backToEdit}
             </button>
           </div>
         </div>
@@ -250,4 +269,61 @@ function getAnsweredItems(
 
 function getStateLabel(content: LocalizedContent, state: SelectedItemState): string {
   return content.stateOptions.find((option) => option.value === state)?.longLabel ?? state
+}
+
+function CopyIcon() {
+  return (
+    <svg
+      className="review-action-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+    </svg>
+  )
+}
+
+function ShareIcon() {
+  return (
+    <svg
+      className="review-action-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="18" cy="5" r="3" />
+      <circle cx="6" cy="12" r="3" />
+      <circle cx="18" cy="19" r="3" />
+      <path d="M8.6 13.5 15.4 17.5" />
+      <path d="M15.4 6.5 8.6 10.5" />
+    </svg>
+  )
+}
+
+function BackIcon() {
+  return (
+    <svg
+      className="review-action-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={2}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="m15 18-6-6 6-6" />
+      <path d="M21 12H9" />
+    </svg>
+  )
 }

@@ -55,9 +55,11 @@ export interface LocaleUiContent {
     shortLabel?: string
   }>>
   actions?: {
+    back?: string
     reset?: string
     copyLink?: string
     linkCopied?: string
+    summaryCopied?: string
     copyUnavailable?: string
   }
   share?: {
@@ -72,6 +74,9 @@ export interface LocaleUiContent {
     accessibleLabel?: string
     title?: string
     countLabel?: string
+    copySummary?: string
+    copySummaryAccessibleLabel?: string
+    copySummaryIntro?: string
     organizeBy?: string
     byAnswer?: string
     byCategory?: string

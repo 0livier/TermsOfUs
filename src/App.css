@@ -329,6 +329,16 @@
   margin: 24px 20px 20px;
 }
 
+.top-back-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  padding: 9px 14px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
 .learn-more-hero,
 .learn-more-section {
   background: var(--panel);
@@ -366,13 +376,6 @@
   margin-bottom: 8px;
 }
 
-.learn-more-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-top: 16px;
-}
-
 /* ── Review ───────────────────────────────────────────────────────────────── */
 
 .review-page {
@@ -398,16 +401,24 @@
   outline: none;
 }
 
+.review-header-top {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
 .review-toolbar {
   display: flex;
   flex-direction: column;
   gap: 14px;
   margin-top: 22px;
+  align-items: center;
 }
 
 .review-grouping {
   display: grid;
   gap: 8px;
+  justify-items: center;
 }
 
 .review-grouping-label {
@@ -419,13 +430,26 @@
 .review-toolbar-actions {
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center;
   gap: 8px;
 }
 
-.review-share-btn,
-.review-back-btn {
+.review-toolbar-actions .btn-primary,
+.review-toolbar-actions .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.review-copy-btn,
+.review-share-btn {
   width: auto;
+}
+
+.review-action-icon {
+  width: 15px;
+  height: 15px;
+  flex-shrink: 0;
 }
 
 .segmented-control {
@@ -764,14 +788,15 @@ input:focus-visible {
     padding: 36px 32px;
   }
 
-  .learn-more-actions {
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
   .review-header,
   .review-empty-card {
     padding: 36px 32px 28px;
+  }
+
+  .review-header-top {
+    flex-direction: row;
+    align-items: start;
+    gap: 20px;
   }
 
   .review-toolbar {
@@ -780,8 +805,8 @@ input:focus-visible {
     justify-content: space-between;
   }
 
-  .review-toolbar-actions {
-    margin-left: auto;
+  .review-grouping {
+    justify-items: start;
   }
 
   .intro-actions {

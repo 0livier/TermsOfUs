@@ -2,7 +2,7 @@
 
 TermsOfUs is a privacy-first web app for helping people express relationship expectations and boundaries in a structured way.
 
-The current V1 is a local-first, multilingual React app where a person can mark relationship items as `present`, `important`, `discuss`, `no`, or unanswered, then share or restore that selection through a compact URL payload.
+The current V1 is a local-first, multilingual React app where a person can mark relationship items as `present`, `important`, `discuss`, `no`, or unanswered, then either copy a text summary or share and restore that selection through a compact URL payload.
 
 ## Project status
 
@@ -11,7 +11,7 @@ The code is the source of truth for current behavior. The app currently includes
 - 19 content categories and 101 items in `src/content/schema.v1.json`
 - English and French locale files with localized UI and content labels
 - URL state using an optional `lang` query parameter and sparse `s1` hash payload
-- a single-page React interface with an intro, localized state legend, expandable category cards, per-item state buttons, copy-link, clear-all confirmation, and invalid-link fallback notice
+- a single-page React interface with an intro, localized state legend, expandable category cards, per-item state buttons, review summary copy, copy-link sharing, clear-all confirmation, and invalid-link fallback notice
 - unused Sunburst components kept in `src/sunburst/` for possible future visual map work
 - unit tests run through Node's built-in test runner after TypeScript test compilation
 

@@ -11,9 +11,11 @@
       "no":        { "label": "Non",        "longLabel": "Pas pour moi",        "shortLabel": "Non"        }
     },
     "actions": {
+      "back":            "Revenir",
       "reset":           "Tout effacer",
       "copyLink":        "Copier le lien",
       "linkCopied":      "Lien copié",
+      "summaryCopied":   "Synthèse copiée",
       "copyUnavailable": "Impossible de copier"
     },
     "share": {
@@ -28,10 +30,13 @@
       "accessibleLabel": "Faire le point sur vos réponses",
       "title":           "Voilà où vous en êtes",
       "countLabel":      "{count} réponses ajoutées",
+      "copySummary":     "Copier",
+      "copySummaryAccessibleLabel": "Copier votre synthèse",
+      "copySummaryIntro": "Ce qui suit est mon évaluation d’une relation, en m’appuyant sur le système du Relationship Anarchy Smorgasbord.",
       "organizeBy":      "Organiser par",
       "byAnswer":        "Par réponse",
       "byCategory":      "Par catégorie",
-      "backToEdit":      "Modifier vos réponses",
+      "backToEdit":      "Modifier",
       "emptyTitle":      "Rien à relire pour l’instant",
       "emptyBody":       "Commencez par marquer quelques éléments, puis revenez ici pour faire le point.",
       "emptyCta":        "Commencer"
@@ -42,7 +47,7 @@
     },
     "intro": {
       "title":            "Qu'est-ce qui compte pour vous dans une relation ?",
-      "body":             "Terms of Us vous aide à mettre des mots sur une relation : ce qui est déjà là, ce que vous aimeriez, ce qui mérite discussion, et ce qui ne vous convient pas.\n\nCommencez par les catégories qui vous parlent. Inutile de tout remplir : l’idée est surtout d’identifier ce qui compte vraiment pour vous.\n\nVous pourrez ensuite faire le point, relire votre synthèse, puis la partager si vous souhaitez ouvrir une discussion.",
+      "body":             "Terms of Us vous aide à mettre des mots sur une relation : ce qui est déjà là, ce que vous aimeriez, ce qui mérite discussion, et ce qui ne vous convient pas.\n\nCommencez par les catégories qui vous parlent. Inutile de tout remplir : l’idée est surtout d’identifier ce qui compte vraiment pour vous.\n\nVous pourrez ensuite faire le point, relire votre synthèse, puis la partager si vous souhaitez ouvrir une discussion.\n\nIl s’inspire du Relationship Anarchy Smorgasbord, un outil de discussion créé dans les communautés d’anarchie relationnelle pour aider à clarifier ce que chaque relation peut contenir.",
       "privacy":          "Vos réponses restent sur votre appareil. Si vous partagez un lien, il contiendra vos réponses.",
       "startCategory":    "Commencer avec une catégorie",
       "browseCategories": "Parcourir les catégories",
@@ -72,6 +77,10 @@
         {
           "title": "Confidentialité",
           "body": "Vos réponses restent sur votre appareil. Il n’y a pas de compte et pas de serveur pour les enregistrer. Si vous copiez ou partagez un lien, les personnes qui ont ce lien peuvent voir les réponses qu’il contient."
+        },
+        {
+          "title": "Origines et crédits",
+          "body": "Terms of Us est une adaptation libre et interactive du Relationship Anarchy Smorgasbord.\n\nLe Relationship Anarchy Smorgasbord original a été créé par Lyrica Lawrence et Heather Orr de Vancouver Polyamory en décembre 2016. Il a ensuite été retravaillé et enrichi par Maxx Hill, avec des retours de communautés autour de l’anarchie relationnelle, du polyamour et du solo polyamour, jusqu’à la version 5 publiée en 2019.\n\nLe concept d’anarchie relationnelle s’inscrit notamment dans la lignée du manifeste d’Andie Nordgren, The short instructional manifesto for relationship anarchy, publié en suédois en 2006.\n\nTerms of Us n’est pas une version officielle du Smorgasbord original. C’est une adaptation indépendante, pensée pour faciliter la réflexion personnelle, la synthèse et le partage."
         }
       ],
       "cta": "Commencer doucement",

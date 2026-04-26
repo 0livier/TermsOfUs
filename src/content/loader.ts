@@ -27,9 +27,11 @@ export interface LocalizedCategory {
 }
 
 export interface UiActions {
+  back: string
   reset: string
   copyLink: string
   linkCopied: string
+  summaryCopied: string
   copyUnavailable: string
 }
 
@@ -46,6 +48,9 @@ export interface UiReview {
   accessibleLabel: string
   title: string
   countLabel: string
+  copySummary: string
+  copySummaryAccessibleLabel: string
+  copySummaryIntro: string
   organizeBy: string
   byAnswer: string
   byCategory: string
@@ -139,9 +144,11 @@ const DEFAULT_STATE_OPTIONS: ItemStateOption[] = [
 ]
 
 const DEFAULT_UI_ACTIONS: UiActions = {
+  back:            'Back',
   reset:           'Clear all',
   copyLink:        'Copy link',
   linkCopied:      'Link copied',
+  summaryCopied:   'Summary copied',
   copyUnavailable: 'Could not copy',
 }
 
@@ -158,6 +165,9 @@ const DEFAULT_UI_REVIEW: UiReview = {
   accessibleLabel: 'See where I’m at in my answers',
   title:           'Your reflection',
   countLabel:      '{count} answers added',
+  copySummary:     'Copy summary',
+  copySummaryAccessibleLabel: 'Copy your summary',
+  copySummaryIntro: 'What follows is my assessment of a relationship using the Relationship Anarchy Smorgasbord framework.',
   organizeBy:      'Organize by',
   byAnswer:        'Answer',
   byCategory:      'Category',
@@ -335,6 +345,9 @@ function buildUiReview(
     accessibleLabel: key('accessibleLabel'),
     title:           key('title'),
     countLabel:      key('countLabel'),
+    copySummary:     key('copySummary'),
+    copySummaryAccessibleLabel: key('copySummaryAccessibleLabel'),
+    copySummaryIntro: key('copySummaryIntro'),
     organizeBy:      key('organizeBy'),
     byAnswer:        key('byAnswer'),
     byCategory:      key('byCategory'),
@@ -371,9 +384,11 @@ function buildUiActions(
   const key = <K extends keyof UiActions>(k: K) =>
     req[k] ?? fb[k] ?? DEFAULT_UI_ACTIONS[k]
   return {
+    back:            key('back'),
     reset:           key('reset'),
     copyLink:        key('copyLink'),
     linkCopied:      key('linkCopied'),
+    summaryCopied:   key('summaryCopied'),
     copyUnavailable: key('copyUnavailable'),
   }
 }
