@@ -28,7 +28,7 @@
     "review": {
       "label":           "See where I’m at",
       "accessibleLabel": "See where I’m at in my answers",
-      "title":           "Here where I am at",
+      "title":           "Here’s where I’m at",
       "countLabel":      "{count} answers added",
       "copySummary":     "Copy",
       "copySummaryAccessibleLabel": "Copy your summary",
@@ -45,9 +45,13 @@
       "description": "Each slice is one item. Colour shows your answer.",
       "emptyHint":   "Tap a category to begin. There are no right or wrong answers."
     },
+    "itemRow": {
+      "markAs": "Mark {item} as {state}",
+      "clearFrom": "Clear {item} from {state}"
+    },
     "intro": {
       "title":            "What matters to you in a relationship?",
-      "body":             "Terms of Us helps you put words on a relationship: what is already there, what you would like, what deserves a conversation, and what does not work for you.\n\nStart with the categories that speak to you. You do not need to fill in everything: the goal is to identify what truly matters to you.\n\nYou can then review your summary, read it back, and share it if you want to open a conversation.\n\nIt is inspired by the Relationship Anarchy Smorgasbord, a discussion tool created in relationship anarchy communities to help clarify what each relationship can contain.",
+      "body":             "Terms of Us helps you put words on a relationship: what is already there, what you would like, what deserves a conversation, and what does not work for you.\n\nThis is not a score or a test. It is a way to notice what might deserve words.\n\nStart with the categories that speak to you. You do not need to fill in everything: the goal is to identify what truly matters to you.\n\nYou can then review your summary, read it back, and share it if you want to open a conversation.\n\nIt is inspired by the Relationship Anarchy Smorgasbord, a discussion tool created in relationship anarchy communities to help clarify what each relationship can contain.",
       "privacy":          "Your answers stay on your device. If you share a link, it will contain your answers.",
       "startCategory":    "Start with one category",
       "browseCategories": "Browse all categories",

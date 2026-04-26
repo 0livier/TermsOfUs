@@ -233,6 +233,15 @@
   margin-bottom: 10px;
 }
 
+.brand-name {
+  font-weight: 600;
+  color: var(--heading);
+}
+
+.learn-more-section.is-dark .brand-name {
+  color: #EDE8E0;
+}
+
 .intro-privacy {
   font-size: 13px;
   color: var(--muted);

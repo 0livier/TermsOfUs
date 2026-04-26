@@ -1,5 +1,6 @@
 import { useRef } from 'react'
 import type { ItemId, ItemState, ItemStateOption, SelectedItemState } from '../domain/model.js'
+import type { UiItemRow } from '../content/loader.js'
 import { StateIcon } from './StateIcon.js'
 
 interface ItemRowProps {
@@ -7,8 +8,28 @@ interface ItemRowProps {
   label: string
   currentState: ItemState
   stateOptions: ItemStateOption[]
+  labels: UiItemRow
   onSelect: (itemId: ItemId, state: SelectedItemState) => void
   onClear: (itemId: ItemId) => void
+}
+
+function formatItemRowLabel(template: string, label: string, optionLabel: string): string {
+  return template
+    .replace('{item}', label)
+    .replace('{state}', optionLabel)
+}
+
+export function getItemRowButtonAriaLabel(
+  label: string,
+  optionLabel: string,
+  isActive: boolean,
+  labels: UiItemRow,
+): string {
+  if (isActive) {
+    return formatItemRowLabel(labels.clearFrom, label, optionLabel)
+  }
+
+  return formatItemRowLabel(labels.markAs, label, optionLabel)
 }
 
 export function ItemRow({
@@ -16,6 +37,7 @@ export function ItemRow({
   label,
   currentState,
   stateOptions,
+  labels,
   onSelect,
   onClear,
 }: ItemRowProps) {
@@ -44,7 +66,7 @@ export function ItemRow({
               key={opt.value}
               type="button"
               className={`sel-btn${isActive ? ` active-${opt.value}` : ''}`}
-              aria-label={opt.longLabel}
+              aria-label={getItemRowButtonAriaLabel(label, opt.longLabel, isActive, labels)}
               aria-pressed={isActive}
               onClick={() => handleStateSelect(opt.value as SelectedItemState)}
             >

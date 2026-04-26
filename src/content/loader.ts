@@ -113,6 +113,11 @@ export interface UiConfirm {
   clearConfirm: string
 }
 
+export interface UiItemRow {
+  markAs: string
+  clearFrom: string
+}
+
 export interface LocalizedContent {
   locale: SupportedLocale
   schema: SchemaDefinition
@@ -132,6 +137,7 @@ export interface LocalizedContent {
   fallbackMessage: string
   menu: UiMenu
   confirm: UiConfirm
+  itemRow: UiItemRow
 }
 
 const SELECTED_STATES: SelectedItemState[] = ['present', 'important', 'discuss', 'no']
@@ -225,6 +231,11 @@ const DEFAULT_UI_CONFIRM: UiConfirm = {
   clearConfirm: 'Clear marks',
 }
 
+const DEFAULT_UI_ITEM_ROW: UiItemRow = {
+  markAs:   'Mark {item} as {state}',
+  clearFrom: 'Clear {item} from {state}',
+}
+
 const DEFAULT_HEADLINE    = 'What do you need in a relationship?'
 const DEFAULT_SUBHEADLINE = "A quiet space to reflect on what matters, what's already there, and what isn't right for you."
 const DEFAULT_LANGUAGE_LABEL = 'Language'
@@ -311,6 +322,7 @@ export function localizeContent(
     fallbackMessage: requestedContent.ui?.fallback?.linkRestoreFailed ?? fallbackContent.ui?.fallback?.linkRestoreFailed ?? DEFAULT_FALLBACK_MESSAGE,
     menu:    buildUiMenu(requestedContent, fallbackContent),
     confirm: buildUiConfirm(requestedContent, fallbackContent),
+    itemRow: buildUiItemRow(requestedContent, fallbackContent),
     categories: schema.categories.map((category) => ({
       id: category.id,
       label: getCategoryLabel(
@@ -421,6 +433,20 @@ function buildUiIntro(
     browseCategories: key('browseCategories'),
     seeMap:           key('seeMap'),
     learnMore:        key('learnMore'),
+  }
+}
+
+function buildUiItemRow(
+  requestedContent: LocaleContent,
+  fallbackContent: LocaleContent,
+): UiItemRow {
+  const req = requestedContent.ui?.itemRow ?? {}
+  const fb  = fallbackContent.ui?.itemRow ?? {}
+  const key = <K extends keyof UiItemRow>(k: K) =>
+    req[k] ?? fb[k] ?? DEFAULT_UI_ITEM_ROW[k]
+  return {
+    markAs:   key('markAs'),
+    clearFrom: key('clearFrom'),
   }
 }
 

@@ -45,6 +45,10 @@
       "description": "Chaque part correspond à un élément. La couleur indique votre réponse.",
       "emptyHint":   "Appuyez sur une catégorie pour commencer. Il n'y a pas de bonne ou mauvaise réponse."
     },
+    "itemRow": {
+      "markAs": "Indiquer « {state} » pour « {item} »",
+      "clearFrom": "Retirer « {state} » pour « {item} »"
+    },
     "intro": {
       "title":            "Qu'est-ce qui compte pour vous dans une relation ?",
       "body":             "Terms of Us vous aide à mettre des mots sur une relation : ce qui est déjà là, ce que vous aimeriez, ce qui mérite discussion, et ce qui ne vous convient pas.\n\nCommencez par les catégories qui vous parlent. Inutile de tout remplir : l’idée est surtout d’identifier ce qui compte vraiment pour vous.\n\nVous pourrez ensuite faire le point, relire votre synthèse, puis la partager si vous souhaitez ouvrir une discussion.\n\nIl s’inspire du Relationship Anarchy Smorgasbord, un outil de discussion créé dans les communautés d’anarchie relationnelle pour aider à clarifier ce que chaque relation peut contenir.",

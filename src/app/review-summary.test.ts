@@ -18,7 +18,7 @@ test('builds a localized review summary grouped by category', () => {
     [
       'What follows is my assessment of a relationship using the Relationship Anarchy Smorgasbord framework.',
       '',
-      'Here where I am at',
+      'Here’s where I’m at',
       '',
       'Communication',
       '- Already present: Video calls',

@@ -99,6 +99,10 @@ export interface LocaleUiContent {
     clearCancel?: string
     clearConfirm?: string
   }
+  itemRow?: {
+    markAs?: string
+    clearFrom?: string
+  }
   intro?: {
     title?: string
     body?: string

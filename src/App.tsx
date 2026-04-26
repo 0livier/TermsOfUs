@@ -9,6 +9,7 @@ import {
   supportedLocales,
   type LocalizedCategory,
   type SupportedLocale,
+  type UiItemRow,
 } from './content/loader.js'
 import {
   type ItemId,
@@ -80,6 +81,7 @@ interface CategoryCardProps {
   category: LocalizedCategory
   selection: SelectionState
   stateOptions: ItemStateOption[]
+  itemRowLabels: UiItemRow
   isOpen: boolean
   onToggle: (cardElement: HTMLDivElement) => void
   onItemSelect: (itemId: ItemId, state: SelectedItemState) => void
@@ -90,6 +92,7 @@ function CategoryCard({
   category,
   selection,
   stateOptions,
+  itemRowLabels,
   isOpen,
   onToggle,
   onItemSelect,
@@ -147,6 +150,7 @@ function CategoryCard({
           label={item.label}
           currentState={selection[item.id] ?? 'none'}
           stateOptions={stateOptions}
+          labels={itemRowLabels}
           onSelect={onItemSelect}
           onClear={onItemClear}
         />
@@ -268,7 +272,7 @@ function LearnMorePage({ content, backLabel, onBack }: LearnMorePageProps) {
       </button>
 
       <h1 id="learn-more-title">{content.learnMore.title}</h1>
-      <p>{content.learnMore.intro}</p>
+      <p>{renderBrandText(content.learnMore.intro)}</p>
 
       <div className="learn-more-sections">
         {content.learnMore.sections.map((section) => (
@@ -670,7 +674,7 @@ function App() {
       {/* ── Intro card ─────────────────────────────────────── */}
       <section className="intro-card" aria-labelledby="intro-title">
         <h1 id="intro-title">{content.intro.title}</h1>
-        <p className="intro-body">{content.intro.body}</p>
+        <p className="intro-body">{renderBrandText(content.intro.body)}</p>
         <p className="intro-privacy">{content.intro.privacy}</p>
 
         <StateLegend stateOptions={content.stateOptions} />
@@ -695,6 +699,7 @@ function App() {
               category={category}
               selection={selection}
               stateOptions={content.stateOptions}
+              itemRowLabels={content.itemRow}
               isOpen={openCategoryId === category.id}
               onToggle={(cardElement) => handleCategoryToggle(category.id, cardElement)}
               onItemSelect={handleItemSelect}
@@ -736,24 +741,38 @@ function renderLearnMoreBody(title: string, body: string) {
 
   if (isCredits) {
     return paragraphs.map((paragraph) => (
-      <p key={paragraph}>{paragraph}</p>
+      <p key={paragraph}>{renderBrandText(paragraph)}</p>
     ))
   }
 
   if (paragraphs.length <= 1) {
-    return <p>{paragraphs[0] ?? body}</p>
+    return <p>{renderBrandText(paragraphs[0] ?? body)}</p>
   }
 
   const [first, ...rest] = paragraphs
 
   return (
     <>
-      <p>{first}</p>
+      <p>{renderBrandText(first)}</p>
       {rest.map((paragraph) => (
-        <p key={paragraph} className="learn-more-aside">{paragraph}</p>
+        <p key={paragraph} className="learn-more-aside">{renderBrandText(paragraph)}</p>
       ))}
     </>
   )
+}
+
+function renderBrandText(text: string) {
+  const parts = text.split('Terms of Us')
+
+  if (parts.length === 1) {
+    return text
+  }
+
+  return parts.flatMap((part, index) => (
+    index === parts.length - 1
+      ? [part]
+      : [part, <span key={`brand-${index}`} className="brand-name">Terms of Us</span>]
+  ))
 }
 
 function getLearnMoreSectionKindClass(title: string): string {

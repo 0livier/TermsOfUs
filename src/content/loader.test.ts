@@ -52,6 +52,8 @@ test('localizes schema labels for English and French', () => {
   assert.equal(english.categories[0]?.items[0]?.label, 'Video calls')
   assert.equal(french.categories[0]?.label, 'Communication')
   assert.equal(french.categories[0]?.items[0]?.label, 'Appels vidéo')
+  assert.equal(english.itemRow.markAs, 'Mark {item} as {state}')
+  assert.equal(french.itemRow.markAs, 'Indiquer « {state} » pour « {item} »')
 })
 
 test('falls back to default locale labels when translations are missing', () => {
