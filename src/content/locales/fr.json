@@ -56,31 +56,31 @@
     },
     "learnMore": {
       "title": "À quoi sert Terms of Us ?",
-      "intro": "Terms of Us est un outil pour prendre un moment avec soi-même et mettre des mots sur ce qui compte dans une relation. Il s’inspire d’un buffet relationnel issu des milieux de l’anarchie relationnelle, mais il peut être utile dans beaucoup de contextes : couple, relation naissante, amitié, coparentalité, relation non exclusive, famille choisie, ou simplement pour mieux comprendre ce dont on a besoin avec quelqu’un.",
+      "intro": "Terms of Us est un outil pour prendre un moment avec soi-même et mettre des mots sur ce qui compte dans une relation. Il s’inspire du Relationship Anarchy Smorgasbord, un buffet relationnel créé dans les communautés d’anarchie relationnelle, mais il peut être utile dans beaucoup de contextes : couple, relation naissante, amitié, coparentalité, relation non exclusive, famille choisie, ou simplement pour mieux comprendre ce dont vous avez besoin avec quelqu’un.",
       "sections": [
         {
           "title": "Ce que l’outil permet",
-          "body": "Terms of Us peut vous aider à repérer ce qui est important pour vous, ce qui est déjà présent dans une relation, ce que vous ne souhaitez pas, et les sujets qui mériteraient une discussion. Il ne s’agit pas de tout remplir, ni de trouver une bonne réponse. L’idée est plutôt d’ouvrir un espace de réflexion, puis éventuellement de conversation."
+          "body": "Terms of Us peut vous aider à repérer ce qui est important pour vous, ce qui est déjà présent dans une relation, ce qui ne vous convient pas, et les sujets qui mériteraient une discussion.\n\nIl ne s’agit pas de tout remplir, ni de trouver la bonne réponse. L’idée est plutôt de créer un espace de réflexion, puis peut-être, plus tard, de conversation."
         },
         {
           "title": "Comment l’utiliser",
-          "body": "Vous pouvez commencer par une catégorie, parcourir la carte, ou ouvrir la liste complète. Pour chaque élément, vous pouvez le marquer comme Présent, Important, À discuter ou Non. Vous pouvez aussi ne rien choisir. Ne pas répondre est une réponse valable : cela peut simplement vouloir dire que ce n’est pas le moment, que le sujet n’est pas clair, ou qu’il n’a pas d’importance pour vous."
+          "body": "Commencez par une catégorie qui vous parle ou qui mérite d’être clarifiée, puis marquez les éléments selon ce que vous ressentez. Vous pouvez aussi laisser des éléments sans réponse.\n\nNe pas répondre est une réponse valable : cela peut simplement vouloir dire que ce n’est pas le moment, que le sujet n’est pas clair, ou qu’il n’a pas d’importance pour vous."
         },
         {
           "title": "Pour quelles relations ?",
-          "body": "Vous pouvez utiliser Terms of Us pour une relation amoureuse, une relation longue, une relation récente, une amitié importante, une relation queerplatonique, une coparentalité, une relation ouverte ou non monogame, ou toute relation où vous avez envie de mieux comprendre ce qui compte pour vous. L’outil ne suppose pas une forme de relation particulière."
+          "body": "Vous pouvez utiliser Terms of Us pour une relation amoureuse, une relation longue, une relation récente, une amitié importante, une relation queerplatonique, une coparentalité, une relation ouverte ou non monogame, ou toute relation dans laquelle vous avez envie de mieux comprendre ce qui compte pour vous.\n\nL’outil ne suppose pas une forme de relation particulière."
         },
         {
           "title": "Ce que ce n’est pas",
-          "body": "Terms of Us n’est pas un test de compatibilité, un score de relation, un outil de diagnostic ou une méthode pour décider à votre place. Il ne remplace pas une discussion honnête, un accompagnement professionnel, ni le respect du consentement et des limites de chacun·e."
+          "body": "Terms of Us n’est pas un test de compatibilité, un score de relation, un outil de diagnostic, ni une méthode pour décider à votre place.\n\nIl ne remplace pas une discussion honnête, un accompagnement professionnel, ni le respect du consentement et des limites de chacun·e."
         },
         {
           "title": "Confidentialité",
-          "body": "Vos réponses restent sur votre appareil. Il n’y a pas de compte et pas de serveur pour les enregistrer. Si vous copiez ou partagez un lien, les personnes qui ont ce lien peuvent voir les réponses qu’il contient."
+          "body": "Vos réponses restent sur votre appareil. Il n’y a pas de compte et pas de serveur pour les enregistrer.\n\nSi vous copiez ou partagez un lien, toute personne qui possède ce lien pourra voir les réponses qu’il contient."
         },
         {
           "title": "Origines et crédits",
-          "body": "Terms of Us est une adaptation libre et interactive du Relationship Anarchy Smorgasbord.\n\nLe Relationship Anarchy Smorgasbord original a été créé par Lyrica Lawrence et Heather Orr de Vancouver Polyamory en décembre 2016. Il a ensuite été retravaillé et enrichi par Maxx Hill, avec des retours de communautés autour de l’anarchie relationnelle, du polyamour et du solo polyamour, jusqu’à la version 5 publiée en 2019.\n\nLe concept d’anarchie relationnelle s’inscrit notamment dans la lignée du manifeste d’Andie Nordgren, The short instructional manifesto for relationship anarchy, publié en suédois en 2006.\n\nTerms of Us n’est pas une version officielle du Smorgasbord original. C’est une adaptation indépendante, pensée pour faciliter la réflexion personnelle, la synthèse et le partage."
+          "body": "Terms of Us est une adaptation indépendante et interactive du Relationship Anarchy Smorgasbord.\n\nLe Relationship Anarchy Smorgasbord original a été créé par Lyrica Lawrence et Heather Orr de Vancouver Polyamory en décembre 2016. Il a ensuite été retravaillé et enrichi par Maxx Hill, avec des retours de communautés autour de l’anarchie relationnelle, du polyamour et du solo polyamour, jusqu’à la version 5, publiée en 2019.\n\nLe concept d’anarchie relationnelle s’inscrit aussi dans la lignée du manifeste d’Andie Nordgren, The short instructional manifesto for relationship anarchy, initialement publié en suédois en 2006.\n\nTerms of Us n’est pas une version officielle du Smorgasbord original. C’est une adaptation indépendante, pensée pour faciliter la réflexion personnelle, la relecture et le partage."
         }
       ],
       "cta": "Commencer doucement",

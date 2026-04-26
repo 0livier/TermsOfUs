@@ -267,16 +267,19 @@ function LearnMorePage({ content, backLabel, onBack }: LearnMorePageProps) {
         {backLabel}
       </button>
 
-      <section className="learn-more-hero">
-        <h1 id="learn-more-title">{content.learnMore.title}</h1>
-        <p>{content.learnMore.intro}</p>
-      </section>
+      <h1 id="learn-more-title">{content.learnMore.title}</h1>
+      <p>{content.learnMore.intro}</p>
 
       <div className="learn-more-sections">
         {content.learnMore.sections.map((section) => (
-          <section key={section.title} className="learn-more-section">
+          <section
+            key={section.title}
+            className={`learn-more-section ${getLearnMoreSectionKindClass(section.title)}`}
+          >
             <h2>{section.title}</h2>
-            <p>{section.body}</p>
+            <div className="learn-more-section-body">
+              {renderLearnMoreBody(section.title, section.body)}
+            </div>
           </section>
         ))}
       </div>
@@ -725,4 +728,48 @@ function BackArrowIcon() {
       <path d="M21 12H9" />
     </svg>
   )
+}
+
+function renderLearnMoreBody(title: string, body: string) {
+  const paragraphs = body.split('\n\n').map((paragraph) => paragraph.trim()).filter(Boolean)
+  const isCredits = getLearnMoreSectionKindClass(title) === 'is-credits'
+
+  if (isCredits) {
+    return paragraphs.map((paragraph) => (
+      <p key={paragraph}>{paragraph}</p>
+    ))
+  }
+
+  if (paragraphs.length <= 1) {
+    return <p>{paragraphs[0] ?? body}</p>
+  }
+
+  const [first, ...rest] = paragraphs
+
+  return (
+    <>
+      <p>{first}</p>
+      {rest.map((paragraph) => (
+        <p key={paragraph} className="learn-more-aside">{paragraph}</p>
+      ))}
+    </>
+  )
+}
+
+function getLearnMoreSectionKindClass(title: string): string {
+  const normalized = title.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase()
+
+  if (normalized.includes('what this is not') || normalized.includes('ce que ce n’est pas') || normalized.includes('ce que ce n\'est pas')) {
+    return 'is-dark'
+  }
+
+  if (normalized.includes('privacy') || normalized.includes('confidentialite')) {
+    return 'is-tinted'
+  }
+
+  if (normalized.includes('origins') || normalized.includes('credits') || normalized.includes('origines')) {
+    return 'is-credits'
+  }
+
+  return 'is-default'
 }
