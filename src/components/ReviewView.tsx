@@ -178,7 +178,7 @@ function ReviewByCategory({
 
         return (
           <section key={category.id} className="review-group">
-            <h2>{category.label} · {answeredItems.length}</h2>
+            <h2>{category.label}</h2>
             <div className="review-state-subgroups">
               {STATE_ORDER.map((state) => {
                 const items = answeredItems.filter((item) => item.state === state)
