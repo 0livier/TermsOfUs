@@ -20,7 +20,6 @@ Useful project docs:
 - [docs/spec.md](docs/spec.md)
 - [docs/product/v1-summary.md](docs/product/v1-summary.md)
 - [docs/decisions.md](docs/decisions.md)
-- [docs/tickets/README.md](docs/tickets/README.md)
 
 ## Stack
 
@@ -106,7 +105,7 @@ The workflow does the following:
 ## Repository layout
 
 ```text
-docs/                  Product notes, decisions, and tickets
+docs/                  Product notes and decisions
 public/                Static assets
 scripts/               Project scripts, including test helpers
 src/                   Application source

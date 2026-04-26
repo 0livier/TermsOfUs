@@ -133,7 +133,7 @@ const SELECTED_STATES: SelectedItemState[] = ['present', 'important', 'discuss',
 
 const DEFAULT_STATE_OPTIONS: ItemStateOption[] = [
   { value: 'present',   label: 'Present',   longLabel: 'Already present',   shortLabel: 'Present',   icon: '✓' },
-  { value: 'important', label: 'Important', longLabel: 'Important to me',  shortLabel: 'Important', icon: '★' },
+  { value: 'important', label: 'Important', longLabel: 'I'd like that',  shortLabel: 'Important', icon: '★' },
   { value: 'discuss',   label: 'Discuss',   longLabel: 'To discuss',        shortLabel: 'Discuss',   icon: '◆' },
   { value: 'no',        label: 'No',        longLabel: 'Not for me',        shortLabel: 'No',        icon: '✕' },
 ]

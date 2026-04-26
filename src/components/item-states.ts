@@ -13,7 +13,7 @@ export const STATE_ICONS: Record<SelectedItemState, string> = {
 
 export const itemStateOptions: ItemStateOption[] = [
   { value: 'present',   label: 'Present',    longLabel: 'Already present',   shortLabel: 'Present',   icon: '✓' },
-  { value: 'important', label: 'Important',  longLabel: 'Important to me',  shortLabel: 'Important', icon: '★' },
+  { value: 'important', label: 'Important',  longLabel: "I'd like that",  shortLabel: 'Important', icon: '★' },
   { value: 'discuss',   label: 'Discuss',    longLabel: 'To discuss',        shortLabel: 'Discuss',   icon: '◆' },
   { value: 'no',        label: 'No',         longLabel: 'Not for me',        shortLabel: 'No',        icon: '✕' },
 ]

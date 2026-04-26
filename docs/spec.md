@@ -1,6 +1,6 @@
 # TermsOfUs spec
 
-This short spec describes the current codebase. If this document disagrees with the implementation, update this document or the relevant ticket after reading the code.
+This short spec describes the current codebase. If this document disagrees with the implementation, update this document after reading the code.
 
 ## Goal
 Help people clarify relationship expectations and boundaries using a structured grid.
@@ -8,7 +8,7 @@ Help people clarify relationship expectations and boundaries using a structured 
 ## Core concepts
 A user can mark each item as:
 - Already present
-- Important to me
+- I'd like that
 - To discuss
 - Not for me
 - Not relevant / unanswered

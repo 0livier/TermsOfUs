@@ -19,7 +19,5 @@ TermsOfUs is a privacy-first web app to help people express and compare relation
 ## Working style
 
 - Never implement the entire product spec at once.
-- Always work from one ticket in docs/tickets/.
-- If no ticket is provided, create a proposed ticket list first.
 - Keep each change small enough to review.
-- Do not introduce new libraries unless the ticket explicitly requires them.
+- Do not introduce new libraries unless explicitly required.

@@ -5,7 +5,7 @@
 - Use Vite + React + TypeScript.
 - Use no backend.
 - Use JSON files for schema and locales.
-- Treat the code in `src/` as the source of truth for current behavior; docs and tickets describe or propose work, but must be refreshed when the code changes.
+- Treat the code in `src/` as the source of truth for current behavior; docs should be refreshed when the code changes.
 - Store V1 content under `src/content/` as `schema.v1.json` plus `locales/en.json` and `locales/fr.json`.
 - Resolve unsupported locales to English, and fall back missing category/item labels to English before falling back to the stable ID.
 - Use stable category and item IDs.

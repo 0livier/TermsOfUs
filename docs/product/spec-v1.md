@@ -8,7 +8,6 @@ For implementation, agents should first read:
 
 - docs/product/v1-summary.md
 
-- the relevant ticket in docs/tickets/
 
 Do not try to implement the full spec in one pass.
 
@@ -17,7 +16,7 @@ Do not try to implement the full spec in one pass.
 This document specifies a multilingual web application inspired by the Relationship Anarchy Smorgasbord PDF. The application allows a person to review a configurable set of relationship-related items and assign each item exactly one state:
 Not selected
 Already present
-Important to me
+I'd like that
 To discuss
 Not for me
 The primary use case for V1 is personal reflection in the context of a current or emerging relationship. The application must work without a backend and must persist the full selection in the URL so it can be shared easily.
@@ -145,7 +144,7 @@ Stable item and category IDs must be shared across locales. Only labels and desc
 The current primary UI exposes state buttons on each item row for the four selected states:
 Not selected
 Already present
-Important to me
+I'd like that
 To discuss
 Not for me
 Recommended visual style:
@@ -494,7 +493,7 @@ Use stable item IDs from day one
 Use optional `lang` query routing for locale
 Use sparse base62 hash payloads for selection encoding
 Use DOM category cards for the current primary UI
-Keep SVG Sunburst work ticketed separately if it returns
+Keep SVG Sunburst work separate if it returns
 Use Option B for multilingual content storage: base schema plus locale dictionaries
 25. Summary
 This project should be built as a config-driven, multilingual, backend-free web application that lets a user classify relationship-related items into four states and share the result through the URL.

@@ -5,7 +5,7 @@
     "headline": "What matters to you in a relationship?",
     "subheadline": "A quiet space to reflect on what matters, what's already there, and what isn't right for you.",
     "states": {
-      "important": { "label": "Important", "longLabel": "Important to me",  "shortLabel": "Important" },
+      "important": { "label": "Important", "longLabel": "I'd like that",  "shortLabel": "Important" },
       "present":   { "label": "Present",   "longLabel": "Already present",   "shortLabel": "Present"   },
       "discuss":   { "label": "Discuss",   "longLabel": "To discuss",        "shortLabel": "Discuss"   },
       "no":        { "label": "No",        "longLabel": "Not for me",        "shortLabel": "No"        }

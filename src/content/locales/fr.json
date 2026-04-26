@@ -5,7 +5,7 @@
     "headline": "Qu'est-ce qui compte pour vous dans une relation ?",
     "subheadline": "Un espace calme pour explorer ce qui compte pour vous, ce qui est déjà là, et ce qui ne vous convient pas.",
     "states": {
-      "important": { "label": "Important",  "longLabel": "Important pour moi", "shortLabel": "Important"  },
+      "important": { "label": "Important",  "longLabel": "Je voudrais ça", "shortLabel": "Important"  },
       "present":   { "label": "Présent",    "longLabel": "Déjà présent",        "shortLabel": "Présent"    },
       "discuss":   { "label": "À discuter", "longLabel": "À discuter",          "shortLabel": "À discuter" },
       "no":        { "label": "Non",        "longLabel": "Pas pour moi",        "shortLabel": "Non"        }

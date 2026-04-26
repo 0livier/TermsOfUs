@@ -7,7 +7,7 @@ import { itemStateOptions } from './item-states.js'
 test('describes unanswered state and next selection action', () => {
   assert.equal(
     getSelectableItemAriaLabel('Video calls', 'none', 'important', itemStateOptions),
-    'Video calls, current state: Unanswered. Activate to mark as Important to me.',
+    "Video calls, current state: Unanswered. Activate to mark as I'd like that.",
   )
 })
 
