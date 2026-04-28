@@ -811,6 +811,14 @@
   transform: rotate(180deg);
 }
 
+.category-card--open .category-card-header {
+  background: var(--neutral-200);
+}
+
+.category-card--open .category-card-header:hover {
+  background: var(--neutral-300);
+}
+
 /* ── Item row ──────────────────────────────────────────────────────────────── */
 
 .item-row {
