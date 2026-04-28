@@ -20,6 +20,7 @@
   padding: 10px 20px;
   background: var(--bg);
   border-bottom: 1px solid var(--border);
+  box-shadow: 0 1px 0 rgba(32,28,24,0.04), 1px 3px 12px rgba(32,28,24,0.06);
 }
 
 .app-name {
@@ -223,7 +224,11 @@
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-card);
+  box-shadow:
+    2px 3px 0 rgba(32,28,24,0.05),
+    5px 9px 0 rgba(32,28,24,0.04),
+    10px 18px 32px rgba(32,28,24,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.8);
 }
 
 .intro-body {
@@ -399,6 +404,7 @@
   font-size: 13px;
   font-weight: 500;
   color: var(--heading);
+  box-shadow: 1px 2px 0 rgba(32,28,24,0.05), 3px 5px 10px rgba(32,28,24,0.07);
 }
 
 .learn-more-state-icon {
@@ -862,11 +868,11 @@
   border-color: var(--border);
 }
 
-/* Active: solid state color, white icon */
-.sel-btn.active-present   { background: var(--present);   color: #fff; }
-.sel-btn.active-important { background: var(--important); color: #fff; }
-.sel-btn.active-discuss   { background: var(--discuss);   color: #fff; }
-.sel-btn.active-no        { background: var(--no);        color: #fff; }
+/* Active: solid state color, white icon, warm tinted shadow */
+.sel-btn.active-present   { background: var(--present);   color: #fff; box-shadow: 1px 2px 0 rgba(32,28,24,0.06), 2px 4px 8px rgba(58,158,104,0.28); }
+.sel-btn.active-important { background: var(--important); color: #fff; box-shadow: 1px 2px 0 rgba(32,28,24,0.06), 2px 4px 8px rgba(74,144,217,0.28); }
+.sel-btn.active-discuss   { background: var(--discuss);   color: #fff; box-shadow: 1px 2px 0 rgba(32,28,24,0.06), 2px 4px 8px rgba(212,146,42,0.28); }
+.sel-btn.active-no        { background: var(--no);        color: #fff; box-shadow: 1px 2px 0 rgba(32,28,24,0.06), 2px 4px 8px rgba(200,92,92,0.28); }
 
 /* ── Utility ───────────────────────────────────────────────────────────────── */
 

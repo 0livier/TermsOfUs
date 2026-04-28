@@ -52,9 +52,9 @@
   --no-border: #EDB8B8;
   --no-text:   #9B3A3A;
 
-  /* Shadows */
-  --shadow-card:     0 2px 8px rgba(0,0,0,0.06);
-  --shadow-elevated: 0 8px 32px rgba(0,0,0,0.10);
+  /* Shadows — warm layered organic stack */
+  --shadow-card:     1px 2px 0 rgba(32,28,24,0.05), 3px 5px 12px rgba(32,28,24,0.08);
+  --shadow-elevated: 3px 5px 0 rgba(32,28,24,0.06), 7px 12px 0 rgba(32,28,24,0.04), 14px 24px 48px rgba(32,28,24,0.14);
 
   /* Radii */
   --radius-sm:   8px;
@@ -87,6 +87,8 @@ h1 {
   line-height: 1.2;
   letter-spacing: -0.02em;
   color: var(--heading);
+  padding-top: 8px;
+  padding-bottom: 32px;
 }
 
 h2 {
